@@ -179,7 +179,7 @@ function App() {
                       <div className="track__title-text">
                         <a className="track__title-link" href="http://">
                           Non Stop
-                          <span className="track__title-span">(Remix)</span>
+                          <span className="track__title-span"> (Remix)</span>
                         </a>
                       </div>
                     </div>
@@ -214,6 +214,7 @@ function App() {
                         <a className="track__title-link" href="http://">
                           Run Run
                           <span className="track__title-span">
+                            {" "}
                             (feat. AR/CO)
                           </span>
                         </a>
@@ -250,6 +251,7 @@ function App() {
                         <a className="track__title-link" href="http://">
                           Eyes on Fire
                           <span className="track__title-span">
+                            {" "}
                             (Zeds Dead Remix)
                           </span>
                         </a>
@@ -286,6 +288,7 @@ function App() {
                         <a className="track__title-link" href="http://">
                           Mucho Bien
                           <span className="track__title-span">
+                            {" "}
                             (Hi Profile Remix)
                           </span>
                         </a>

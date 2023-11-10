@@ -371,7 +371,7 @@ body {
 
 .col04 {
   width: 60px;
-  text-align: end;
+  text-align: flex-end;
 }
 
 .playlist__item {
@@ -509,8 +509,8 @@ body {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
+  -webkit-box-pack: flex-end;
+  -ms-flex-pack: flex-end;
   justify-content: flex-end;
   padding: 12px 0 15px 0;
 }
@@ -855,9 +855,9 @@ body {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  justify-content: end;
+  -webkit-box-pack: flex-end;
+  -ms-flex-pack: flex-end;
+  justify-content: flex-end;
 }
 
 .volume__image {

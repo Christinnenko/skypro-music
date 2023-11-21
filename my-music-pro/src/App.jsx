@@ -1,10 +1,10 @@
 import "./App.css";
-import AudioPlayer from "./components/AudioPlayer.jsx";
-import NavMenu from "./components/NavMenu.jsx";
-import Tracklist from "./components/Tracklist.jsx";
-import Search from "./components/Search.jsx";
-import Filters from "./components/Filters.jsx";
-import Sidebar from "./components/Sidebar.jsx";
+import AudioPlayer from "./components/AudioPlayer/AudioPlayer.jsx";
+import NavMenu from "./components/NavMenu/NavMenu.jsx";
+import Tracklist from "./components/Tracklist/Tracklist.jsx";
+import Search from "./components/Search/Search.jsx";
+import Filters from "./components/Filters/Filters.jsx";
+import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
 function App() {
   return (

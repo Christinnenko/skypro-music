@@ -1,3 +1,6 @@
+import styled, { createGlobalStyle } from "styled-components";
+
+export const GlobalStyle = createGlobalStyle`
 * {
   margin: 0;
   padding: 0;
@@ -18,10 +21,12 @@ a:visited {
   cursor: pointer;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "StratosSkyeng", sans-serif;
+  color: #ffffff;
 }
 
 button,
@@ -44,49 +49,42 @@ ul li {
   font-style: normal;
 }
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  font-family: "StratosSkyeng", sans-serif;
-  color: #ffffff;
-}
-
-.wrapper {
-  width: 100%;
-  min-height: 100%;
-  overflow: hidden;
-  background-color: #383838;
-}
-
-.container {
-  max-width: 1920px;
-  height: 100vh;
-  margin: 0 auto;
-  position: relative;
-  background-color: #181818;
-}
-
-._btn-icon:hover svg {
+.btn-icon:hover svg {
   fill: transparent;
   stroke: #acacac;
   cursor: pointer;
 }
 
-._btn-icon:active svg {
+.btn-icon:active svg {
   fill: transparent;
   stroke: #ffffff;
   cursor: pointer;
 }
 
-._btn-icon:active .track-play__like-svg,
-._btn-icon:active .track-play__dislike-svg {
+.btn-icon:active .track-play__like-svg,
+.btn-icon:active .track-play__dislike-svg {
   fill: #696969;
   stroke: #ffffff;
   cursor: pointer;
 }
+`;
 
-.main {
+export const Wrapper = styled.div`
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background-color: #383838;
+`;
+
+export const Container = styled.div`
+  max-width: 1920px;
+  height: 100vh;
+  margin: 0 auto;
+  position: relative;
+  background-color: #181818;
+`;
+
+export const Main = styled.main`
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -98,13 +96,13 @@ body {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
+`;
 
-.centerblock__h2 {
+export const CenterblockH2 = styled.h2`
   font-style: normal;
   font-weight: 400;
   font-size: 64px;
   line-height: 72px;
   letter-spacing: -0.8px;
   margin-bottom: 45px;
-}
+`;

@@ -1,48 +1,45 @@
-import "./Sidebar.css";
+import * as Styled from "./Sidebar.styles.js";
 
 function Sidebar() {
   return (
-    <div className="main__sidebar sidebar">
-      <div className="sidebar__personal">
-        <p className="sidebar__personal-name">Sergey.Ivanov</p>
-        <div className="sidebar__icon">
+    <Styled.MainSidebar>
+      <Styled.SidebarPersonal>
+        <Styled.SidebarPersonalName>Sergey.Ivanov</Styled.SidebarPersonalName>
+        <Styled.SidebarIcon>
           <svg alt="logout">
             <use xlinkHref="/icon/sprite.svg#logout"></use>
           </svg>
-        </div>
-      </div>
-      <div className="sidebar__block">
-        <div className="sidebar__list">
-          <div className="sidebar__item">
-            <a className="sidebar__link" href="#">
-              <img
-                className="sidebar__img"
+        </Styled.SidebarIcon>
+      </Styled.SidebarPersonal>
+      <Styled.SidebarBlock>
+        <Styled.SidebarList>
+          <Styled.SidebarItem>
+            <Styled.SidebarLink href="#">
+              <Styled.SidebarImg
                 src="./img/playlist01.png"
                 alt="day's playlist"
               />
-            </a>
-          </div>
-          <div className="sidebar__item">
-            <a className="sidebar__link" href="#">
-              <img
-                className="sidebar__img"
+            </Styled.SidebarLink>
+          </Styled.SidebarItem>
+          <Styled.SidebarItem>
+            <Styled.SidebarLink href="#">
+              <Styled.SidebarImg
                 src="./img/playlist02.png"
                 alt="day's playlist"
               />
-            </a>
-          </div>
-          <div className="sidebar__item">
-            <a className="sidebar__link" href="#">
-              <img
-                className="sidebar__img"
+            </Styled.SidebarLink>
+          </Styled.SidebarItem>
+          <Styled.SidebarItem>
+            <Styled.SidebarLink href="#">
+              <Styled.SidebarImg
                 src="./img/playlist03.png"
                 alt="day's playlist"
               />
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Styled.SidebarLink>
+          </Styled.SidebarItem>
+        </Styled.SidebarList>
+      </Styled.SidebarBlock>
+    </Styled.MainSidebar>
   );
 }
 

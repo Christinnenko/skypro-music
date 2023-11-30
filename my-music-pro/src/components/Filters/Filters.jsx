@@ -4,7 +4,7 @@ import {
   OpenFilterYears,
   OpenFilterGenre,
 } from "./OpenFilters";
-import "./Filters.css";
+import * as S from "./Filters.styles.js";
 
 function Filters() {
   const [openFilter, setOpenFilter] = useState(null);
@@ -14,8 +14,8 @@ function Filters() {
   };
 
   return (
-    <div className="centerblock__filter filter">
-      <div className="filter__title">Искать по:</div>
+    <S.CenterblockFilter>
+      <S.FilterTitle>Искать по:</S.FilterTitle>
       <OpenFilterSinger
         buttonText="исполнителю"
         listItems={[
@@ -57,7 +57,7 @@ function Filters() {
         toggleFilter={() => toggleFilter("жанру")}
         isSelected={true}
       />
-    </div>
+    </S.CenterblockFilter>
   );
 }
 

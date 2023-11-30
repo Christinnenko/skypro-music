@@ -18,6 +18,12 @@ a:visited {
   cursor: pointer;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
 button,
 ._btn {
   cursor: pointer;

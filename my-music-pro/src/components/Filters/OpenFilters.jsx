@@ -1,40 +1,24 @@
 import PropTypes from "prop-types";
+import * as S from "./Filters.styles.js";
 
-const OpenFilter = ({
-  buttonText,
-  listItems,
-  isOpen,
-  toggleFilter,
-  isSelected,
-}) => {
+const OpenFilter = ({ buttonText, listItems, isOpen, toggleFilter }) => {
   const handleClick = () => {
     toggleFilter();
   };
 
   return (
-    <div
-      className={`filter ${isOpen ? "active" : ""} ${
-        isSelected ? "filter-active" : ""
-      }`}
-    >
-      <div
-        className={`filter__button button-author _btn-text ${
-          isOpen && isSelected ? "filter-active-button" : ""
-        }`}
-        onClick={handleClick}
-      >
+    <div>
+      <S.FilterButton isOpen={isOpen} onClick={handleClick}>
         {buttonText}
-      </div>
+      </S.FilterButton>
       {isOpen && (
-        <div className="filter-popup">
-          <ul className="filter-popup-scrollable">
+        <S.FilterPopup>
+          <S.FilterPopupScrollable>
             {listItems.map((item, index) => (
-              <a href="#" key={index}>
-                <li>{item}</li>
-              </a>
+              <div key={index}>{item}</div>
             ))}
-          </ul>
-        </div>
+          </S.FilterPopupScrollable>
+        </S.FilterPopup>
       )}
     </div>
   );

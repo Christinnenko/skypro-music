@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
 import * as S from "./Filters.styles.js";
 
-const OpenFilter = ({ buttonText, listItems, isOpen, toggleFilter }) => {
+const OpenFilter = ({ buttonText, listItems, isopen, toggleFilter }) => {
   const handleClick = () => {
     toggleFilter();
   };
 
   return (
     <div>
-      <S.FilterButton isOpen={isOpen} onClick={handleClick}>
+      <S.FilterButton isopen={isopen} onClick={handleClick}>
         {buttonText}
       </S.FilterButton>
-      {isOpen && (
+      {isopen && (
         <S.FilterPopup>
           <S.FilterPopupScrollable>
             {listItems.map((item, index) => (
@@ -27,7 +27,7 @@ const OpenFilter = ({ buttonText, listItems, isOpen, toggleFilter }) => {
 OpenFilter.propTypes = {
   buttonText: PropTypes.string.isRequired,
   listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isOpen: PropTypes.bool.isRequired,
+  isopen: PropTypes.bool.isRequired,
   toggleFilter: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
 };
@@ -35,14 +35,14 @@ OpenFilter.propTypes = {
 const OpenFilterSinger = ({
   buttonText,
   listItems,
-  isOpen,
+  isopen,
   toggleFilter,
   isSelected,
 }) => (
   <OpenFilter
     buttonText={buttonText}
     listItems={listItems}
-    isOpen={isOpen}
+    isopen={isopen}
     toggleFilter={toggleFilter}
     isSelected={isSelected}
   />
@@ -56,14 +56,14 @@ OpenFilterSinger.propTypes = {
 const OpenFilterYears = ({
   buttonText,
   listItems,
-  isOpen,
+  isopen,
   toggleFilter,
   isSelected,
 }) => (
   <OpenFilter
     buttonText={buttonText}
     listItems={listItems}
-    isOpen={isOpen}
+    isopen={isopen}
     toggleFilter={toggleFilter}
     isSelected={isSelected}
   />
@@ -77,14 +77,14 @@ OpenFilterYears.propTypes = {
 const OpenFilterGenre = ({
   buttonText,
   listItems,
-  isOpen,
+  isopen,
   toggleFilter,
   isSelected,
 }) => (
   <OpenFilter
     buttonText={buttonText}
     listItems={listItems}
-    isOpen={isOpen}
+    isopen={isopen}
     toggleFilter={toggleFilter}
     isSelected={isSelected}
   />

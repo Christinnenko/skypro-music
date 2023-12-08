@@ -1,18 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
 
-export const ProtectedRoute = ({ redirectPath = "/login" }) => {
-  const user = Boolean(localStorage.getItem("user"));
-  const isAllowed = user;
+//компонент, который будет получать признак isAllowed , который говорит о том, что пользователю можно попасть в авторизированную зону
+export const ProtectedRoute = ({ redirectPath = "/login" }, isAllowed) => {
   if (!isAllowed) {
     return <Navigate to={redirectPath} replace={true} />;
   }
-
   return <Outlet />;
 };
 
 ProtectedRoute.propTypes = {
   redirectPath: PropTypes.string,
 };
-
-export default ProtectedRoute;

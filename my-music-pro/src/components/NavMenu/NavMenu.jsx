@@ -1,21 +1,13 @@
-import { useState } from "react";
 import * as S from "./NavMenu.styles.js";
 import cn from "classnames";
-import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useState } from "react";
 
-const NavMenu = () => {
+const NavMenu = ({ onAuthButtonClick }) => {
   const [visible, setVisible] = useState(false);
-  const activeClassName = "underline";
-  const toggleVisibility = () => setVisible(!visible);
-  const navigate = useNavigate();
 
-  const onClick = () => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      localStorage.removeItem("user");
-    }
-    navigate("/login");
-  };
+  const toggleVisibility = () => setVisible(!visible);
+  const activeClassName = "underline";
 
   return (
     <S.MainNav>
@@ -52,9 +44,10 @@ const NavMenu = () => {
                     [activeClassName]: isActive,
                   })
                 }
-                onClick={onClick}
+                onClick={onAuthButtonClick}
+                to="/login"
               >
-                {localStorage.getItem("user") ? "Выйти" : "Войти"}
+                Выйти
               </S.NavLink>
             </S.MenuItem>
           </S.MenuList>
@@ -64,13 +57,9 @@ const NavMenu = () => {
   );
 };
 
-// // Предполагая, что у вас есть данные пользователя (например, после успешной аутентификации)
-// const user = {
-//   username: "exampleUser",
-//   // другие свойства пользователя
-// };
-
-// // Сохранение пользователя в локальном хранилище
-// localStorage.setItem("user", JSON.stringify(user));
-
 export default NavMenu;
+
+NavMenu.propTypes = {
+  user: PropTypes.object,
+  onAuthButtonClick: PropTypes.func,
+};

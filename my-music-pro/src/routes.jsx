@@ -9,21 +9,18 @@ import { ProtectedRoute } from "./components/protected-route";
 import PropTypes from "prop-types";
 
 export const AppRoutes = ({ user }) => {
+  user = null;
+
   return (
     <Routes>
-      <Route path="/" element={<Main />} />
+      <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
+        <Route path="/category/:id" element={<Category />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/" element={<Main />} />
+      </Route>
       <Route path="/*" element={<NotFound />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute isAllowed={Boolean(user)}>
-            <Route path="/login" element={<Login />} />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="login" element={<Login />} />
       <Route path="/registration" element={<Registration />} />
-      <Route path="/category/:id" element={<Category />} />
-      <Route path="/favorites" element={<Favorites />} />
     </Routes>
   );
 };

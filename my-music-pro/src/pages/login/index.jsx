@@ -1,9 +1,10 @@
 import * as S from "../Pages.styles.js";
 import { GlobalStyle } from "../../App.styles.js";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const NavLink = styled(Link)`
+const Button = styled.button`
   width: 278px;
   height: 52px;
   background-color: #580ea2;
@@ -45,16 +46,28 @@ const NavLink = styled(Link)`
   }
 `;
 
-export const Login = () => {
+export const Login = ({ setUser }) => {
+  const navigate = useNavigate();
+
+  const onSubmit = () => {
+    localStorage.setItem("user", JSON.stringify({ login: "edergerg" }));
+    setUser({ login: "edergerg" });
+    navigate("/");
+  };
+
   return (
     <>
       <GlobalStyle />
       <S.Wrapper>
         <S.Container>
           <S.Text>Login Page</S.Text>
-          <NavLink to="/">Войти</NavLink>
+          <Button onClick={onSubmit}>Войти</Button>
         </S.Container>
       </S.Wrapper>
     </>
   );
+};
+
+Login.propTypes = {
+  setUser: PropTypes.func.isRequired,
 };

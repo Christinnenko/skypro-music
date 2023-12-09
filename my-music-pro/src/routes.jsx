@@ -8,9 +8,7 @@ import { Favorites } from "./pages/favorites";
 import { ProtectedRoute } from "./components/protected-route";
 import PropTypes from "prop-types";
 
-export const AppRoutes = ({ user }) => {
-  user = null;
-
+export const AppRoutes = ({ user, setUser }) => {
   return (
     <Routes>
       <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
@@ -18,8 +16,8 @@ export const AppRoutes = ({ user }) => {
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/" element={<Main />} />
       </Route>
-      <Route path="/*" element={<NotFound />} />
-      <Route path="login" element={<Login />} />
+      <Route path="*" element={<NotFound />} />
+      <Route path="/login" element={<Login setUser={setUser} />} />
       <Route path="/registration" element={<Registration />} />
     </Routes>
   );
@@ -27,7 +25,8 @@ export const AppRoutes = ({ user }) => {
 
 // Валидация PropTypes
 AppRoutes.propTypes = {
-  user: PropTypes.oneOfType([PropTypes.object, PropTypes.oneOf([null])]),
+  user: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
+  setUser: PropTypes.func.isRequired,
 };
 
 export default AppRoutes;

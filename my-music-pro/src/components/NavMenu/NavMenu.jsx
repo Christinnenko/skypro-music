@@ -1,13 +1,20 @@
 import * as S from "./NavMenu.styles.js";
 import cn from "classnames";
-import PropTypes from "prop-types";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const NavMenu = ({ onAuthButtonClick }) => {
+const NavMenu = () => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => setVisible(!visible);
   const activeClassName = "underline";
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Удаляем информацию о пользователе из localStorage
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   return (
     <S.MainNav>
@@ -38,17 +45,7 @@ const NavMenu = ({ onAuthButtonClick }) => {
               </S.NavLink>
             </S.MenuItem>
             <S.MenuItem>
-              <S.NavLink
-                className={({ isActive }) =>
-                  cn("App-link", {
-                    [activeClassName]: isActive,
-                  })
-                }
-                onClick={onAuthButtonClick}
-                to="/login"
-              >
-                Выйти
-              </S.NavLink>
+              <S.Button onClick={handleLogout}>Выйти</S.Button>
             </S.MenuItem>
           </S.MenuList>
         </S.NavMenu>
@@ -58,8 +55,3 @@ const NavMenu = ({ onAuthButtonClick }) => {
 };
 
 export default NavMenu;
-
-NavMenu.propTypes = {
-  user: PropTypes.object,
-  onAuthButtonClick: PropTypes.func,
-};

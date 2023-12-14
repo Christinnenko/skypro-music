@@ -1,6 +1,11 @@
 import * as S from "./AudioPlayer.styles.js";
+import PropTypes from "prop-types";
 
-function AudioPlayer() {
+function AudioPlayer({ track }) {
+  if (!track) {
+    return <div>Трек не определен</div>;
+  }
+
   return (
     <S.Bar>
       <S.BarContent>
@@ -44,12 +49,12 @@ function AudioPlayer() {
                 </S.TrackPlayImage>
                 <S.TrackPlayAuthor>
                   <S.TrackPlayAuthorLink href="http://">
-                    Ты та...
+                    {track.name}
                   </S.TrackPlayAuthorLink>
                 </S.TrackPlayAuthor>
                 <S.TrackPlayAlbum>
                   <S.TrackPlayAlbumLink href="http://">
-                    Баста
+                    {track.author}
                   </S.TrackPlayAlbumLink>
                 </S.TrackPlayAlbum>
               </S.TrackPlayContain>
@@ -85,5 +90,12 @@ function AudioPlayer() {
     </S.Bar>
   );
 }
+
+AudioPlayer.propTypes = {
+  track: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default AudioPlayer;

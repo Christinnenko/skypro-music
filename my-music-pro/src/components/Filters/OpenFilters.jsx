@@ -8,7 +8,7 @@ const OpenFilter = ({ buttonText, listItems, isopen, toggleFilter }) => {
 
   return (
     <div>
-      <S.FilterButton isopen={isopen} onClick={handleClick}>
+      <S.FilterButton $isOpen={isopen} onClick={handleClick}>
         {buttonText}
       </S.FilterButton>
       {isopen && (
@@ -27,7 +27,7 @@ const OpenFilter = ({ buttonText, listItems, isopen, toggleFilter }) => {
 OpenFilter.propTypes = {
   buttonText: PropTypes.string.isRequired,
   listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isopen: PropTypes.bool.isRequired,
+  $isOpen: PropTypes.bool.isRequired,
   toggleFilter: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
 };
@@ -42,7 +42,7 @@ const OpenFilterSinger = ({
   <OpenFilter
     buttonText={buttonText}
     listItems={listItems}
-    isopen={isopen}
+    $isOpen={isopen}
     toggleFilter={toggleFilter}
     isSelected={isSelected}
   />
@@ -63,7 +63,7 @@ const OpenFilterYears = ({
   <OpenFilter
     buttonText={buttonText}
     listItems={listItems}
-    isopen={isopen}
+    $isOpen={isopen}
     toggleFilter={toggleFilter}
     isSelected={isSelected}
   />
@@ -84,7 +84,7 @@ const OpenFilterGenre = ({
   <OpenFilter
     buttonText={buttonText}
     listItems={listItems}
-    isopen={isopen}
+    $isOpen={isopen}
     toggleFilter={toggleFilter}
     isSelected={isSelected}
   />

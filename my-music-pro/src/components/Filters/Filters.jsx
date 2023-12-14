@@ -31,14 +31,14 @@ function Filters() {
           "Tom Boxer",
           "Calvin Harris, Disciples",
         ]}
-        isopen={openFilter === "исполнителю"}
+        $isOpen={openFilter === "исполнителю"}
         toggleFilter={() => toggleFilter("исполнителю")}
         isSelected={true}
       />
       <OpenFilterYears
         buttonText="году выпуска"
         listItems={["1992", "1993", "1994", "1995"]}
-        isopen={openFilter === "году выпуска"}
+        $isOpen={openFilter === "году выпуска"}
         toggleFilter={() => toggleFilter("году выпуска")}
         isSelected={true}
       />
@@ -53,7 +53,7 @@ function Filters() {
           "Метал",
           "Классическая музыка",
         ]}
-        isopen={openFilter === "жанру"}
+        $isOpen={openFilter === "жанру"}
         toggleFilter={() => toggleFilter("жанру")}
         isSelected={true}
       />

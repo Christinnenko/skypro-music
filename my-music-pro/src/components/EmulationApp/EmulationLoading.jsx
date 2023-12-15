@@ -4,6 +4,51 @@ import * as S from "../AudioPlayer/AudioPlayer.styles.js";
 import * as St from "./EmulationLoading.styles.js";
 
 function EmulationTracklist() {
+  const numberOfItems = 9;
+  const items = [];
+
+  for (let i = 0; i < numberOfItems; i++) {
+    items.push(
+      <Style.PlaylistItem key={i}>
+        <St.PlaylistTrack>
+          <Style.TrackTitle>
+            <Style.TrackTitleImage>
+              <img
+                src="/icon/emulate_track-image.svg"
+                alt="Обложка трека загружается"
+              />
+            </Style.TrackTitleImage>
+            <div>
+              <Style.TrackTitleLink href="http://">
+                <img
+                  src="/icon/emulate_track-name.svg"
+                  alt="Название трека загружается"
+                />
+                <Style.TrackTitleSpan></Style.TrackTitleSpan>
+              </Style.TrackTitleLink>
+            </div>
+          </Style.TrackTitle>
+          <Style.TrackAuthor>
+            <Style.TrackAuthorLink href="http://">
+              <img
+                src="/icon/emulate_track-singer.svg"
+                alt="Имя исполнителя загружается"
+              />
+            </Style.TrackAuthorLink>
+          </Style.TrackAuthor>
+          <Style.TrackAlbum>
+            <Style.TrackAlbumLink href="http://">
+              <img
+                src="/icon/emulate_track-album.svg"
+                alt="Название альбома загружается"
+              />
+            </Style.TrackAlbumLink>
+          </Style.TrackAlbum>
+        </St.PlaylistTrack>
+      </Style.PlaylistItem>
+    );
+  }
+
   return (
     <Style.CenterblockContent>
       <Style.ContentTitle>
@@ -16,658 +61,25 @@ function EmulationTracklist() {
           </Style.PlaylistTitleSvg>
         </Style.PlaylistTitleColCol04>
       </Style.ContentTitle>
-      <Style.ContentPlaylist>
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-
-        <Style.PlaylistItem>
-          <St.PlaylistTrack>
-            <Style.TrackTitle>
-              <Style.TrackTitleImage>
-                <img
-                  src="/icon/emulate_track-image.svg"
-                  alt="Обложка трека загружается"
-                />
-              </Style.TrackTitleImage>
-              <div>
-                <Style.TrackTitleLink href="http://">
-                  <img
-                    src="/icon/emulate_track-name.svg"
-                    alt="Название трека загружается"
-                  />
-                  <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                </Style.TrackTitleLink>
-              </div>
-            </Style.TrackTitle>
-            <Style.TrackAuthor>
-              <Style.TrackAuthorLink href="http://">
-                <img
-                  src="/icon/emulate_track-singer.svg"
-                  alt="Имя исполнителя загружается"
-                />
-              </Style.TrackAuthorLink>
-            </Style.TrackAuthor>
-            <Style.TrackAlbum>
-              <Style.TrackAlbumLink href="http://">
-                <img
-                  src="/icon/emulate_track-album.svg"
-                  alt="Название альбома загружается"
-                />
-              </Style.TrackAlbumLink>
-            </Style.TrackAlbum>
-          </St.PlaylistTrack>
-        </Style.PlaylistItem>
-      </Style.ContentPlaylist>
+      <Style.ContentPlaylist>{items}</Style.ContentPlaylist>
     </Style.CenterblockContent>
   );
 }
 
 function EmulationSidebar() {
+  const numberOfItems = 3;
+  const items = [];
+
+  for (let i = 0; i < numberOfItems; i++) {
+    items.push(
+      <Styled.SidebarItem key={i}>
+        <Styled.SidebarLink href="#">
+          <img src="/icon/emulate_sidebar.svg" alt="Сайдбар загружается" />
+        </Styled.SidebarLink>
+      </Styled.SidebarItem>
+    );
+  }
+
   return (
     <Styled.MainSidebar>
       <Styled.SidebarPersonal>
@@ -679,23 +91,7 @@ function EmulationSidebar() {
         </Styled.SidebarIcon>
       </Styled.SidebarPersonal>
       <Styled.SidebarBlock>
-        <Styled.SidebarList>
-          <Styled.SidebarItem>
-            <Styled.SidebarLink href="#">
-              <img src="/icon/emulate_sidebar.svg" alt="Сайдбар загружается" />
-            </Styled.SidebarLink>
-          </Styled.SidebarItem>
-          <Styled.SidebarItem>
-            <Styled.SidebarLink href="#">
-              <img src="/icon/emulate_sidebar.svg" alt="Сайдбар загружается" />
-            </Styled.SidebarLink>
-          </Styled.SidebarItem>
-          <Styled.SidebarItem>
-            <Styled.SidebarLink href="#">
-              <img src="/icon/emulate_sidebar.svg" alt="Сайдбар загружается" />
-            </Styled.SidebarLink>
-          </Styled.SidebarItem>
-        </Styled.SidebarList>
+        <Styled.SidebarList>{items}</Styled.SidebarList>
       </Styled.SidebarBlock>
     </Styled.MainSidebar>
   );

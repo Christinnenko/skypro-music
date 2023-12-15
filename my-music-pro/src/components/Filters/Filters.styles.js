@@ -47,6 +47,7 @@ export const FilterButton = styled.div`
     border-color: #ad61ff;
     color: #ad61ff;
     cursor: pointer;
+  }
 `;
 
 export const FilterPopup = styled.div`

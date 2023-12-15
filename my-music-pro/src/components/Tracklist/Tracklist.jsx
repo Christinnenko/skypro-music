@@ -4,19 +4,20 @@ import * as Style from "./Tracklist.styles.js";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
 
-function Tracklist({ handleTrackPlay }) {
+function Tracklist({ handleTrackPlay, setLoading }) {
   const [tracks, setTracks] = useState([]);
 
-  const [getTracksError, setGetTracksError] = useState(null);
+  const [getTracksError, setGetTracksError] = useState(false);
 
   useEffect(() => {
     getAllTracks()
       .then((tracks) => {
         setTracks(tracks);
+        setLoading(false);
       })
       .catch((error) => {
         setGetTracksError(
-          `Не удалось загрузить плейлист, попробуйте позже:${error.message}`
+          `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`
         );
       });
   }, []);
@@ -80,6 +81,7 @@ function Tracklist({ handleTrackPlay }) {
 
 Tracklist.propTypes = {
   handleTrackPlay: PropTypes.func.isRequired,
+  setLoading: PropTypes.func.isRequired,
 };
 
 export default Tracklist;

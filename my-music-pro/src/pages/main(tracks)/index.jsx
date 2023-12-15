@@ -7,15 +7,19 @@ import NavMenu from "../../components/NavMenu/NavMenu.jsx";
 import Search from "../../components/Search/Search.jsx";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
-import PropTypes from "prop-types";
+import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
 
 export const Main = () => {
   const [showBar, setShowBar] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const handleTrackPlay = (track) => {
     setShowBar(track);
   };
 
-  return (
+  return loading ? (
+    <EmulationApp />
+  ) : (
     <S.Wrapper>
       <GlobalStyle />
       <S.Container>
@@ -25,7 +29,10 @@ export const Main = () => {
             <Search />
             <S.CenterblockH2>Треки</S.CenterblockH2>
             <Filters />
-            <Tracklist handleTrackPlay={handleTrackPlay} />
+            <Tracklist
+              handleTrackPlay={handleTrackPlay}
+              setLoading={setLoading}
+            />
           </div>
           <Sidebar />
         </S.Main>
@@ -36,10 +43,4 @@ export const Main = () => {
       </S.Container>
     </S.Wrapper>
   );
-};
-
-Main.propTypes = {
-  showBar: PropTypes.object,
-  track: PropTypes.object,
-  setShowBar: PropTypes.func.isRequired,
 };

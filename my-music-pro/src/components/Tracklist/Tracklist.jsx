@@ -1,27 +1,8 @@
-import { useEffect, useState } from "react";
-import { getAllTracks } from "../../api.js";
 import * as Style from "./Tracklist.styles.js";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
 
-function Tracklist({ handleTrackPlay, setLoading }) {
-  const [tracks, setTracks] = useState([]);
-
-  const [getTracksError, setGetTracksError] = useState(false);
-
-  useEffect(() => {
-    getAllTracks()
-      .then((tracks) => {
-        setTracks(tracks);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setGetTracksError(
-          `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`
-        );
-      });
-  }, []);
-
+function Tracklist({ handleTrackPlay, tracks, getTracksError }) {
   return (
     <Style.CenterblockContent>
       <Style.ContentTitle>
@@ -81,7 +62,8 @@ function Tracklist({ handleTrackPlay, setLoading }) {
 
 Tracklist.propTypes = {
   handleTrackPlay: PropTypes.func.isRequired,
-  setLoading: PropTypes.func.isRequired,
+  tracks: PropTypes.array.isRequired,
+  getTracksError: PropTypes.any,
 };
 
 export default Tracklist;

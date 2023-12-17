@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "../../App.styles.js";
 import { GlobalStyle } from "../../App.styles.js";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.jsx";
@@ -8,14 +8,31 @@ import Search from "../../components/Search/Search.jsx";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
+import { getAllTracks } from "../../api.js";
 
 export const Main = () => {
   const [showBar, setShowBar] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [tracks, setTracks] = useState(true);
+  const [tracksError, setTracksError] = useState(true);
 
   const handleTrackPlay = (track) => {
     setShowBar(track);
   };
+
+  useEffect(() => {
+    getAllTracks()
+      .then((tracks) => {
+        setTracks(tracks);
+        console.log(tracks);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setTracksError(
+          `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`
+        );
+      });
+  }, []);
 
   return loading ? (
     <EmulationApp />
@@ -31,7 +48,8 @@ export const Main = () => {
             <Filters />
             <Tracklist
               handleTrackPlay={handleTrackPlay}
-              setLoading={setLoading}
+              tracks={tracks}
+              tracksError={tracksError}
             />
           </div>
           <Sidebar />

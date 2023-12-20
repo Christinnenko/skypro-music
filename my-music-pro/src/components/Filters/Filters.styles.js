@@ -34,8 +34,8 @@ export const FilterButton = styled.div`
   text-align: center;
   position: relative;
 
-  border-color: ${(props) => (props.isopen ? "#ad61ff" : "")};
-  color: ${(props) => (props.isopen ? "#ad61ff" : "")};
+  border-color: ${(props) => (props.$isOpen ? "#ad61ff" : "")};
+  color: ${(props) => (props.$isOpen ? "#ad61ff" : "")};
 
   &:hover {
     border-color: #d9b6ff;
@@ -47,6 +47,7 @@ export const FilterButton = styled.div`
     border-color: #ad61ff;
     color: #ad61ff;
     cursor: pointer;
+  }
 `;
 
 export const FilterPopup = styled.div`

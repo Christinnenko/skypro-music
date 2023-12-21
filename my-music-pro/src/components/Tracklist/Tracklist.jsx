@@ -25,6 +25,7 @@ function Tracklist({ handleTrackPlay, tracks, getTracksError }) {
               <Style.TrackTitle>
                 <Style.TrackTitleImage>
                   <Style.TrackTitleSvg alt="music">
+                    <use xlinkHref="/icon/sprite.svg#icon-note"></use>
                     {track.logo}
                   </Style.TrackTitleSvg>
                 </Style.TrackTitleImage>

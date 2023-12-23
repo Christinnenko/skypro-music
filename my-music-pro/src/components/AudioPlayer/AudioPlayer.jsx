@@ -33,6 +33,18 @@ function AudioPlayer({
 
   const togglePlay = isPlaying ? handleStop : handleStart; //кнопка плей/пауза
 
+  //воспроизведение следущего трека
+  useEffect(() => {
+    audioRef.current.load();
+  }, [track]);
+
+  //воспроизведение трека сразу после нажатия на название/автора/альбома
+  useEffect(() => {
+    audioRef.current.addEventListener("loadedmetadata", () => {
+      handleStart();
+    });
+  }, []);
+
   useEffect(() => {
     const updateCurrentTime = () => {
       if (audioRef.current) {
@@ -137,7 +149,7 @@ function AudioPlayer({
                   <S.PlayerBtnRepeatSvg
                     alt="repeat"
                     onClick={toggleLoop}
-                    isLooped={isLooped}
+                    $isLooped={isLooped}
                   >
                     <use xlinkHref="/icon/sprite.svg#icon-repeat"></use>
                   </S.PlayerBtnRepeatSvg>

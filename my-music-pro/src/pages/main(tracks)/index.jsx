@@ -16,10 +16,10 @@ export const Main = () => {
   const [tracks, setTracks] = useState(true); //показ полученного треклиста из API
   const [tracksError, setTracksError] = useState(true); //ошибка при получении треклиста из API
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
-
   const audioRef = useRef(null);
 
   const handleStart = () => {
+    console.log("handleStart");
     audioRef.current.play();
     setIsPlaying(true);
   };
@@ -30,14 +30,9 @@ export const Main = () => {
   };
 
   const handleTrackPlay = (track) => {
+    console.log("handleTrackPlay");
     setShowAudioPlayer(track);
   };
-
-  useEffect(() => {
-    if (audioRef.current) {
-      handleStart();
-    }
-  }, [audioRef]);
 
   useEffect(() => {
     getAllTracks()

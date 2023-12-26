@@ -25,6 +25,7 @@ function Tracklist({ handleTrackPlay, tracks, getTracksError }) {
               <Style.TrackTitle>
                 <Style.TrackTitleImage>
                   <Style.TrackTitleSvg alt="music">
+                    <use xlinkHref="/icon/sprite.svg#icon-note"></use>
                     {track.logo}
                   </Style.TrackTitleSvg>
                 </Style.TrackTitleImage>
@@ -35,12 +36,12 @@ function Tracklist({ handleTrackPlay, tracks, getTracksError }) {
                 </div>
               </Style.TrackTitle>
               <Style.TrackAuthor>
-                <Style.TrackAuthorLink href={track.track_file}>
+                <Style.TrackAuthorLink onClick={() => handleTrackPlay(track)}>
                   {track.author}
                 </Style.TrackAuthorLink>
               </Style.TrackAuthor>
               <Style.TrackAlbum>
-                <Style.TrackAlbumLink href={track.track_file}>
+                <Style.TrackAlbumLink onClick={() => handleTrackPlay(track)}>
                   {track.album}
                 </Style.TrackAlbumLink>
               </Style.TrackAlbum>

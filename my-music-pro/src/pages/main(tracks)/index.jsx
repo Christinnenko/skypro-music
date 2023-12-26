@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "../../App.styles.js";
 import { GlobalStyle } from "../../App.styles.js";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.jsx";
@@ -16,21 +16,9 @@ export const Main = () => {
   const [tracks, setTracks] = useState(true); //показ полученного треклиста из API
   const [tracksError, setTracksError] = useState(true); //ошибка при получении треклиста из API
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
-  const audioRef = useRef(null);
 
-  const handleStart = () => {
-    console.log("handleStart");
-    audioRef.current.play();
-    setIsPlaying(true);
-  };
-
-  const handleStop = () => {
-    audioRef.current.pause();
-    setIsPlaying(false);
-  };
-
+  //показ плеера при нажатии на трек
   const handleTrackPlay = (track) => {
-    console.log("handleTrackPlay");
     setShowAudioPlayer(track);
   };
 
@@ -74,10 +62,7 @@ export const Main = () => {
             handleTrackPlay={handleTrackPlay}
             setShowBar={setShowAudioPlayer}
             setIsPlaying={setIsPlaying}
-            handleStart={handleStart}
-            handleStop={handleStop}
             isPlaying={isPlaying}
-            audioRef={audioRef}
           />
         ) : null}
         <footer></footer>

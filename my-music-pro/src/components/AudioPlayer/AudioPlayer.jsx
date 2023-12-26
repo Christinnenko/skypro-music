@@ -1,37 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as S from "./AudioPlayer.styles.js";
 import PropTypes from "prop-types";
 import { convertSecToMinAndSec } from "../../helpers.js";
 
-function AudioPlayer({
-  track,
-  handleStop,
-  handleStart,
-  isPlaying,
-  setIsPlaying,
-  audioRef,
-}) {
+function AudioPlayer({ track, isPlaying, setIsPlaying }) {
+  //функция для нереализованных кнопок
   const navigateTrack = () => {
     alert("Еще не реализовано");
   };
 
-  const [currentTime, setCurrentTime] = useState(0); //текущее время воспроизведения аудио
+  const audioRef = useRef(null);
 
-  const duration = audioRef.current?.duration || 0; //общая длительность трека
+  //нажатие на play
+  const handleStart = () => {
+    audioRef.current.play();
+    setIsPlaying(true);
+  };
+
+  //нажатие на stop
+  const handleStop = () => {
+    audioRef.current.pause();
+    setIsPlaying(false);
+  };
+
+  //кнопка плей/пауза
+  const togglePlay = isPlaying ? handleStop : handleStart;
+
+  //текущее время воспроизведения аудио
+  const [currentTime, setCurrentTime] = useState(0);
+
+  //общая длительность трека
+  const duration = audioRef.current?.duration || 0;
   const progressPercent = (currentTime / duration) * 100 || 0;
 
-  //громкость
+  //управление громкостью
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
-    // Проверьте, что newVolume находится в диапазоне [0, 1]
+
     const clampedVolume = Math.max(0, Math.min(1, newVolume));
 
     if (audioRef.current) {
       audioRef.current.volume = clampedVolume;
     }
   };
-
-  const togglePlay = isPlaying ? handleStop : handleStart; //кнопка плей/пауза
 
   //воспроизведение следущего трека
   useEffect(() => {
@@ -92,11 +103,12 @@ function AudioPlayer({
 
   //повторение трека по кругу
   const [isLooped, setIsLooped] = useState(false);
+  //включение
   const handleLoop = () => {
     audioRef.current.loop = true;
     setIsLooped(true);
   };
-
+  //выключение
   const handleUnloop = () => {
     audioRef.current.loop = false;
     setIsLooped(false);

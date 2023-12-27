@@ -1,20 +1,13 @@
 import * as S from "./NavMenu.styles.js";
 import cn from "classnames";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const NavMenu = () => {
+const NavMenu = ({ handleLogout }) => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => setVisible(!visible);
   const activeClassName = "underline";
-
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    // Удаляем информацию о пользователе из localStorage
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
 
   return (
     <S.MainNav>
@@ -45,7 +38,9 @@ const NavMenu = () => {
               </S.NavLink>
             </S.MenuItem>
             <S.MenuItem>
-              <S.Button onClick={handleLogout}>Выйти</S.Button>
+              <S.Button to="/login" onClick={handleLogout}>
+                Выйти
+              </S.Button>
             </S.MenuItem>
           </S.MenuList>
         </S.NavMenu>
@@ -55,3 +50,7 @@ const NavMenu = () => {
 };
 
 export default NavMenu;
+
+NavMenu.propTypes = {
+  handleLogout: PropTypes.func.isRequired,
+};

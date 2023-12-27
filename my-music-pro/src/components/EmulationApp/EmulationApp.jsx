@@ -8,14 +8,15 @@ import {
 } from "./EmulationLoading.jsx";
 import * as S from "../../App.styles.js";
 import { GlobalStyle } from "../../App.styles.js";
+import PropTypes from "prop-types";
 
-function EmulationApp() {
+function EmulationApp({ handleLogout }) {
   return (
     <S.Wrapper>
       <GlobalStyle />
       <S.Container>
         <S.Main>
-          <NavMenu />
+          <NavMenu handleLogout={handleLogout} />
           <div>
             <Search />
             <S.CenterblockH2>Треки</S.CenterblockH2>
@@ -32,3 +33,7 @@ function EmulationApp() {
 }
 
 export { EmulationApp };
+
+EmulationApp.propTypes = {
+  handleLogout: PropTypes.func.isRequired,
+};

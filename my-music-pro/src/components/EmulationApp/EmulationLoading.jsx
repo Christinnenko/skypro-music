@@ -68,7 +68,7 @@ function EmulationSidebar() {
   return (
     <Styled.MainSidebar>
       <Styled.SidebarPersonal>
-        <Styled.SidebarPersonalName>Sergey.Ivanov</Styled.SidebarPersonalName>
+        <Styled.SidebarPersonalName></Styled.SidebarPersonalName>
         <Styled.SidebarIcon>
           <svg alt="logout">
             <use xlinkHref="/icon/sprite.svg#logout"></use>

@@ -29,7 +29,7 @@ export default function AuthPage({ setIsLoginMode, isLoginMode }) {
     }
 
     try {
-      // setIsRegistering(true);
+      setIsRegistering(true);
       const response = await loginUser({ email, password });
 
       if (response.ok) {
@@ -77,9 +77,8 @@ export default function AuthPage({ setIsLoginMode, isLoginMode }) {
     }
 
     try {
-      // setIsRegistering(true);
+      setIsRegistering(true);
       const response = await registerUser({ email, password });
-
       if (response.ok) {
         const user = await response.json();
         localStorage.setItem("user", JSON.stringify(user));

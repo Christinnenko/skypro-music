@@ -12,6 +12,7 @@ export const AppRoutes = ({
   handleLogout,
   setIsLoginMode,
   isLoginMode,
+  setCurrentTrack,
 }) => {
   return (
     <Routes>
@@ -20,7 +21,13 @@ export const AppRoutes = ({
         <Route path="/favorites" element={<Favorites />} />
         <Route
           path="/"
-          element={<Main user={user} handleLogout={handleLogout} />}
+          element={
+            <Main
+              user={user}
+              handleLogout={handleLogout}
+              setCurrentTrack={setCurrentTrack}
+            />
+          }
         />
       </Route>
       <Route path="*" element={<NotFound />} />
@@ -46,6 +53,7 @@ AppRoutes.propTypes = {
   handleLogout: PropTypes.func.isRequired,
   isLoginMode: PropTypes.bool.isRequired,
   setIsLoginMode: PropTypes.func.isRequired,
+  setCurrentTrack: PropTypes.func.isRequired,
 };
 
 export default AppRoutes;

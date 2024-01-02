@@ -217,28 +217,3 @@ export const TrackTimeText = styled.span`
   text-align: right;
   color: #696969;
 `;
-
-export const BlinkingDot = styled.div`
-  width: 150px;
-  height: 15px;
-  background-color: purple;
-  border-radius: 50%;
-  animation: dot 1s infinite;
-  @keyframes dot {
-    0% {
-      opacity: 0;
-    }
-    25% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-    75% {
-      opacity: 0.5;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-`;

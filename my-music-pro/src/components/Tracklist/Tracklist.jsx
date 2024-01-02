@@ -1,16 +1,8 @@
 import * as Style from "./Tracklist.styles.js";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import { setCurrentTrack } from "../../store/actions/creators/todo.js";
 
 function Tracklist({ handleTrackPlay, tracks, getTracksError }) {
-  const dispatch = useDispatch();
-
-  const handleCurrentTrackId = (track) => {
-    dispatch(setCurrentTrack(track.id, track, tracks));
-  };
-
   return (
     <Style.CenterblockContent>
       <Style.ContentTitle>
@@ -32,19 +24,13 @@ function Tracklist({ handleTrackPlay, tracks, getTracksError }) {
             <Style.PlaylistTrack>
               <Style.TrackTitle>
                 <Style.TrackTitleImage>
-                  <Style.BlinkingDot alt="music"> </Style.BlinkingDot>
-
                   <Style.TrackTitleSvg alt="music">
                     <use xlinkHref="/icon/sprite.svg#icon-note"></use>
                     {track.logo}
                   </Style.TrackTitleSvg>
                 </Style.TrackTitleImage>
                 <div>
-                  <Style.TrackTitleLink
-                    onClick={() => {
-                      handleCurrentTrackId(track);
-                    }}
-                  >
+                  <Style.TrackTitleLink onClick={() => handleTrackPlay(track)}>
                     {track.name} <Style.TrackTitleSpan></Style.TrackTitleSpan>
                   </Style.TrackTitleLink>
                 </div>

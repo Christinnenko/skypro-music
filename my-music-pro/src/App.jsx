@@ -7,13 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-  const [isLoginMode, setIsLoginMode] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setIsLoginMode(true);
     navigate("/login");
   };
 
@@ -29,8 +27,6 @@ function App() {
               user={user}
               setUser={setUser}
               handleLogout={handleLogout}
-              setIsLoginMode={setIsLoginMode}
-              isLoginMode={isLoginMode}
             />
           </S.Container>
         </S.Wrapper>

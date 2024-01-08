@@ -3,11 +3,13 @@ import {
   NEXT_TRACK,
   PREVIOUS_TRACK,
   MIX_TRACK,
+  PLAY,
+  PAUSE,
 } from "../actions/types/todo";
 
 // 1.
 const initialState = {
-  currentTrack: {},
+  currentTrack: null,
   allIds: [],
   isPlaying: null,
   tracks: [],
@@ -21,24 +23,42 @@ export default function playerReducer(state = initialState, action) {
     case SET_CURRENT_TRACK: {
       // 4.
 
-      const { id, content, isPlaying, tracks } = action.payload;
+      const { track, playlist } = action.payload;
 
       // 5.
       return {
-        id: id,
         ...state,
-        currentTrack: { content },
-        isPlaying: isPlaying,
-        tracks: tracks,
+        currentTrack: track,
+        tracks: playlist,
+        isPlaying: true,
+      };
+    }
+
+    case PLAY: {
+      return {
+        ...state,
+        isPlaying: true,
+      };
+    }
+
+    case PAUSE: {
+      return {
+        ...state,
+        isPlaying: false,
       };
     }
 
     case NEXT_TRACK: {
       const playlist = state.isMix ? state.mixTracks : state.tracks;
       const currentTrackIndex = playlist.findIndex(
-        (track) => track.id === state.currentTrack.content.id
+        (track) => track.id === state.currentTrack.id
       );
       let content = playlist[currentTrackIndex + 1];
+
+      if (!content && state.isMix) {
+        // Если дошли до конца перемешанного плейлиста, возвращаемся к началу
+        content = state.mixTracks[0];
+      }
 
       if (!content) {
         return state;
@@ -46,14 +66,14 @@ export default function playerReducer(state = initialState, action) {
 
       return {
         ...state,
-        currentTrack: { content },
+        currentTrack: content,
       };
     }
 
     case PREVIOUS_TRACK: {
       const playlist = state.isSuffled ? state.mixTracks : state.tracks;
       const currentTrackIndex = playlist.findIndex(
-        (track) => track.id === state.currentTrack.content.id
+        (track) => track.id === state.currentTrack.id
       );
       let content = playlist[currentTrackIndex - 1];
 
@@ -63,7 +83,7 @@ export default function playerReducer(state = initialState, action) {
 
       return {
         ...state,
-        currentTrack: { content },
+        currentTrack: content,
       };
     }
 

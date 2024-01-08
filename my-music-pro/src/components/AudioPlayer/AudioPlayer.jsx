@@ -3,16 +3,21 @@ import * as S from "./AudioPlayer.styles.js";
 import PropTypes from "prop-types";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import {
-  setCurrentTrack,
   nextTrack,
   previousTrack,
   mixTracks,
+  play,
+  pause,
 } from "../../store/actions/creators/todo.js";
 import { useDispatch } from "react-redux";
 
-function AudioPlayer({ track, tracks, currentTrack }) {
+function AudioPlayer({ track }) {
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
+  //повторение трека по кругу
+  const [isLooped, setIsLooped] = useState(false);
+  //текущее время воспроизведения аудио
+  const [currentTime, setCurrentTime] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -32,16 +37,14 @@ function AudioPlayer({ track, tracks, currentTrack }) {
   const handleStart = () => {
     audioRef.current.play();
     setIsPlaying(true);
-    const isPlaying = true;
-    dispatch(setCurrentTrack(currentTrack.id, currentTrack, isPlaying, tracks));
+    dispatch(play());
   };
 
   //нажатие на stop
   const handleStop = () => {
     audioRef.current.pause();
     setIsPlaying(false);
-    const isPlaying = false;
-    dispatch(setCurrentTrack(currentTrack.id, currentTrack, isPlaying, tracks));
+    dispatch(pause());
   };
 
   //кнопка плей/пауза
@@ -51,12 +54,16 @@ function AudioPlayer({ track, tracks, currentTrack }) {
     dispatch(nextTrack());
   };
 
+  console.log(currentTime);
+
   const handlePreviousTrack = () => {
+    if (audioRef.current && currentTime > 5) {
+      audioRef.current.currentTime = 0;
+
+      return;
+    }
     dispatch(previousTrack());
   };
-
-  //текущее время воспроизведения аудио
-  const [currentTime, setCurrentTime] = useState(0);
 
   //общая длительность трека
   const duration = audioRef.current?.duration || 0;
@@ -92,40 +99,30 @@ function AudioPlayer({ track, tracks, currentTrack }) {
       }
     };
 
+    const handleTrackEnd = () => {
+      !isLooped && dispatch(nextTrack());
+      isLooped && setCurrentTime(0);
+      isLooped && handleStart(); // Перезапуск воспроизведения для зацикливания
+    };
+
     // Удаление предыдущего слушателя перед добавлением нового
     if (audioRef.current) {
       audioRef.current.removeEventListener("timeupdate", updateCurrentTime);
+      audioRef.current.removeEventListener("ended", handleTrackEnd);
       audioRef.current.addEventListener("timeupdate", updateCurrentTime);
+      audioRef.current.addEventListener("ended", handleTrackEnd);
     }
 
     updateCurrentTime(); // Вызов функции
-
-    if (audioRef.current && audioRef.current.ended) {
-      !isLooped && dispatch(nextTrack());
-      isLooped && setCurrentTime(0);
-      isLooped && audioRef.current.play();
-    }
 
     // Удаление слушателя при размонтировании компонента
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener("timeupdate", updateCurrentTime);
+        audioRef.current.removeEventListener("ended", handleTrackEnd);
       }
     };
   }, [audioRef, isLooped]);
-
-  //сброс прогресса проигрывания трека после его окончания
-  useEffect(() => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-
-      // Проверяем, завершено ли проигрывание
-      if (audioRef.current.currentTime === audioRef.current.duration) {
-        setCurrentTime(0);
-        setIsPlaying(false);
-      }
-    }
-  }, [audioRef.current, audioRef.current?.currentTime]);
 
   //перемотка трека при нажатии на ProgressBarClick
   const handleProgressBarClick = (e) => {
@@ -139,8 +136,6 @@ function AudioPlayer({ track, tracks, currentTrack }) {
     }
   };
 
-  //повторение трека по кругу
-  const [isLooped, setIsLooped] = useState(false);
   //включение
   const handleLoop = () => {
     audioRef.current.loop = true;
@@ -204,8 +199,12 @@ function AudioPlayer({ track, tracks, currentTrack }) {
                     <use xlinkHref="/icon/sprite.svg#icon-repeat"></use>
                   </S.PlayerBtnRepeatSvg>
                 </S.PlayerBtnRepeat>
-                <S.PlayerBtnShuffle onClick={() => handleMix()}>
-                  <S.PlayerBtnShuffleSvg alt="shuffle">
+                <S.PlayerBtnShuffle>
+                  <S.PlayerBtnShuffleSvg
+                    alt="shuffle"
+                    onClick={() => handleMix()}
+                    $isMix={isMix}
+                  >
                     <use xlinkHref="/icon/sprite.svg#icon-shuffle"></use>
                   </S.PlayerBtnShuffleSvg>
                 </S.PlayerBtnShuffle>
@@ -275,15 +274,6 @@ AudioPlayer.propTypes = {
     name: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     track_file: PropTypes.string.isRequired,
-  }).isRequired,
-  handleStop: PropTypes.func.isRequired,
-  handleStart: PropTypes.func.isRequired,
-  isPlaying: PropTypes.bool.isRequired,
-  setIsPlaying: PropTypes.func.isRequired,
-  audioRef: PropTypes.object.isRequired,
-  tracks: PropTypes.array.isRequired,
-  currentTrack: PropTypes.shape({
-    id: PropTypes.string.isRequired,
   }).isRequired,
 };
 

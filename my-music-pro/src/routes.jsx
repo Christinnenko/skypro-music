@@ -5,15 +5,10 @@ import { Category } from "./pages/category/CategoryPage.jsx";
 import { Favorites } from "./pages/favorites";
 import { ProtectedRoute } from "./components/protected-route";
 import PropTypes from "prop-types";
-import AuthPage from "./pages/auth/AuthPage.jsx";
+import Register from "./pages/register/register.jsx";
+import Login from "./pages/login/login.jsx";
 
-export const AppRoutes = ({
-  user,
-  handleLogout,
-  setIsLoginMode,
-  isLoginMode,
-  setCurrentTrack,
-}) => {
+export const AppRoutes = ({ user, handleLogout, setCurrentTrack }) => {
   return (
     <Routes>
       <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
@@ -31,16 +26,8 @@ export const AppRoutes = ({
         />
       </Route>
       <Route path="*" element={<NotFound />} />
-      <Route
-        path="/login"
-        element={
-          <AuthPage
-            user={user}
-            setIsLoginMode={setIsLoginMode}
-            isLoginMode={isLoginMode}
-          />
-        }
-      />
+      <Route path="/login" element={<Login user={user} />} />
+      <Route path="/register" element={<Register user={user} />} />
     </Routes>
   );
 };
@@ -51,8 +38,6 @@ AppRoutes.propTypes = {
   }),
   setUser: PropTypes.func.isRequired,
   handleLogout: PropTypes.func.isRequired,
-  isLoginMode: PropTypes.bool.isRequired,
-  setIsLoginMode: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
 };
 

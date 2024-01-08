@@ -3,16 +3,24 @@ import {
   NEXT_TRACK,
   PREVIOUS_TRACK,
   MIX_TRACK,
+  PLAY,
+  PAUSE,
 } from "../types/todo";
 
-export const setCurrentTrack = (id, content, isPlaying, tracks) => ({
+export const setCurrentTrack = ({ playlist, track }) => ({
   type: SET_CURRENT_TRACK,
   payload: {
-    id,
-    content,
-    isPlaying,
-    tracks,
+    playlist,
+    track,
   },
+});
+
+export const play = () => ({
+  type: PLAY,
+});
+
+export const pause = () => ({
+  type: PAUSE,
 });
 
 export const nextTrack = () => ({

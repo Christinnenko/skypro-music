@@ -8,13 +8,11 @@ import { setCurrentTrack } from "./store/actions/creators/todo.js";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-  const [isLoginMode, setIsLoginMode] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setIsLoginMode(true);
     navigate("/login");
   };
 
@@ -30,8 +28,6 @@ function App() {
               user={user}
               setUser={setUser}
               handleLogout={handleLogout}
-              setIsLoginMode={setIsLoginMode}
-              isLoginMode={isLoginMode}
               setCurrentTrack={setCurrentTrack}
             />
           </S.Container>

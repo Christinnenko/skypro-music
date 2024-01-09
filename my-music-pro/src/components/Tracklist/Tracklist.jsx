@@ -15,8 +15,6 @@ function Tracklist({ tracks, getTracksError }) {
   const { currentTrack } = useSelector((store) => store.player);
   const { isPlaying } = useSelector((store) => store.player);
 
-  console.log("isPlaying:", isPlaying);
-
   return (
     <Style.CenterblockContent>
       <Style.ContentTitle>

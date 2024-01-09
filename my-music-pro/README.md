@@ -1,3 +1,9 @@
+## Задание Управление состоянием. Redux
+
+### Планируемое время на выполнение задания: 10 часов
+
+### Фактическое время выполнения: 17 часов
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

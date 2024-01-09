@@ -54,8 +54,6 @@ function AudioPlayer({ track }) {
     dispatch(nextTrack());
   };
 
-  console.log(currentTime);
-
   const handlePreviousTrack = () => {
     if (audioRef.current && currentTime > 5) {
       audioRef.current.currentTime = 0;

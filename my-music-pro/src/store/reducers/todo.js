@@ -71,7 +71,7 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case PREVIOUS_TRACK: {
-      const playlist = state.isSuffled ? state.mixTracks : state.tracks;
+      const playlist = state.isMix ? state.mixTracks : state.tracks;
       const currentTrackIndex = playlist.findIndex(
         (track) => track.id === state.currentTrack.id
       );

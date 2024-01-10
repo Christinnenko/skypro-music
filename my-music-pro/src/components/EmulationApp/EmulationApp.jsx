@@ -1,5 +1,5 @@
-import NavMenu from "../NavMenu/NavMenu.jsx";
-import Search from "../Search/Search.jsx";
+// import NavMenu from "../NavMenu/NavMenu.jsx";
+// import Search from "../Search/Search.jsx";
 import Filters from "../Filters/Filters.jsx";
 import {
   EmulationAudioPlayer,
@@ -10,15 +10,15 @@ import * as S from "../../App.styles.js";
 import { GlobalStyle } from "../../App.styles.js";
 import PropTypes from "prop-types";
 
-function EmulationApp({ handleLogout }) {
+function EmulationApp() {
   return (
     <S.Wrapper>
       <GlobalStyle />
       <S.Container>
         <S.Main>
-          <NavMenu handleLogout={handleLogout} />
+          {/* <NavMenu handleLogout={handleLogout} /> */}
           <div>
-            <Search />
+            {/* <Search /> */}
             <S.CenterblockH2>Треки</S.CenterblockH2>
             <Filters />
             <EmulationTracklist />

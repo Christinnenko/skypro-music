@@ -3,9 +3,9 @@ import * as S from "../../App.styles.js";
 import { GlobalStyle } from "../../App.styles.js";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.jsx";
 import Filters from "../../components/Filters/Filters.jsx";
-import NavMenu from "../../components/NavMenu/NavMenu.jsx";
-import Search from "../../components/Search/Search.jsx";
-import Sidebar from "../../components/Sidebar/Sidebar.jsx";
+// import NavMenu from "../../components/NavMenu/NavMenu.jsx";
+// import Search from "../../components/Search/Search.jsx";
+// import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
 import { getAllTracks } from "../../api.js";
@@ -40,14 +40,14 @@ export const Main = ({ handleLogout }) => {
       <GlobalStyle />
       <S.Container>
         <S.Main>
-          <NavMenu handleLogout={handleLogout} />
+          {/* <NavMenu handleLogout={handleLogout} /> */}
           <div>
-            <Search />
+            {/* <Search /> */}
             <S.CenterblockH2>Треки</S.CenterblockH2>
             <Filters />
             <Tracklist tracks={tracks} tracksError={tracksError} />
           </div>
-          <Sidebar tracks={tracks} handleLogout={handleLogout} />
+          {/* <Sidebar tracks={tracks} handleLogout={handleLogout} /> */}
         </S.Main>
         {currentTrack ? <AudioPlayer track={currentTrack} /> : null}
         <footer></footer>

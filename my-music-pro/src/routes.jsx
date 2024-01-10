@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import Register from "./pages/register/register.jsx";
 import Login from "./pages/login/login.jsx";
 
-export const AppRoutes = ({ user, handleLogout }) => {
+export const AppRoutes = ({ user, handleLogout, setCurrentTrack }) => {
   return (
     <Routes>
       <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
@@ -16,7 +16,13 @@ export const AppRoutes = ({ user, handleLogout }) => {
         <Route path="/favorites" element={<Favorites />} />
         <Route
           path="/"
-          element={<Main user={user} handleLogout={handleLogout} />}
+          element={
+            <Main
+              user={user}
+              handleLogout={handleLogout}
+              setCurrentTrack={setCurrentTrack}
+            />
+          }
         />
       </Route>
       <Route path="*" element={<NotFound />} />
@@ -32,6 +38,7 @@ AppRoutes.propTypes = {
   }),
   setUser: PropTypes.func.isRequired,
   handleLogout: PropTypes.func.isRequired,
+  setCurrentTrack: PropTypes.func.isRequired,
 };
 
 export default AppRoutes;

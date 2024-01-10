@@ -49,10 +49,10 @@ export default function Register() {
       } else {
         if (response.status === 400) {
           const errorData = await response.json();
-          let errorMessage = "Неверный ввод";
+          let errorMessage = "";
 
           for (const field in errorData) {
-            errorMessage += `\n${field}: ${errorData[field].join(", ")}`;
+            errorMessage += `${errorData[field].join(", ")}`;
           }
           setError(errorMessage);
         } else if (response.status === 500) {

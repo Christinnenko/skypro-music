@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 
 export const CenterblockContent = styled.div`
   display: -webkit-box;
@@ -216,4 +216,28 @@ export const TrackTimeText = styled.span`
   line-height: 24px;
   text-align: right;
   color: #696969;
+`;
+
+const blinkAnimation = keyframes`
+0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+`;
+
+export const BlinkingDot = styled.div`
+  width: 300px;
+  height: 20px;
+  background-color: #b672ff;
+  border-radius: 50%;
+  animation: ${({ $isPlaying }) =>
+    $isPlaying
+      ? css`
+          ${blinkAnimation} 1s infinite
+        `
+      : "none"};
 `;

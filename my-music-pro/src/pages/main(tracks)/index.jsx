@@ -10,18 +10,14 @@ import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
 import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
 export const Main = ({ handleLogout }) => {
-  const [showAudioPlayer, setShowAudioPlayer] = useState(null); //показ плеера
   const [loading, setLoading] = useState(true); //показ эмуляции загрузки(скелетон)
   const [tracks, setTracks] = useState(true); //показ полученного треклиста из API
   const [tracksError, setTracksError] = useState(true); //ошибка при получении треклиста из API
-  const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
 
-  //показ плеера при нажатии на трек
-  const handleTrackPlay = (track) => {
-    setShowAudioPlayer(track);
-  };
+  const currentTrack = useSelector((state) => state.player.currentTrack);
 
   useEffect(() => {
     getAllTracks()
@@ -49,23 +45,11 @@ export const Main = ({ handleLogout }) => {
             <Search />
             <S.CenterblockH2>Треки</S.CenterblockH2>
             <Filters />
-            <Tracklist
-              handleTrackPlay={handleTrackPlay}
-              tracks={tracks}
-              tracksError={tracksError}
-            />
+            <Tracklist tracks={tracks} tracksError={tracksError} />
           </div>
           <Sidebar tracks={tracks} handleLogout={handleLogout} />
         </S.Main>
-        {showAudioPlayer ? (
-          <AudioPlayer
-            track={showAudioPlayer}
-            handleTrackPlay={handleTrackPlay}
-            setShowBar={setShowAudioPlayer}
-            setIsPlaying={setIsPlaying}
-            isPlaying={isPlaying}
-          />
-        ) : null}
+        {currentTrack ? <AudioPlayer track={currentTrack} /> : null}
         <footer></footer>
       </S.Container>
     </S.Wrapper>
@@ -77,4 +61,5 @@ Main.propTypes = {
     username: PropTypes.string,
   }),
   handleLogout: PropTypes.func.isRequired,
+  setCurrentTrack: PropTypes.func.isRequired,
 };

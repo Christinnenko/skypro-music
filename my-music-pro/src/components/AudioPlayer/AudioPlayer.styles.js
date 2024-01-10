@@ -211,10 +211,14 @@ export const PlayerBtnShuffleSvg = styled.svg`
   width: 19px;
   height: 12px;
   fill: transparent;
-  stroke: #696969;
+  stroke: ${(props) => (props.$isMix ? "#fff" : "#696969")};
 
   &:hover {
-    stroke: #acacac;
+    stroke: ${(props) => (props.$isMix ? "#fff" : "#acacac")};
+  }
+
+  &:active {
+    stroke: #fff;
   }
 `;
 

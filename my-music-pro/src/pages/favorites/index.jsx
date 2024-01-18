@@ -4,17 +4,17 @@ import * as Style from "../Pages.styles.js";
 import PropTypes from "prop-types";
 import * as S from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
-import Tracklist from "../../components/Tracklist/Tracklist.jsx";
+// import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 
-export const Favorites = ({ handleLogout, tracks, tracksError }) => {
+export const Favorites = ({ handleLogout }) => {
   return (
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <Style.ContainerWrap>
           <Search />
-          <Style.Text>Мои треки</Style.Text>
-          <Tracklist tracks={tracks} tracksError={tracksError} />
+          <S.CenterblockH2>Мои треки</S.CenterblockH2>
+          {/* <Tracklist tracks={tracks} tracksError={tracksError} /> */}
         </Style.ContainerWrap>
         <LoginSidebar handleLogout={handleLogout} />
       </S.Main>

@@ -9,15 +9,7 @@ import Register from "./pages/register/register.jsx";
 import Login from "./pages/login/login.jsx";
 import { PageLayout } from "./pages/Layout/Layout.jsx";
 
-export const AppRoutes = ({
-  user,
-  handleLogout,
-  setCurrentTrack,
-  tracks,
-  setTracks,
-  tracksError,
-  setTracksError,
-}) => {
+export const AppRoutes = ({ user, handleLogout, setCurrentTrack }) => {
   return (
     <Routes>
       <Route path="/" element={<PageLayout handleLogout={handleLogout} />}>
@@ -28,13 +20,7 @@ export const AppRoutes = ({
           />
           <Route
             path="/favorites"
-            element={
-              <Favorites
-                handleLogout={handleLogout}
-                tracks={tracks}
-                tracksError={tracksError}
-              />
-            }
+            element={<Favorites handleLogout={handleLogout} />}
           />
           <Route
             index
@@ -43,10 +29,6 @@ export const AppRoutes = ({
                 user={user}
                 handleLogout={handleLogout}
                 setCurrentTrack={setCurrentTrack}
-                tracks={true}
-                tracksError={true}
-                setTracks={setTracks}
-                setTracksError={setTracksError}
               />
             }
           />
@@ -65,10 +47,6 @@ AppRoutes.propTypes = {
   }),
   handleLogout: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
-  tracks: PropTypes.array.isRequired,
-  setTracks: PropTypes.func.isRequired,
-  tracksError: PropTypes.array.isRequired,
-  setTracksError: PropTypes.func.isRequired,
 };
 
 export default AppRoutes;

@@ -12,14 +12,11 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import * as St from "../Pages.styles.js";
 
-export const Main = ({
-  handleLogout,
-  tracks,
-  tracksError,
-  setTracks,
-  setTracksError,
-}) => {
+export const Main = ({ handleLogout }) => {
   const [loading, setLoading] = useState(true); //показ эмуляции загрузки(скелетон)
+  const [tracks, setTracks] = useState(true); //показ полученного треклиста из API
+  const [tracksError, setTracksError] = useState(true); //ошибка при получении треклиста из API
+
   const currentTrack = useSelector((state) => state.player.currentTrack);
 
   useEffect(() => {

@@ -24,6 +24,4 @@ export const Favorites = ({ handleLogout }) => {
 
 Favorites.propTypes = {
   handleLogout: PropTypes.func.isRequired,
-  tracks: PropTypes.array.isRequired,
-  tracksError: PropTypes.any.isRequired,
 };

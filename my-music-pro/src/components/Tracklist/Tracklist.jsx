@@ -71,14 +71,14 @@ function Tracklist({ tracks, getTracksError }) {
                   {track.album}
                 </Style.TrackAlbumLink>
               </Style.TrackAlbum>
-              <div>
+              <Style.TrackLikeTime>
                 <Style.TrackTimeSvg alt="time">
                   <use xlinkHref="/icon/sprite.svg#icon-like"></use>
                 </Style.TrackTimeSvg>
                 <Style.TrackTimeText>
                   {convertSecToMinAndSec(track.duration_in_seconds)}
                 </Style.TrackTimeText>
-              </div>
+              </Style.TrackLikeTime>
             </Style.PlaylistTrack>
           </Style.PlaylistItem>
         ))}

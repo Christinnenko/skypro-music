@@ -242,3 +242,8 @@ export const BlinkingDot = styled.div`
         `
       : "none"};
 `;
+
+export const TrackLikeTime = styled.div`
+  display: flex;
+  align-items: center;
+`;

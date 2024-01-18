@@ -60,9 +60,4 @@ Main.propTypes = {
     username: PropTypes.string,
   }),
   handleLogout: PropTypes.func.isRequired,
-  setCurrentTrack: PropTypes.func.isRequired,
-  tracks: PropTypes.array.isRequired,
-  tracksError: PropTypes.array.isRequired,
-  setTracks: PropTypes.func.isRequired,
-  setTracksError: PropTypes.func.isRequired,
 };

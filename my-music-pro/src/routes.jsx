@@ -14,24 +14,28 @@ export const AppRoutes = ({
   handleLogout,
   setCurrentTrack,
   tracks,
-  // tracksError,
+  setTracks,
+  tracksError,
+  setTracksError,
 }) => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <PageLayout
-            loading={false}
-            handleLogout={handleLogout}
-            tracks={tracks}
-            // tracksError={tracksError}
-          />
-        }
-      >
+      <Route path="/" element={<PageLayout handleLogout={handleLogout} />}>
         <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
-          <Route path="/category/:id" element={<Category />} />
-          <Route path="/favorites" element={<Favorites />} />
+          <Route
+            path="/category/:id"
+            element={<Category handleLogout={handleLogout} />}
+          />
+          <Route
+            path="/favorites"
+            element={
+              <Favorites
+                handleLogout={handleLogout}
+                tracks={tracks}
+                tracksError={tracksError}
+              />
+            }
+          />
           <Route
             index
             element={
@@ -39,6 +43,10 @@ export const AppRoutes = ({
                 user={user}
                 handleLogout={handleLogout}
                 setCurrentTrack={setCurrentTrack}
+                tracks={true}
+                tracksError={true}
+                setTracks={setTracks}
+                setTracksError={setTracksError}
               />
             }
           />
@@ -57,8 +65,10 @@ AppRoutes.propTypes = {
   }),
   handleLogout: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
-  tracks: PropTypes.any.isRequired,
-  // tracksError: PropTypes.any.isRequired,
+  tracks: PropTypes.array.isRequired,
+  setTracks: PropTypes.func.isRequired,
+  tracksError: PropTypes.array.isRequired,
+  setTracksError: PropTypes.func.isRequired,
 };
 
 export default AppRoutes;

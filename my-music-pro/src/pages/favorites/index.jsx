@@ -5,8 +5,25 @@ import PropTypes from "prop-types";
 import * as S from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 // import Tracklist from "../../components/Tracklist/Tracklist.jsx";
+// import { useGetFavTracksQuery } from "../../services/todo";
 
 export const Favorites = ({ handleLogout }) => {
+  // const { data, error, isLoading } = useGetFavTracksQuery();
+
+  // const isEmptyList = !isLoading && !data?.length;
+
+  // if (isLoading) {
+  //   return <p>Loading...</p>;
+  // }
+
+  // if (error) {
+  //   return <p>{error.message}</p>;
+  // }
+
+  // if (isEmptyList) {
+  //   return <p>No tracks, yay!</p>;
+  // }
+
   return (
     <>
       <S.Main>

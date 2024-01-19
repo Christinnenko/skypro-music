@@ -6,3 +6,14 @@ export const store = configureStore({
     player: playerReducer,
   },
 });
+
+// import { getFavTracksApi } from "../services/todo";
+
+// export const store = configureStore({
+//   reducer: {
+//     [getFavTracksApi.reducerPath]: getFavTracksApi.reducer,
+//   },
+
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware().concat(getFavTracksApi.middleware),
+// });

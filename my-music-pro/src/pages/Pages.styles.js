@@ -16,6 +16,7 @@ export const Container = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  overflow-y: scroll;
 `;
 
 export const Text = styled.div`

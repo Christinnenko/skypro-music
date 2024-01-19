@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import * as S from "../register/register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
-import { loginUser } from "../../api";
+import { getTokenUser, loginUser } from "../../api";
 import { UserContext } from "../../Authorization";
 
 export default function Login() {
@@ -30,10 +30,19 @@ export default function Login() {
     try {
       setIsRegistering(true);
       const response = await loginUser({ email, password });
+      const tokenResponse = await getTokenUser({ email, password });
 
       if (response.ok) {
         const user = await response.json();
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem(
+          "access",
+          JSON.stringify(tokenResponse.access.toString())
+        );
+        localStorage.setItem(
+          "refresh",
+          JSON.stringify(tokenResponse.refresh.toString())
+        );
         changingUserData(user);
         navigate("/");
       } else {

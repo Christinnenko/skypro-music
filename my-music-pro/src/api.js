@@ -42,3 +42,17 @@ export async function loginUser({ email, password }) {
     },
   });
 }
+
+//получение токена
+export async function getTokenUser({ email, password }) {
+  return fetch("https://skypro-music-api.skyeng.tech/user/token/", {
+    method: "POST",
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).then((response) => response.json());
+}

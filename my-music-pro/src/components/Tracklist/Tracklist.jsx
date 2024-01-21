@@ -1,19 +1,42 @@
 import * as Style from "./Tracklist.styles.js";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentTrack } from "../../store/actions/creators/todo.js";
-import { useSelector } from "react-redux";
+
+import {
+  useAddToFavoritesMutation,
+  useDeleteFromFavoritesMutation,
+} from "../../services/todo.js";
 
 function Tracklist({ tracks, getTracksError }) {
+  console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
+  const { currentTrack, isPlaying, favTrackIds } = useSelector(
+    (store) => store.player
+  );
+
+  const [addToFavorites] = useAddToFavoritesMutation();
+  const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
 
   const handleCurrentTrackId = (track) => {
+    console.log("Handling current track ID:", track.id);
     dispatch(setCurrentTrack({ playlist: tracks, track: track }));
   };
 
-  const { currentTrack } = useSelector((store) => store.player);
-  const { isPlaying } = useSelector((store) => store.player);
+  const isTrackInFavorites = (trackId) => favTrackIds.includes(trackId);
+
+  const token = JSON.parse(localStorage.access);
+
+  const handleToggleFavoriteClick = (track) => {
+    if (isTrackInFavorites(track.id)) {
+      deleteFromFavorites({ id: track.id, token });
+    } else {
+      addToFavorites({ id: track.id, token });
+    }
+
+    // dispatch(updateIsFavorite({ trackId: track.id }));
+  };
 
   return (
     <Style.CenterblockContent>
@@ -72,9 +95,14 @@ function Tracklist({ tracks, getTracksError }) {
                 </Style.TrackAlbumLink>
               </Style.TrackAlbum>
               <Style.TrackLikeTime>
-                <Style.TrackTimeSvg alt="time">
+                <Style.TrackLikeSvg
+                  alt="like"
+                  onClick={() => handleToggleFavoriteClick(track)}
+                  $isFavorite={isTrackInFavorites(track.id)}
+                >
                   <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                </Style.TrackTimeSvg>
+                </Style.TrackLikeSvg>
+
                 <Style.TrackTimeText>
                   {convertSecToMinAndSec(track.duration_in_seconds)}
                 </Style.TrackTimeText>

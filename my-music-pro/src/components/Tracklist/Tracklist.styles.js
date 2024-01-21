@@ -202,12 +202,22 @@ export const TrackAlbumLink = styled.a`
   color: #696969;
 `;
 
-export const TrackTimeSvg = styled.svg`
+export const TrackLikeSvg = styled.svg`
   width: 14px;
   height: 12px;
   margin-right: 17px;
-  fill: transparent;
-  stroke: #696969;
+  fill: ${(props) => (props.$isFavorite ? "#B672FF" : "transparent")};
+  stroke: ${(props) => (props.$isFavorite ? "#B672FF" : "#696969")};
+  cursor: pointer;
+
+  &:hover {
+    stroke: #acacac;
+  }
+
+  &:active {
+    fill: #696969;
+    stroke: #fff;
+  }
 `;
 
 export const TrackTimeText = styled.span`

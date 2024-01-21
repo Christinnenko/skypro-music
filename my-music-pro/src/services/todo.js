@@ -6,7 +6,7 @@ export const getFavTracksApi = createApi({
     baseUrl: "https://skypro-music-api.skyeng.tech/",
   }),
   endpoints: (builder) => ({
-    getTracks: builder.query({
+    getFavTracks: builder.query({
       query: ({ token }) => ({
         url: "/catalog/track/favorite/all/",
         headers: {
@@ -14,7 +14,31 @@ export const getFavTracksApi = createApi({
         },
       }),
     }),
+    addToFavorites: builder.mutation({
+      query: ({ id, token }) => ({
+        url: `/catalog/track/${id}/favorite/`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: [{ type: "Favorites", id: "LIST" }],
+    }),
+    deleteFromFavorites: builder.mutation({
+      query: ({ id, token }) => ({
+        url: `/catalog/track/${id}/favorite/`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: [{ type: "Favorites", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetFavTracksQuery } = getFavTracksApi;
+export const {
+  useGetFavTracksQuery,
+  useAddToFavoritesMutation,
+  useDeleteFromFavoritesMutation,
+} = getFavTracksApi;

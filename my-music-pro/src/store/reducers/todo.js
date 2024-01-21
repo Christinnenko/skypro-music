@@ -5,6 +5,8 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
+  ADD_TO_FAVORITES,
+  DELETE_FROM_FAVORITES,
 } from "../actions/types/todo";
 
 // 1.
@@ -14,6 +16,9 @@ const initialState = {
   isPlaying: null,
   tracks: [],
   isMix: false,
+  // favTrackId: [], // массив идентификаторов избранных треков
+  favTrackIds: [],
+  isFavorite: false,
 };
 
 // 2.
@@ -92,6 +97,24 @@ export default function playerReducer(state = initialState, action) {
         ...state,
         isMix: !state.isMix,
         mixTracks: [...state.tracks].sort(() => 0.5 - Math.random()),
+      };
+    }
+
+    case ADD_TO_FAVORITES: {
+      return {
+        ...state,
+        favTrackIds: [...state.favTrackIds, action.payload.favTrackId],
+        // isFavorite: true,
+      };
+    }
+
+    case DELETE_FROM_FAVORITES: {
+      return {
+        ...state,
+        favTrackIds: state.favTrackIds.filter(
+          (id) => id !== action.payload.favTrackId
+        ),
+        // isFavorite: false,
       };
     }
 

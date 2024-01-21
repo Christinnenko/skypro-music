@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import * as S from "../register/register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
-import { getTokenUser, loginUser } from "../../api";
+import { getTokenUser, loginUser, refreshTokenUser } from "../../api";
 import { UserContext } from "../../Authorization";
 
 export default function Login() {
+  const REFRESH_TIMEOUT = 197000;
+
   const navigate = useNavigate();
 
   const { changingUserData } = useContext(UserContext);
@@ -27,6 +29,12 @@ export default function Login() {
       return;
     }
 
+    const setLocalStorageData = (user, access, refresh) => {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("access", JSON.stringify(access));
+      localStorage.setItem("refresh", JSON.stringify(refresh));
+    };
+
     try {
       setIsRegistering(true);
       const response = await loginUser({ email, password });
@@ -34,31 +42,28 @@ export default function Login() {
 
       if (response.ok) {
         const user = await response.json();
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem(
-          "access",
-          JSON.stringify(tokenResponse.access.toString())
-        );
-        localStorage.setItem(
-          "refresh",
-          JSON.stringify(tokenResponse.refresh.toString())
-        );
+        setLocalStorageData(user, tokenResponse.access, tokenResponse.refresh);
+        let refreshToken = JSON.parse(localStorage.refresh);
+        setInterval(async () => {
+          try {
+            const refreshedTokenResponse = await refreshTokenUser(refreshToken);
+            console.log("Обновленный токен:", refreshedTokenResponse);
+            localStorage.setItem(
+              "access",
+              JSON.stringify(refreshedTokenResponse.access)
+            );
+          } catch (refreshError) {
+            console.error(
+              "Ошибка при обновлении токена:",
+              refreshError.message
+            );
+          }
+        }, REFRESH_TIMEOUT);
         changingUserData(user);
         navigate("/");
       } else {
-        if (response.status === 400) {
-          const errorData = await response.json();
-          let errorMessage = "";
-
-          for (const field in errorData) {
-            errorMessage += `${errorData[field].join(", ")}`;
-          }
-          setError(errorMessage);
-        } else if (response.status === 401) {
-          setError("Пользователь с таким email или паролем не найден");
-        } else if (response.status === 500) {
-          setError("Внутренняя ошибка сервера");
-        }
+        const errorMessage = await response.text();
+        setError(errorMessage);
       }
     } catch (error) {
       console.error("Ошибка при входе:", error.message);

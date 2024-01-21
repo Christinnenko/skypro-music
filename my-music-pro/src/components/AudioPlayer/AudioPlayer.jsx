@@ -146,6 +146,8 @@ function AudioPlayer({ track }) {
   };
   const toggleLoop = isLooped ? handleUnloop : handleLoop;
 
+  // const { isFavorite } = useSelector((store) => store.player);
+
   return (
     <>
       <S.StandartAudioPlayer controls ref={audioRef}>
@@ -227,18 +229,19 @@ function AudioPlayer({ track }) {
                   </S.TrackPlayAlbum>
                 </S.TrackPlayContain>
 
-                <S.TrackPlayLikeDis>
+                {/* <S.TrackPlayLikeDis>
                   <S.TrackPlayLike>
-                    <S.TrackPlayLikeSvg alt="like">
-                      <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                    </S.TrackPlayLikeSvg>
+                    {isFavorite ? (
+                      <S.TrackPlayDislikeSvg alt="dislike">
+                        <use xlinkHref="/icon/sprite.svg#icon-dislike"></use>
+                      </S.TrackPlayDislikeSvg>
+                    ) : (
+                      <S.TrackPlayLikeSvg alt="like">
+                        <use xlinkHref="/icon/sprite.svg#icon-like"></use>
+                      </S.TrackPlayLikeSvg>
+                    )}
                   </S.TrackPlayLike>
-                  <S.TrackPlayDislike>
-                    <S.TrackPlayDislikeSvg alt="dislike">
-                      <use xlinkHref="/icon/sprite.svg#icon-dislike"></use>
-                    </S.TrackPlayDislikeSvg>
-                  </S.TrackPlayDislike>
-                </S.TrackPlayLikeDis>
+                </S.TrackPlayLikeDis> */}
               </S.PlayerTrackPlay>
             </S.BarPlayer>
             <S.VolumeBlock>

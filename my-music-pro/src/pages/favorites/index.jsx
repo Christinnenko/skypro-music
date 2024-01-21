@@ -50,23 +50,11 @@ import { useGetFavTracksQuery } from "../../services/todo.js";
 // ];
 
 export const Favorites = ({ handleLogout }) => {
-  const token = localStorage.getItem("access");
+  const token = JSON.parse(localStorage.access);
 
-  const { data, error, isLoading } = useGetFavTracksQuery({ token });
+  const { data, isLoading } = useGetFavTracksQuery({ token });
 
   const isEmptyList = !isLoading && !data?.length;
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error.message}</p>;
-  }
-
-  if (isEmptyList) {
-    return <p>No tracks, yay!</p>;
-  }
 
   return (
     <>
@@ -75,7 +63,13 @@ export const Favorites = ({ handleLogout }) => {
         <Style.ContainerWrap>
           <Search />
           <S.CenterblockH2>Мои треки</S.CenterblockH2>
-          <Tracklist tracks={data} />
+          {isLoading ? (
+            `Загрузка треков...`
+          ) : isEmptyList ? (
+            `Не удалось загрузить плейлист, попробуйте позже`
+          ) : (
+            <Tracklist tracks={data} />
+          )}
         </Style.ContainerWrap>
         <LoginSidebar handleLogout={handleLogout} />
       </S.Main>

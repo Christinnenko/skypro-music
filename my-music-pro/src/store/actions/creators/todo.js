@@ -5,6 +5,8 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
+  ADD_TO_FAVORITES,
+  DELETE_FROM_FAVORITES,
 } from "../types/todo";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -37,3 +39,19 @@ export const mixTracks = (isMix) => ({
     isMix,
   },
 });
+
+export const addToFavorites = (favTrackId) => {
+  console.log("Adding to favorites:", favTrackId);
+  return {
+    type: ADD_TO_FAVORITES,
+    payload: { favTrackId },
+  };
+};
+
+export const deleteFromFavorites = (favTrackId) => {
+  console.log("Deleting from favorites:", favTrackId);
+  return {
+    type: DELETE_FROM_FAVORITES,
+    payload: { favTrackId },
+  };
+};

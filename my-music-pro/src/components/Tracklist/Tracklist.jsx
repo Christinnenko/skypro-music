@@ -9,15 +9,19 @@ import {
   useDeleteFromFavoritesMutation,
 } from "../../services/todo.js";
 
-function Tracklist({ tracks, getTracksError }) {
+function Tracklist({ tracks, getTracksError, refetch }) {
   console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
   const { currentTrack, isPlaying, favTrackIds } = useSelector(
     (store) => store.player
   );
 
-  const [addToFavorites] = useAddToFavoritesMutation();
-  const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
+  const [addToFavorites, { data: dataAdd, error: errorAdd }] =
+    useAddToFavoritesMutation();
+  const [deleteFromFavorites, { data: dataDelete, error: errorDelete }] =
+    useDeleteFromFavoritesMutation();
+
+  console.log(data, error);
 
   const handleCurrentTrackId = (track) => {
     console.log("Handling current track ID:", track.id);
@@ -30,9 +34,13 @@ function Tracklist({ tracks, getTracksError }) {
 
   const handleToggleFavoriteClick = (track) => {
     if (isTrackInFavorites(track.id)) {
-      deleteFromFavorites({ id: track.id, token });
+      deleteFromFavorites({ id: track.id, token }).then(() => {
+        refetch();
+      });
     } else {
-      addToFavorites({ id: track.id, token });
+      addToFavorites({ id: track.id, token }).then(() => {
+        refetch();
+      });
     }
 
     // dispatch(updateIsFavorite({ trackId: track.id }));
@@ -118,6 +126,7 @@ function Tracklist({ tracks, getTracksError }) {
 Tracklist.propTypes = {
   tracks: PropTypes.array.isRequired,
   getTracksError: PropTypes.any,
+  refetch: PropTypes.func.isRequired,
 };
 
 export default Tracklist;

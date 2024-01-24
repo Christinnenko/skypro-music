@@ -15,7 +15,7 @@ export const Main = ({ handleLogout }) => {
   const [tracks, setTracks] = useState(true); //показ полученного треклиста из API
   const [tracksError, setTracksError] = useState(true); //ошибка при получении треклиста из API
 
-  useEffect(() => {
+  const getTracks = () => {
     getAllTracks()
       .then((tracks) => {
         setTracks(tracks);
@@ -27,6 +27,10 @@ export const Main = ({ handleLogout }) => {
         );
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    getTracks();
   }, []);
 
   return loading ? (
@@ -39,7 +43,11 @@ export const Main = ({ handleLogout }) => {
           <Search />
           <S.CenterblockH2>Треки</S.CenterblockH2>
           <Filters />
-          <Tracklist tracks={tracks} tracksError={tracksError} />
+          <Tracklist
+            tracks={tracks}
+            tracksError={tracksError}
+            refetch={getTracks}
+          />
         </div>
         <St.ContainerSidebar>
           <LoginSidebar handleLogout={handleLogout} />

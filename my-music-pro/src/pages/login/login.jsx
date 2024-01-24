@@ -1,12 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import * as S from "../register/register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
-import { getTokenUser, loginUser, refreshTokenUser } from "../../api";
+import { getTokenUser, loginUser } from "../../api";
 import { UserContext } from "../../Authorization";
 
 export default function Login() {
-  const REFRESH_TIMEOUT = 197000;
-
   const navigate = useNavigate();
 
   const { changingUserData } = useContext(UserContext);
@@ -43,22 +41,7 @@ export default function Login() {
       if (response.ok) {
         const user = await response.json();
         setLocalStorageData(user, tokenResponse.access, tokenResponse.refresh);
-        let refreshToken = JSON.parse(localStorage.refresh);
-        setInterval(async () => {
-          try {
-            const refreshedTokenResponse = await refreshTokenUser(refreshToken);
-            console.log("Обновленный токен:", refreshedTokenResponse);
-            localStorage.setItem(
-              "access",
-              JSON.stringify(refreshedTokenResponse.access)
-            );
-          } catch (refreshError) {
-            console.error(
-              "Ошибка при обновлении токена:",
-              refreshError.message
-            );
-          }
-        }, REFRESH_TIMEOUT);
+
         changingUserData(user);
         navigate("/");
       } else {

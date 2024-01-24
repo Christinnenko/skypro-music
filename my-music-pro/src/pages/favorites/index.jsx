@@ -6,6 +6,8 @@ import * as S from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useGetFavTracksQuery } from "../../services/todo.js";
+import { useEffect } from "react";
+import { refreshTokenUser } from "../../api.js";
 
 // const mockFavoritesTracks = [
 //   {
@@ -51,8 +53,26 @@ import { useGetFavTracksQuery } from "../../services/todo.js";
 
 export const Favorites = ({ handleLogout }) => {
   const token = JSON.parse(localStorage.access);
+  const refreshToken = JSON.parse(localStorage.refresh);
 
-  const { data, isLoading } = useGetFavTracksQuery({ token });
+  const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
+
+  useEffect(() => {
+    console.log(error, "error");
+    if (error && error.status === 401) {
+      refreshTokenUser(refreshToken)
+        .then((res) => {
+          console.log("Обновленный токен:", res);
+          localStorage.setItem("access", JSON.stringify(res.access));
+        })
+        .then(() => {
+          refetch();
+        })
+        .catch((refreshError) => {
+          console.error("Ошибка при обновлении токена:", refreshError.message);
+        });
+    }
+  }, [error]);
 
   const isEmptyList = !isLoading && !data?.length;
 
@@ -68,7 +88,7 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Не удалось загрузить плейлист, попробуйте позже`
           ) : (
-            <Tracklist tracks={data} />
+            <Tracklist tracks={data} refetch={refetch} />
           )}
         </Style.ContainerWrap>
         <LoginSidebar handleLogout={handleLogout} />

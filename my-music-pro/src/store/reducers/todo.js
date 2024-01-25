@@ -7,6 +7,7 @@ import {
   PAUSE,
   ADD_TO_FAVORITES,
   DELETE_FROM_FAVORITES,
+  UPDATE_FAV_TRACKS,
 } from "../actions/types/todo";
 
 // 1.
@@ -104,7 +105,6 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         favTrackIds: [...state.favTrackIds, action.payload.favTrackId],
-        // isFavorite: true,
       };
     }
 
@@ -114,7 +114,13 @@ export default function playerReducer(state = initialState, action) {
         favTrackIds: state.favTrackIds.filter(
           (id) => id !== action.payload.favTrackId
         ),
-        // isFavorite: false,
+      };
+    }
+
+    case UPDATE_FAV_TRACKS: {
+      return {
+        ...state,
+        favTracks: action.payload,
       };
     }
 

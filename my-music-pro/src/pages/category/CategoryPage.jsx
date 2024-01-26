@@ -6,6 +6,7 @@ import NavMenu from "../../components/NavMenu/NavMenu.jsx";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Search from "../../components/Search/Search.jsx";
 import PropTypes from "prop-types";
+import * as St from "../Pages.styles.js";
 
 export const Category = ({ handleLogout }) => {
   const params = useParams();
@@ -19,11 +20,13 @@ export const Category = ({ handleLogout }) => {
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
-        <Style.ContainerWrap>
+        <div>
           <Search />
           <Style.Text>{`Здесь будет '${title}'`}</Style.Text>
-        </Style.ContainerWrap>
-        <LoginSidebar handleLogout={handleLogout} />
+        </div>
+        <St.ContainerSidebar>
+          <LoginSidebar handleLogout={handleLogout} />
+        </St.ContainerSidebar>
       </S.Main>
     </>
   );

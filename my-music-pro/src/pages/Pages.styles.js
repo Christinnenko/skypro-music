@@ -21,11 +21,11 @@ export const Container = styled.div`
 
 export const Text = styled.div`
   font-style: normal;
-  font-weight: 700;
-  font-size: 56px;
-  letter-spacing: 2px;
-  color: #fff;
-  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.8px;
+  margin-bottom: 45px;
 `;
 
 export const ContainerWrap = styled.div`

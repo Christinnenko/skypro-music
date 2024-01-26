@@ -1,6 +1,5 @@
 import NavMenu from "../../components/NavMenu/NavMenu.jsx";
 import Search from "../../components/Search/Search.jsx";
-import * as Style from "../Pages.styles.js";
 import PropTypes from "prop-types";
 import * as S from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
@@ -8,7 +7,7 @@ import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useGetFavTracksQuery } from "../../services/todo.js";
 import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
-// import { useSelector } from "react-redux";
+import * as St from "../Pages.styles.js";
 
 // const mockFavoritesTracks = [
 //   {
@@ -55,11 +54,7 @@ import { refreshTokenUser } from "../../api.js";
 export const Favorites = ({ handleLogout }) => {
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
-
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
-
-  // const { favTrackIds } = useSelector((state) => state.player);
-  // const favoriteTracks = useSelector((state) => state.player.favTrackIds);
 
   useEffect(() => {
     console.log(error, "error");
@@ -84,7 +79,7 @@ export const Favorites = ({ handleLogout }) => {
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
-        <Style.ContainerWrap>
+        <div>
           <Search />
           <S.CenterblockH2>Мои треки</S.CenterblockH2>
           {isLoading ? (
@@ -94,8 +89,10 @@ export const Favorites = ({ handleLogout }) => {
           ) : (
             <Tracklist tracks={data} refetch={refetch} />
           )}
-        </Style.ContainerWrap>
-        <LoginSidebar handleLogout={handleLogout} />
+        </div>
+        <St.ContainerSidebar>
+          <LoginSidebar handleLogout={handleLogout} />
+        </St.ContainerSidebar>
       </S.Main>
     </>
   );

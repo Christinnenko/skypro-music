@@ -17,7 +17,6 @@ const initialState = {
   isPlaying: null,
   tracks: [],
   isMix: false,
-  // favTrackId: [], // массив идентификаторов избранных треков
   favTrackIds: [],
   isFavorite: false,
 };
@@ -121,7 +120,6 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         favTrackIds: action.payload,
-        // isFavorite: true,
       };
     }
 

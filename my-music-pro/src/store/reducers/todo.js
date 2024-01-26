@@ -120,7 +120,8 @@ export default function playerReducer(state = initialState, action) {
     case UPDATE_FAV_TRACKS: {
       return {
         ...state,
-        favTracks: action.payload,
+        favTrackIds: action.payload,
+        // isFavorite: true,
       };
     }
 

@@ -2,32 +2,26 @@ import * as Style from "./Tracklist.styles.js";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setCurrentTrack,
-  updateFavTracks,
-} from "../../store/actions/creators/todo.js";
+import { setCurrentTrack } from "../../store/actions/creators/todo.js";
 import {
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
 } from "../../services/todo.js";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 function Tracklist({ tracks, getTracksError, refetch }) {
-  const dispatchEvent = useDispatch();
-  const { currentTrack, isPlaying, favTrackIds } = useSelector(
-    (store) => store.player
-  );
+  console.log("Rendering Tracklist component");
+  const dispatch = useDispatch();
+  const { currentTrack, isPlaying } = useSelector((store) => store.player);
+  const navigate = useNavigate();
 
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
 
-  const navigate = useNavigate();
-
   if (
-    (errorAdd && errorAdd?.status == 401) ||
-    (errorDelete && errorDelete?.status == 401)
+    (errorAdd && errorAdd.status == 401) ||
+    (errorDelete && errorDelete.status == 401)
   ) {
     localStorage.removeItem("user");
     navigate("/login");
@@ -35,44 +29,30 @@ function Tracklist({ tracks, getTracksError, refetch }) {
 
   const handleCurrentTrackId = (track) => {
     console.log("Handling current track ID:", track.id);
-    dispatchEvent(setCurrentTrack({ playlist: tracks, track: track }));
+    dispatch(setCurrentTrack({ playlist: tracks, track: track }));
   };
 
-  const isTrackInFavorites = (trackId) => favTrackIds.includes(trackId);
-
+  const currentUser = JSON.parse(localStorage.getItem("user"));
   const token = JSON.parse(localStorage.access);
 
-  const [trackLikes, setTrackLikes] = useState(
-    tracks.reduce((acc, track) => {
-      acc[track.id] = isTrackInFavorites(track.id);
-      return acc;
-    }, {})
-  );
-
-  const handleToggleFavoriteClick = async (track) => {
-    const updatedLikes = { ...trackLikes };
-    const isFavorite = !updatedLikes[track.id];
-    updatedLikes[track.id] = isFavorite;
-    setTrackLikes(updatedLikes);
-
-    try {
-      if (isFavorite) {
-        await addToFavorites({ id: track.id, token });
-      } else {
-        await deleteFromFavorites({ id: track.id, token });
-      }
-
-      // Передаем токен напрямую в функцию updateFavTracks
-      await updateFavTracks(token);
-
-      refetch();
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-    }
+  const isUserStarred = (track) => {
+    const trackIsLiked =
+      track.stared_user &&
+      track.stared_user.some((user) => user.id === currentUser.id);
+    return trackIsLiked || !track.stared_user;
   };
 
-  // dispatch(updateIsFavorite({ trackId: track.id }));
-  // };
+  const handleToggleFavoriteClick = (track) => {
+    if (isUserStarred(track)) {
+      deleteFromFavorites({ id: track.id, token }).then(() => {
+        refetch();
+      });
+    } else {
+      addToFavorites({ id: track.id, token }).then(() => {
+        refetch();
+      });
+    }
+  };
 
   return (
     <Style.CenterblockContent>
@@ -134,7 +114,7 @@ function Tracklist({ tracks, getTracksError, refetch }) {
                 <Style.TrackLikeSvg
                   alt="like"
                   onClick={() => handleToggleFavoriteClick(track)}
-                  $isFavorite={trackLikes[track.id]}
+                  $isFavorite={isUserStarred(track)}
                 >
                   <use xlinkHref="/icon/sprite.svg#icon-like"></use>
                 </Style.TrackLikeSvg>

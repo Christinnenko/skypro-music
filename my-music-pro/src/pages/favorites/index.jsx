@@ -8,7 +8,7 @@ import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useGetFavTracksQuery } from "../../services/todo.js";
 import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 // const mockFavoritesTracks = [
 //   {
@@ -56,10 +56,10 @@ export const Favorites = ({ handleLogout }) => {
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
 
-  // const { favTrackIds } = useSelector((state) => state.player);
-  const favoriteTracks = useSelector((state) => state.player.favTrackIds);
-
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
+
+  // const { favTrackIds } = useSelector((state) => state.player);
+  // const favoriteTracks = useSelector((state) => state.player.favTrackIds);
 
   useEffect(() => {
     console.log(error, "error");
@@ -92,11 +92,7 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Не удалось загрузить плейлист, попробуйте позже`
           ) : (
-            <Tracklist
-              tracks={data}
-              refetch={refetch}
-              favTrackIds={favoriteTracks}
-            />
+            <Tracklist tracks={data} refetch={refetch} />
           )}
         </Style.ContainerWrap>
         <LoginSidebar handleLogout={handleLogout} />

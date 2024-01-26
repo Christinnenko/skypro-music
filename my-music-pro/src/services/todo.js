@@ -7,32 +7,39 @@ export const getFavTracksApi = createApi({
   }),
   endpoints: (builder) => ({
     getFavTracks: builder.query({
-      query: ({ token }) => ({
+      query: () => ({
         url: "/catalog/track/favorite/all/",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${JSON.parse(localStorage.access)}`,
         },
       }),
+      transformResponse: (response) => {
+        return response.map((track) => ({ ...track, isFavorite: true }));
+      },
+      providesTags: (result) =>
+        result
+          ? [{ type: "isFavorite", id: "LIST" }]
+          : [{ type: "isFavorite", id: "LIST" }],
     }),
     addToFavorites: builder.mutation({
-      query: ({ id, token }) => ({
+      query: ({ id }) => ({
         url: `/catalog/track/${id}/favorite/`,
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${JSON.parse(localStorage.access)}`,
         },
       }),
-      invalidatesTags: [{ type: "Favorites", id: "LIST" }],
+      invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
     }),
     deleteFromFavorites: builder.mutation({
-      query: ({ id, token }) => ({
+      query: ({ id }) => ({
         url: `/catalog/track/${id}/favorite/`,
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${JSON.parse(localStorage.access)}`,
         },
       }),
-      invalidatesTags: [{ type: "Favorites", id: "LIST" }],
+      invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
     }),
   }),
 });

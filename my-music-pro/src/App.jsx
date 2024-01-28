@@ -4,15 +4,22 @@ import { GlobalStyle } from "./App.styles.js";
 import { AppRoutes } from "./routes.jsx";
 import { UserContext } from "./Authorization.js";
 import { useNavigate } from "react-router-dom";
-import { setCurrentTrack } from "./store/actions/creators/todo.js";
+import {
+  clearCurrentTrack,
+  setCurrentTrack,
+} from "./store/actions/creators/todo.js";
+import { useDispatch } from "react-redux";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [loading, setLoading] = useState(true); //показ эмуляции загрузки(скелетон)
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    dispatch(clearCurrentTrack());
     navigate("/login");
   };
 
@@ -29,6 +36,8 @@ function App() {
               setUser={setUser}
               handleLogout={handleLogout}
               setCurrentTrack={setCurrentTrack}
+              loading={loading}
+              setLoading={setLoading}
             />
           </S.Container>
         </S.Wrapper>

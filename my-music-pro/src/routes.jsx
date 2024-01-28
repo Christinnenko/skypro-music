@@ -9,7 +9,13 @@ import Register from "./pages/register/register.jsx";
 import Login from "./pages/login/login.jsx";
 import { PageLayout } from "./pages/Layout/Layout.jsx";
 
-export const AppRoutes = ({ user, handleLogout, setCurrentTrack }) => {
+export const AppRoutes = ({
+  user,
+  handleLogout,
+  setCurrentTrack,
+  loading,
+  setLoading,
+}) => {
   return (
     <Routes>
       <Route path="/" element={<PageLayout handleLogout={handleLogout} />}>
@@ -20,7 +26,9 @@ export const AppRoutes = ({ user, handleLogout, setCurrentTrack }) => {
           />
           <Route
             path="/favorites"
-            element={<Favorites handleLogout={handleLogout} />}
+            element={
+              <Favorites handleLogout={handleLogout} loading={loading} />
+            }
           />
           <Route
             index
@@ -29,6 +37,8 @@ export const AppRoutes = ({ user, handleLogout, setCurrentTrack }) => {
                 user={user}
                 handleLogout={handleLogout}
                 setCurrentTrack={setCurrentTrack}
+                loading={loading}
+                setLoading={setLoading}
               />
             }
           />
@@ -47,6 +57,8 @@ AppRoutes.propTypes = {
   }),
   handleLogout: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  setLoading: PropTypes.func.isRequired,
 };
 
 export default AppRoutes;

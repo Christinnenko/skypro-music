@@ -41,6 +41,20 @@ export const getFavTracksApi = createApi({
       }),
       invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
     }),
+    viewSelections: builder.query({
+      query: () => ({
+        url: `/catalog/selection/`,
+        method: "GET",
+      }),
+      // invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
+    }),
+    viewSelectionsById: builder.query({
+      query: ({ id }) => ({
+        url: `/catalog/selection/${id}/`,
+        method: "GET",
+      }),
+      // invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
+    }),
   }),
 });
 
@@ -48,4 +62,6 @@ export const {
   useGetFavTracksQuery,
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
+  useViewSelectionsQuery,
+  useViewSelectionsByIdQuery,
 } = getFavTracksApi;

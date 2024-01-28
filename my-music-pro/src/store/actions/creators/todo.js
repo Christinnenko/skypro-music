@@ -1,6 +1,7 @@
 import { getFavTracksApi } from "../../../services/todo";
 import {
   SET_CURRENT_TRACK,
+  CLEAR_CURRENT_TRACK,
   NEXT_TRACK,
   PREVIOUS_TRACK,
   MIX_TRACK,
@@ -17,6 +18,10 @@ export const setCurrentTrack = ({ playlist, track }) => ({
     playlist,
     track,
   },
+});
+
+export const clearCurrentTrack = () => ({
+  type: CLEAR_CURRENT_TRACK,
 });
 
 export const play = () => ({

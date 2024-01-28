@@ -1,5 +1,7 @@
+// import { mixArray } from "../../helpers";
 import {
   SET_CURRENT_TRACK,
+  CLEAR_CURRENT_TRACK,
   NEXT_TRACK,
   PREVIOUS_TRACK,
   MIX_TRACK,
@@ -19,6 +21,7 @@ const initialState = {
   isMix: false,
   favTrackIds: [],
   isFavorite: false,
+  playlist: [],
 };
 
 // 2.
@@ -36,6 +39,14 @@ export default function playerReducer(state = initialState, action) {
         currentTrack: track,
         tracks: playlist,
         isPlaying: true,
+      };
+    }
+
+    case CLEAR_CURRENT_TRACK: {
+      return {
+        ...state,
+        currentTrack: null,
+        isPlaying: false,
       };
     }
 
@@ -93,12 +104,34 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case MIX_TRACK: {
+      const page = location.pathname;
+      if (page === "/favotites") {
+        state.tracks = state.favTrackIds;
+      }
       return {
         ...state,
         isMix: !state.isMix,
         mixTracks: [...state.tracks].sort(() => 0.5 - Math.random()),
       };
     }
+
+    // case MIX_TRACK:
+    //   if (!state.isMix) {
+    //     const mixTracks = mixArray([...state.playlist]);
+    //     return {
+    //       ...state,
+    //       mixTracks: mixTracks,
+    //       isMix: true,
+    //     };
+    //   } else {
+    //     const trackIndex = state.playlist.indexOf(state.track);
+    //     return {
+    //       ...state,
+    //       isMix: false,
+    //       mixTracks: [],
+    //       currentTrackIndex: trackIndex,
+    //     };
+    //   }
 
     case ADD_TO_FAVORITES: {
       return {

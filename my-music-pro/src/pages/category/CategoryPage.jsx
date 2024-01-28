@@ -7,22 +7,39 @@ import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Search from "../../components/Search/Search.jsx";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
+import Tracklist from "../../components/Tracklist/Tracklist.jsx";
+import { useViewSelectionsByIdQuery } from "../../services/todo.js";
+import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
 
 export const Category = ({ handleLogout }) => {
   const params = useParams();
-
   const category = Categories.find(
     (category) => category.id === Number(params.id)
   );
+
+  const categoryId = `${category.id}`;
   const title = `${category.title}`;
+  const { data, isLoading, error } = useViewSelectionsByIdQuery({
+    id: categoryId,
+  });
+  const isEmptyList = !isLoading && !data?.length;
 
   return (
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
-        <div>
+        <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
           <Search />
-          <Style.Text>{`Здесь будет '${title}'`}</Style.Text>
+          <Style.Text>{`${title}`}</Style.Text>
+          {error ? (
+            <p>Не удалось загрузить плейлист, попробуйте позже</p>
+          ) : isLoading ? (
+            <EmulationTracklist />
+          ) : isEmptyList ? (
+            `Треки в разделе отсутствуют`
+          ) : (
+            <Tracklist tracks={data} error={error} />
+          )}
         </div>
         <St.ContainerSidebar>
           <LoginSidebar handleLogout={handleLogout} />

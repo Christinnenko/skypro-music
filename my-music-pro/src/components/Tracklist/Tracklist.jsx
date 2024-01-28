@@ -2,12 +2,16 @@ import * as Style from "./Tracklist.styles.js";
 import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentTrack } from "../../store/actions/creators/todo.js";
+import {
+  clearCurrentTrack,
+  setCurrentTrack,
+} from "../../store/actions/creators/todo.js";
 import {
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
 } from "../../services/todo.js";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Tracklist({ tracks, getTracksError, refetch }) {
   console.log("Rendering Tracklist component");
@@ -19,13 +23,16 @@ function Tracklist({ tracks, getTracksError, refetch }) {
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
 
-  if (
-    (errorAdd && errorAdd.status == 401) ||
-    (errorDelete && errorDelete.status == 401)
-  ) {
-    localStorage.removeItem("user");
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (
+      (errorAdd && errorAdd.status == 401) ||
+      (errorDelete && errorDelete.status == 401)
+    ) {
+      localStorage.removeItem("user");
+      dispatch(clearCurrentTrack());
+      navigate("/login");
+    }
+  }, [errorAdd, errorDelete]);
 
   const handleCurrentTrackId = (track) => {
     console.log("Handling current track ID:", track.id);

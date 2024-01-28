@@ -45,7 +45,11 @@ export default function Login() {
         changingUserData(user);
         navigate("/");
       } else {
-        const errorMessage = await response.text();
+        const errorData = await response.json();
+        const errorMessage = (
+          errorData.detail ||
+          "Произошла ошибка при входе. Пожалуйста, попробуйте еще раз."
+        ).replace(/detail/g, ""); // Удаление слова "detail"
         setError(errorMessage);
       }
     } catch (error) {

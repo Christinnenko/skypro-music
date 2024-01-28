@@ -8,6 +8,7 @@ import { useGetFavTracksQuery } from "../../services/todo.js";
 import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
+import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
 
 // const mockFavoritesTracks = [
 //   {
@@ -57,7 +58,7 @@ export const Favorites = ({ handleLogout }) => {
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
 
   useEffect(() => {
-    console.log(error, "error");
+    // console.log(error, "error");
     if (error && error.status === 401) {
       refreshTokenUser(refreshToken)
         .then((res) => {
@@ -79,13 +80,15 @@ export const Favorites = ({ handleLogout }) => {
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
-        <div>
+        <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
           <Search />
           <S.CenterblockH2>Мои треки</S.CenterblockH2>
-          {isLoading ? (
-            `Загрузка треков...`
+          {error ? (
+            <p>Не удалось загрузить плейлист, попробуйте позже</p>
+          ) : isLoading ? (
+            <EmulationTracklist />
           ) : isEmptyList ? (
-            `Не удалось загрузить плейлист, попробуйте позже`
+            `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
             <Tracklist tracks={data} refetch={refetch} />
           )}
@@ -100,4 +103,5 @@ export const Favorites = ({ handleLogout }) => {
 
 Favorites.propTypes = {
   handleLogout: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };

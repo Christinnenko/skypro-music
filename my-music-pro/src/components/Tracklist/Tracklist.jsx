@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCurrentTrack,
+  mixTracks,
   setCurrentTrack,
 } from "../../store/actions/creators/todo.js";
 import {
@@ -16,7 +17,9 @@ import { useEffect } from "react";
 function Tracklist({ tracks, getTracksError, refetch }) {
   console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
-  const { currentTrack, isPlaying } = useSelector((store) => store.player);
+  const { currentTrack, isPlaying, isMix } = useSelector(
+    (store) => store.player
+  );
   const navigate = useNavigate();
 
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
@@ -37,6 +40,9 @@ function Tracklist({ tracks, getTracksError, refetch }) {
   const handleCurrentTrackId = (track) => {
     console.log("Handling current track ID:", track.id);
     dispatch(setCurrentTrack({ playlist: tracks, track: track }));
+    if (isMix) {
+      dispatch(mixTracks(true));
+    }
   };
 
   const currentUser = JSON.parse(localStorage.getItem("user"));

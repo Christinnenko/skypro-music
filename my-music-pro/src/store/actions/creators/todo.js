@@ -10,6 +10,8 @@ import {
   ADD_TO_FAVORITES,
   DELETE_FROM_FAVORITES,
   UPDATE_FAV_TRACKS,
+  SET_SEARCH_QUERY,
+  CLEAR_SEARCH_QUERY,
 } from "../types/todo";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -81,3 +83,12 @@ export const updateFavTracks = (token) => {
     }
   };
 };
+
+export const setSearchQuery = (query) => ({
+  type: SET_SEARCH_QUERY,
+  payload: query,
+});
+
+export const clearSearchQuery = () => ({
+  type: CLEAR_SEARCH_QUERY,
+});

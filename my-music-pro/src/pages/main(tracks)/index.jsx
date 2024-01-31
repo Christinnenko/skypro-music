@@ -9,32 +9,55 @@ import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
 import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
+import { useDispatch, useSelector } from "react-redux";
+import { clearSearchQuery } from "../../store/actions/creators/todo.js";
 
 export const Main = ({ handleLogout }) => {
-  const [loading, setLoading] = useState(true); //показ эмуляции загрузки(скелетон)
-  const [tracks, setTracks] = useState(true); //показ полученного треклиста из API
-  const [tracksError, setTracksError] = useState(true); //ошибка при получении треклиста из API
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [tracks, setTracks] = useState([]);
+  const [tracksError, setTracksError] = useState([]);
+  const [filteredTracks, setFilteredTracks] = useState([]);
 
-  const getTracks = () => {
-    getAllTracks()
-      .then((tracks) => {
-        setTracks(tracks);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setTracksError(
-          `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`
-        );
-      })
-      .finally(() => setLoading(false));
+  const searchQuery = useSelector((state) => state.player.searchQuery);
+
+  const getTracks = async () => {
+    try {
+      const fetchedTracks = await getAllTracks();
+      setTracks(fetchedTracks);
+      setLoading(false);
+    } catch (error) {
+      setTracksError([
+        `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`,
+      ]);
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearSearchQuery());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     getTracks();
   }, []);
 
+  useEffect(() => {
+    const updatedFilteredTracks = tracks.filter(
+      (track) =>
+        track.name &&
+        track.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    console.log("Search Query:", searchQuery);
+    console.log("Filtered Tracks:", updatedFilteredTracks);
+    setFilteredTracks(updatedFilteredTracks);
+  }, [searchQuery, tracks]);
+
   return loading ? (
-    <EmulationApp handleLogout={handleLogout} />
+    <EmulationApp handleLogout={handleLogout} tracks={tracks} />
   ) : (
     <>
       <S.Main>
@@ -42,16 +65,17 @@ export const Main = ({ handleLogout }) => {
         <div>
           <Search />
           <S.CenterblockH2>Треки</S.CenterblockH2>
-          <Filters />
+          <Filters tracks={tracks} />
+
           <Tracklist
-            tracks={tracks}
+            tracks={filteredTracks}
             tracksError={tracksError}
             refetch={getTracks}
           />
         </div>
         <St.ContainerSidebar>
           <LoginSidebar handleLogout={handleLogout} />
-          <Sidebar tracks={tracks} handleLogout={handleLogout} />
+          <Sidebar handleLogout={handleLogout} />
         </St.ContainerSidebar>
       </S.Main>
     </>

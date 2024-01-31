@@ -9,7 +9,7 @@ import {
 import * as S from "../../App.styles.js";
 import PropTypes from "prop-types";
 
-function EmulationApp({ handleLogout }) {
+function EmulationApp({ handleLogout, tracks }) {
   return (
     <>
       <S.Main>
@@ -17,7 +17,7 @@ function EmulationApp({ handleLogout }) {
         <div>
           <Search />
           <S.CenterblockH2>Треки</S.CenterblockH2>
-          <Filters />
+          <Filters tracks={tracks} />
           <EmulationTracklist />
         </div>
         <EmulationSidebar />
@@ -31,4 +31,6 @@ export { EmulationApp };
 
 EmulationApp.propTypes = {
   handleLogout: PropTypes.func.isRequired,
+  handleSearchChange: PropTypes.func.isRequired,
+  tracks: PropTypes.array.isRequired,
 };

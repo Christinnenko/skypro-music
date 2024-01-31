@@ -230,25 +230,24 @@ export const TrackTimeText = styled.span`
 `;
 
 const blinkAnimation = keyframes`
-0% {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
+  0%, to {
+    transform: scale(0.5);
   }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+  50% {
+    transform: scale(1);
   }
 `;
 
 export const BlinkingDot = styled.div`
-  width: 300px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   background-color: #b672ff;
-  border-radius: 50%;
+  border-radius: 8px;
+  display: block;
   animation: ${({ $isPlaying }) =>
     $isPlaying
       ? css`
-          ${blinkAnimation} 1s infinite
+          ${blinkAnimation} 0.6s ease-in-out infinite both
         `
       : "none"};
 `;

@@ -10,18 +10,37 @@ import * as St from "../Pages.styles.js";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useViewSelectionsByIdQuery } from "../../services/todo.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const Category = ({ handleLogout }) => {
   const params = useParams();
   const category = Categories.find(
     (category) => category.id === Number(params.id)
   );
-
   const categoryId = `${category.id}`;
   const title = `${category.title}`;
-  const { data, isLoading, error } = useViewSelectionsByIdQuery({
+  const { data, isLoading, error, refetch } = useViewSelectionsByIdQuery({
     id: categoryId,
   });
+
+  const searchQuery = useSelector((state) => state.player.searchQuery);
+  const [filteredTracks, setFilteredTracks] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      const updatedFilteredTracks = data.filter(
+        (track) =>
+          track.name &&
+          track.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      console.log("Search Query:", searchQuery);
+      console.log("Filtered Tracks:", updatedFilteredTracks);
+      setFilteredTracks(updatedFilteredTracks);
+    }
+  }, [searchQuery, data]);
+
   const isEmptyList = !isLoading && !data?.length;
 
   return (
@@ -38,7 +57,7 @@ export const Category = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Треки в разделе отсутствуют`
           ) : (
-            <Tracklist tracks={data} error={error} />
+            <Tracklist tracks={filteredTracks} refetch={refetch} />
           )}
         </div>
         <St.ContainerSidebar>

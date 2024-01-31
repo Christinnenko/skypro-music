@@ -5,10 +5,11 @@ import * as S from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useGetFavTracksQuery } from "../../services/todo.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
+import { useSelector } from "react-redux";
 
 // const mockFavoritesTracks = [
 //   {
@@ -56,9 +57,24 @@ export const Favorites = ({ handleLogout }) => {
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
+  const searchQuery = useSelector((state) => state.player.searchQuery);
+  const [filteredTracks, setFilteredTracks] = useState([]);
 
   useEffect(() => {
-    // console.log(error, "error");
+    if (data) {
+      const updatedFilteredTracks = data.filter(
+        (track) =>
+          track.name &&
+          track.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      console.log("Search Query:", searchQuery);
+      console.log("Filtered Tracks:", updatedFilteredTracks);
+      setFilteredTracks(updatedFilteredTracks);
+    }
+  }, [searchQuery, data]);
+
+  useEffect(() => {
     if (error && error.status === 401) {
       refreshTokenUser(refreshToken)
         .then((res) => {
@@ -90,7 +106,7 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
-            <Tracklist tracks={data} refetch={refetch} />
+            <Tracklist tracks={filteredTracks} refetch={refetch} />
           )}
         </div>
         <St.ContainerSidebar>

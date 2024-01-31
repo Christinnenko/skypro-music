@@ -154,14 +154,7 @@ function EmulationAudioPlayer() {
           </S.BarPlayer>
           <S.VolumeBlock>
             <S.VolumeContent>
-              <S.VolumeImage>
-                <S.VolumeSvg alt="volume">
-                  <use xlinkHref="/icon/sprite.svg#icon-volume"></use>
-                </S.VolumeSvg>
-              </S.VolumeImage>
-              <S.VolumeProgress>
-                <S.VolumeProgressLine type="range" name="range" />
-              </S.VolumeProgress>
+              <img src="/icon/emulate_valume.svg" alt="Громкость" />
             </S.VolumeContent>
           </S.VolumeBlock>
         </S.BarPlayerBlock>

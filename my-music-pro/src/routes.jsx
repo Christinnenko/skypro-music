@@ -19,6 +19,7 @@ export const AppRoutes = ({
   return (
     <Routes>
       <Route path="/" element={<PageLayout handleLogout={handleLogout} />}>
+        <Route path="*" element={<NotFound />} />
         <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
           <Route
             path="/category/:id"
@@ -44,7 +45,7 @@ export const AppRoutes = ({
           />
         </Route>
       </Route>
-      <Route path="*" element={<NotFound />} />
+
       <Route path="/login" element={<Login user={user} />} />
       <Route path="/register" element={<Register user={user} />} />
     </Routes>

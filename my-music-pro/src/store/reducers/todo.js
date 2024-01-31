@@ -10,6 +10,8 @@ import {
   ADD_TO_FAVORITES,
   DELETE_FROM_FAVORITES,
   UPDATE_FAV_TRACKS,
+  SET_SEARCH_QUERY,
+  CLEAR_SEARCH_QUERY,
 } from "../actions/types/todo";
 
 // 1.
@@ -22,6 +24,7 @@ const initialState = {
   favTrackIds: [],
   isFavorite: false,
   playlist: [],
+  searchQuery: "",
 };
 
 // 2.
@@ -73,7 +76,7 @@ export default function playerReducer(state = initialState, action) {
 
       if (!content && state.isMix) {
         // Если дошли до конца перемешанного плейлиста, возвращаемся к началу
-        content = state.mixTracks[0];
+        content = playlist[0];
       }
 
       if (!content) {
@@ -104,13 +107,17 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case MIX_TRACK: {
-      const page = location.pathname;
-      if (page === "/favotites") {
-        state.tracks = state.favTrackIds;
-      }
+      // const page = location.pathname;
+      // if (page === "/favotites") {
+      //   state.tracks = state.favTrackIds;
+      // }
+      const isMixValue = action.payload.isMix;
+      console.log(isMixValue);
       return {
         ...state,
-        isMix: !state.isMix,
+
+        isMix: isMixValue ? isMixValue : !state.isMix,
+        // tracks: [...state.tracks].sort(() => 0.5 - Math.random()),
         mixTracks: [...state.tracks].sort(() => 0.5 - Math.random()),
       };
     }
@@ -153,6 +160,21 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         favTrackIds: action.payload,
+      };
+    }
+
+    case SET_SEARCH_QUERY: {
+      const query = action.payload;
+      return {
+        ...state,
+        searchQuery: query,
+      };
+    }
+
+    case CLEAR_SEARCH_QUERY: {
+      return {
+        ...state,
+        searchQuery: "",
       };
     }
 

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import * as S from "../register/register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
-import { loginUser } from "../../api";
+import { getTokenUser, loginUser } from "../../api";
 import { UserContext } from "../../Authorization";
 
 export default function Login() {
@@ -27,29 +27,30 @@ export default function Login() {
       return;
     }
 
+    const setLocalStorageData = (user, access, refresh) => {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("access", JSON.stringify(access));
+      localStorage.setItem("refresh", JSON.stringify(refresh));
+    };
+
     try {
       setIsRegistering(true);
       const response = await loginUser({ email, password });
+      const tokenResponse = await getTokenUser({ email, password });
 
       if (response.ok) {
         const user = await response.json();
-        localStorage.setItem("user", JSON.stringify(user));
+        setLocalStorageData(user, tokenResponse.access, tokenResponse.refresh);
+
         changingUserData(user);
         navigate("/");
       } else {
-        if (response.status === 400) {
-          const errorData = await response.json();
-          let errorMessage = "";
-
-          for (const field in errorData) {
-            errorMessage += `${errorData[field].join(", ")}`;
-          }
-          setError(errorMessage);
-        } else if (response.status === 401) {
-          setError("Пользователь с таким email или паролем не найден");
-        } else if (response.status === 500) {
-          setError("Внутренняя ошибка сервера");
-        }
+        const errorData = await response.json();
+        const errorMessage = (
+          errorData.detail ||
+          "Произошла ошибка при входе. Пожалуйста, попробуйте еще раз."
+        ).replace(/detail/g, ""); // Удаление слова "detail"
+        setError(errorMessage);
       }
     } catch (error) {
       console.error("Ошибка при входе:", error.message);

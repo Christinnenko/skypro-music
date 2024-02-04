@@ -4,6 +4,7 @@ export const CenterblockFilter = styled.div`
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  justify-content: space-between;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -ms-flex-direction: row;
@@ -13,6 +14,12 @@ export const CenterblockFilter = styled.div`
   align-items: center;
   margin-bottom: 51px;
   gap: 10px;
+`;
+
+export const FilterBlock = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
 `;
 
 export const FilterTitle = styled.div`
@@ -52,39 +59,53 @@ export const FilterButton = styled.div`
 
 export const FilterPopup = styled.div`
   margin-top: 10px;
-  width: 248px;
-  height: 305px;
   border-radius: 12px;
   background: #313131;
   display: flex;
   flex-direction: column;
   padding: 34px;
   font-size: 20px;
-  font-weight: 400;
   line-height: 24px;
-  overflow-y: auto;
   position: absolute;
-
-  .filter-popup div:hover {
-    color: #b672ff;
-    text-decoration-line: underline;
-  }
+  max-height: 237px;
+  max-width: 242px;
+  overflow-y: auto;
 `;
 
 export const FilterPopupScrollable = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   gap: 28px;
   list-style: none;
   padding: 0;
-  max-height: 237px;
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 24px;
+  width: 100%;
+
+  div:hover {
+    color: #b672ff;
+    text-decoration-line: underline;
+  }
+
+  div:active {
+    color: #b672ff;
+    font-weight: bold;
+  }
+
+  div.selected {
+    color: #b672ff;
+    font-weight: bold;
+  }
 
   scrollbar-color: #ffffff #4b4949; /* Для Firefox */
-  scrollbar-width: thin; /* Для Firefox */
+  scrollbar-width: 4px; /* Для Firefox */
 
   &::-webkit-scrollbar {
     width: 4px;
+  }
+  div {
+    padding-right: 12px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -94,4 +115,18 @@ export const FilterPopupScrollable = styled.div`
   &::-webkit-scrollbar-track {
     background-color: #4b4949;
   }
+`;
+
+export const SelectedCount = styled.span`
+  width: 26px;
+  height: 25.5px;
+  background-color: #ad61ff;
+  color: white;
+  border-radius: 50%;
+  padding: 6px 9px 6px 9px;
+  font-size: 13px;
+  line-height: 13px;
+  position: absolute;
+  top: -9px;
+  right: -9px;
 `;

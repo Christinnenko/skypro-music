@@ -87,6 +87,7 @@ export const ContentPlaylist = styled.div`
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  max-height: 50vh;
   overflow-y: auto;
 `;
 
@@ -201,12 +202,22 @@ export const TrackAlbumLink = styled.a`
   color: #696969;
 `;
 
-export const TrackTimeSvg = styled.svg`
+export const TrackLikeSvg = styled.svg`
   width: 14px;
   height: 12px;
   margin-right: 17px;
-  fill: transparent;
-  stroke: #696969;
+  fill: ${(props) => (props.$isFavorite ? "#B672FF" : "transparent")};
+  stroke: ${(props) => (props.$isFavorite ? "#B672FF" : "#696969")};
+  cursor: pointer;
+
+  &:hover {
+    stroke: #acacac;
+  }
+
+  &:active {
+    fill: #696969;
+    stroke: #fff;
+  }
 `;
 
 export const TrackTimeText = styled.span`
@@ -219,25 +230,29 @@ export const TrackTimeText = styled.span`
 `;
 
 const blinkAnimation = keyframes`
-0% {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
+  0%, to {
+    transform: scale(0.5);
   }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+  50% {
+    transform: scale(1);
   }
 `;
 
 export const BlinkingDot = styled.div`
-  width: 300px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   background-color: #b672ff;
-  border-radius: 50%;
+  border-radius: 8px;
+  display: block;
   animation: ${({ $isPlaying }) =>
     $isPlaying
       ? css`
-          ${blinkAnimation} 1s infinite
+          ${blinkAnimation} 0.6s ease-in-out infinite both
         `
       : "none"};
+`;
+
+export const TrackLikeTime = styled.div`
+  display: flex;
+  align-items: center;
 `;

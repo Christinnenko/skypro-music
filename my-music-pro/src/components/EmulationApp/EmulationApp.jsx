@@ -7,28 +7,23 @@ import {
   EmulationTracklist,
 } from "./EmulationLoading.jsx";
 import * as S from "../../App.styles.js";
-import { GlobalStyle } from "../../App.styles.js";
 import PropTypes from "prop-types";
 
-function EmulationApp({ handleLogout }) {
+function EmulationApp({ handleLogout, tracks }) {
   return (
-    <S.Wrapper>
-      <GlobalStyle />
-      <S.Container>
-        <S.Main>
-          <NavMenu handleLogout={handleLogout} />
-          <div>
-            <Search />
-            <S.CenterblockH2>Треки</S.CenterblockH2>
-            <Filters />
-            <EmulationTracklist />
-          </div>
-          <EmulationSidebar />
-        </S.Main>
-        <EmulationAudioPlayer />
-        <footer></footer>
-      </S.Container>
-    </S.Wrapper>
+    <>
+      <S.Main>
+        <NavMenu handleLogout={handleLogout} />
+        <div>
+          <Search />
+          <S.CenterblockH2>Треки</S.CenterblockH2>
+          <Filters tracks={tracks} />
+          <EmulationTracklist />
+        </div>
+        <EmulationSidebar />
+      </S.Main>
+      <EmulationAudioPlayer />
+    </>
   );
 }
 
@@ -36,4 +31,6 @@ export { EmulationApp };
 
 EmulationApp.propTypes = {
   handleLogout: PropTypes.func.isRequired,
+  handleSearchChange: PropTypes.func.isRequired,
+  tracks: PropTypes.array.isRequired,
 };

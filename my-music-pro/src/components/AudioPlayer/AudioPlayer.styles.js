@@ -320,6 +320,11 @@ export const TrackPlayLikeSvg = styled.svg`
   &:hover {
     stroke: #acacac;
   }
+
+  &:active {
+    fill: #696969;
+    stroke: #fff;
+  }
 `;
 
 export const TrackPlayDislike = styled.div`

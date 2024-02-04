@@ -82,7 +82,7 @@ export const Container = styled.div`
   margin: 0 auto;
   position: relative;
   background-color: #181818;
-  overflow: scroll;
+  overflow-y: scroll;
 `;
 
 export const Main = styled.main`
@@ -92,8 +92,6 @@ export const Main = styled.main`
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;

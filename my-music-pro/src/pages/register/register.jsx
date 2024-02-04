@@ -3,9 +3,12 @@ import * as S from "./register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
 import { registerUser } from "../../api";
 import { UserContext } from "../../Authorization";
+import { clearCurrentTrack } from "../../store/actions/creators/todo";
+import { useDispatch } from "react-redux";
 
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { changingUserData } = useContext(UserContext);
 
@@ -45,6 +48,7 @@ export default function Register() {
         const user = await response.json();
         localStorage.setItem("user", JSON.stringify(user));
         changingUserData(user);
+        dispatch(clearCurrentTrack());
         navigate("/login");
       } else {
         if (response.status === 400) {

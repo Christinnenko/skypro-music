@@ -1,10 +1,17 @@
+// import { mixArray } from "../../helpers";
 import {
   SET_CURRENT_TRACK,
+  CLEAR_CURRENT_TRACK,
   NEXT_TRACK,
   PREVIOUS_TRACK,
   MIX_TRACK,
   PLAY,
   PAUSE,
+  ADD_TO_FAVORITES,
+  DELETE_FROM_FAVORITES,
+  UPDATE_FAV_TRACKS,
+  SET_SEARCH_QUERY,
+  CLEAR_SEARCH_QUERY,
 } from "../actions/types/todo";
 
 // 1.
@@ -14,6 +21,10 @@ const initialState = {
   isPlaying: null,
   tracks: [],
   isMix: false,
+  favTrackIds: [],
+  isFavorite: false,
+  playlist: [],
+  searchQuery: "",
 };
 
 // 2.
@@ -31,6 +42,14 @@ export default function playerReducer(state = initialState, action) {
         currentTrack: track,
         tracks: playlist,
         isPlaying: true,
+      };
+    }
+
+    case CLEAR_CURRENT_TRACK: {
+      return {
+        ...state,
+        currentTrack: null,
+        isPlaying: false,
       };
     }
 
@@ -57,7 +76,7 @@ export default function playerReducer(state = initialState, action) {
 
       if (!content && state.isMix) {
         // Если дошли до конца перемешанного плейлиста, возвращаемся к началу
-        content = state.mixTracks[0];
+        content = playlist[0];
       }
 
       if (!content) {
@@ -88,10 +107,74 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case MIX_TRACK: {
+      // const page = location.pathname;
+      // if (page === "/favotites") {
+      //   state.tracks = state.favTrackIds;
+      // }
+      const isMixValue = action.payload.isMix;
+      console.log(isMixValue);
       return {
         ...state,
-        isMix: !state.isMix,
+
+        isMix: isMixValue ? isMixValue : !state.isMix,
+        // tracks: [...state.tracks].sort(() => 0.5 - Math.random()),
         mixTracks: [...state.tracks].sort(() => 0.5 - Math.random()),
+      };
+    }
+
+    // case MIX_TRACK:
+    //   if (!state.isMix) {
+    //     const mixTracks = mixArray([...state.playlist]);
+    //     return {
+    //       ...state,
+    //       mixTracks: mixTracks,
+    //       isMix: true,
+    //     };
+    //   } else {
+    //     const trackIndex = state.playlist.indexOf(state.track);
+    //     return {
+    //       ...state,
+    //       isMix: false,
+    //       mixTracks: [],
+    //       currentTrackIndex: trackIndex,
+    //     };
+    //   }
+
+    case ADD_TO_FAVORITES: {
+      return {
+        ...state,
+        favTrackIds: [...state.favTrackIds, action.payload.favTrackId],
+      };
+    }
+
+    case DELETE_FROM_FAVORITES: {
+      return {
+        ...state,
+        favTrackIds: state.favTrackIds.filter(
+          (id) => id !== action.payload.favTrackId
+        ),
+      };
+    }
+
+    case UPDATE_FAV_TRACKS: {
+      return {
+        ...state,
+        favTrackIds: action.payload,
+      };
+    }
+
+    case SET_SEARCH_QUERY: {
+      const query = action.payload;
+      return {
+        ...state,
+        searchQuery: query,
+      };
+    }
+
+    case CLEAR_SEARCH_QUERY: {
+      return {
+        ...state,
+        searchQuery: "",
       };
     }
 

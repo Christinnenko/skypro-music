@@ -4,7 +4,7 @@ import * as Styled from "./Sidebar.styles.js";
 import PropTypes from "prop-types";
 import { UserContext } from "../../Authorization.js";
 
-function Sidebar({ handleLogout }) {
+export function LoginSidebar({ handleLogout }) {
   const { userData } = useContext(UserContext);
 
   return (
@@ -19,6 +19,13 @@ function Sidebar({ handleLogout }) {
           </svg>
         </Styled.SidebarIcon>
       </Styled.SidebarPersonal>
+    </Styled.MainSidebar>
+  );
+}
+
+export function Sidebar() {
+  return (
+    <Styled.MainSidebar>
       <Styled.SidebarBlock>
         <Styled.SidebarList>
           {Categories.map((category) => {
@@ -39,8 +46,6 @@ function Sidebar({ handleLogout }) {
   );
 }
 
-export default Sidebar;
-
-Sidebar.propTypes = {
+LoginSidebar.propTypes = {
   handleLogout: PropTypes.func.isRequired,
 };

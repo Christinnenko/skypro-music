@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import { Main } from "./pages/main(tracks)";
-import { NotFound } from "./pages/not-found";
-import { Category } from "./pages/category/CategoryPage.jsx";
-import { Favorites } from "./pages/favorites";
-import { ProtectedRoute } from "./components/protected-route";
+import { Main } from "./pages/main(tracks)/Main.jsx";
+import { NotFound } from "./pages/not-found/NotFound.jsx";
+import { Category } from "./pages/category/Category.jsx";
+import { Favorites } from "./pages/favorites/Favorites.jsx";
+import { ProtectedRoute } from "./components/protected-route/ProtectedRoute.jsx";
 import PropTypes from "prop-types";
-import Register from "./pages/register/register.jsx";
-import Login from "./pages/login/login.jsx";
+import Register from "./pages/register/Register.jsx";
+import Login from "./pages/login/Login.jsx";
 import { PageLayout } from "./pages/Layout/Layout.jsx";
 
 export const AppRoutes = ({

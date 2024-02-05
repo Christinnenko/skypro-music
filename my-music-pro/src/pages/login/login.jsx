@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import * as S from "../register/register.styles";
+import * as S from "../register/Register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getTokenUser, loginUser } from "../../api";
 import { UserContext } from "../../Authorization";

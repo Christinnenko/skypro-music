@@ -6,11 +6,11 @@ import {
   clearCurrentTrack,
   mixTracks,
   setCurrentTrack,
-} from "../../store/actions/creators/todo.js";
+} from "../../store/actions/creators/creators.js";
 import {
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
-} from "../../services/todo.js";
+} from "../../services/Services.js";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 

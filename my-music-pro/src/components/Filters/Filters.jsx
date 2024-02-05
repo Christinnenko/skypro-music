@@ -100,19 +100,19 @@ function Filters({ tracks }) {
   const filterData = [
     {
       buttonText: "исполнителю",
-      listItems: tracks.map((track) => track.author),
+      listItems: Array.from(
+        new Set(tracks.map((track) => track.author))
+      ).sort(),
     },
     {
       buttonText: "году выпуска",
       listItems: Array.from(
         new Set(
-          tracks.map((track) =>
-            track.release_date ? track.release_date.substring(0, 4) : null
-          )
+          tracks
+            .filter((track) => track.release_date) // Фильтруем треки без release_date
+            .map((track) => track.release_date.substring(0, 4))
         )
-      )
-        .filter((year) => year !== null) // Отфильтровываем возможные null значения
-        .sort((a, b) => b - a), // Сортируем года в порядке убывания
+      ).sort((a, b) => b - a),
     },
 
     {

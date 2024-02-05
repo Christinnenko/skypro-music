@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import {
   clearCurrentTrack,
   setCurrentTrack,
-} from "./store/actions/creators/todo.js";
+} from "./store/actions/creators/creators.js";
 import { useDispatch } from "react-redux";
 
 function App() {
@@ -19,8 +19,8 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    dispatch(clearCurrentTrack());
     navigate("/login");
+    dispatch(clearCurrentTrack());
   };
 
   return (

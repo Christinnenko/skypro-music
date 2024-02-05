@@ -6,9 +6,10 @@ export const MIX_TRACK = "MIX_TRACK";
 export const PLAY = "PLAY";
 export const PAUSE = "PAUSE";
 
-export const ADD_TO_FAVORITES = "ADD_TO_FAVORITES";
-export const DELETE_FROM_FAVORITES = "DELETE_FROM_FAVORITES";
-export const UPDATE_FAV_TRACKS = "UPDATE_FAV_TRACKS";
+export const TOGGLE_LIKE = "TOGGLE_LIKE";
 
 export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
+
+export const SET_FILTER = "SET_FILTER";
+export const SET_SORTER = "SET_SORTER";

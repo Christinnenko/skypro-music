@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import * as S from "./Search.styles.js";
-import { setSearchQuery } from "../../store/actions/creators/todo.js";
+import { setSearchQuery } from "../../store/actions/creators/creators.js";
 
 function Search() {
   const dispatch = useDispatch();

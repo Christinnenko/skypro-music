@@ -8,10 +8,15 @@ import {
   mixTracks,
   play,
   pause,
-} from "../../store/actions/creators/todo.js";
-import { useDispatch } from "react-redux";
+  toggleLike,
+} from "../../store/actions/creators/creators.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  useAddToFavoritesMutation,
+  useDeleteFromFavoritesMutation,
+} from "../../services/Services.js";
 
-function AudioPlayer({ track }) {
+function AudioPlayer({ track, props }) {
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
   //повторение трека по кругу
@@ -20,6 +25,38 @@ function AudioPlayer({ track }) {
   const [currentTime, setCurrentTime] = useState(0);
 
   const dispatch = useDispatch();
+
+  const { isFavorite } = useSelector((store) => store.player);
+
+  const [addToFavorites] = useAddToFavoritesMutation();
+  const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
+
+  const token = JSON.parse(localStorage.access);
+
+  const handleToggleLike = (track) => {
+    return () => {
+      if (isFavorite) {
+        deleteFromFavorites({ id: track.id })
+          .then(() => {
+            console.log("Toggling like for track:", track);
+          })
+          .catch((error) => {
+            console.error("Error deleting from favorites:", error);
+          });
+      } else {
+        addToFavorites({ id: track.id, token })
+          .then(() => {
+            console.log("Toggling like for track:", track);
+          })
+          .catch((error) => {
+            console.error("Error adding to favorites:", error);
+          });
+      }
+
+      // Обернуть трек в объект с именем "track"
+      dispatch(toggleLike({ track }));
+    };
+  };
 
   const handleMix = () => {
     if (!isMix) {
@@ -146,8 +183,6 @@ function AudioPlayer({ track }) {
   };
   const toggleLoop = isLooped ? handleUnloop : handleLoop;
 
-  // const { isFavorite } = useSelector((store) => store.player);
-
   return (
     <>
       <S.StandartAudioPlayer controls ref={audioRef}>
@@ -229,19 +264,24 @@ function AudioPlayer({ track }) {
                   </S.TrackPlayAlbum>
                 </S.TrackPlayContain>
 
-                {/* <S.TrackPlayLikeDis>
+                <S.TrackPlayLikeDis>
                   <S.TrackPlayLike>
-                    {isFavorite ? (
-                      <S.TrackPlayDislikeSvg alt="dislike">
-                        <use xlinkHref="/icon/sprite.svg#icon-dislike"></use>
-                      </S.TrackPlayDislikeSvg>
-                    ) : (
-                      <S.TrackPlayLikeSvg alt="like">
-                        <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                      </S.TrackPlayLikeSvg>
-                    )}
+                    <S.TrackPlayLikeSvg
+                      alt="like"
+                      onClick={handleToggleLike(track)}
+                      {...props}
+                      isFavorite={isFavorite}
+                    >
+                      <use xlinkHref="/icon/sprite.svg#icon-like"></use>
+                    </S.TrackPlayLikeSvg>
+                    {/* <S.TrackPlayLikeSvg alt="like">
+                      <use xlinkHref="/icon/sprite.svg#icon-like"></use>
+                    </S.TrackPlayLikeSvg>
+                    <S.TrackPlayDislikeSvg alt="dislike">
+                      <use xlinkHref="/icon/sprite.svg#icon-dislike"></use>
+                    </S.TrackPlayDislikeSvg> */}
                   </S.TrackPlayLike>
-                </S.TrackPlayLikeDis> */}
+                </S.TrackPlayLikeDis>
               </S.PlayerTrackPlay>
             </S.BarPlayer>
             <S.VolumeBlock>
@@ -272,10 +312,12 @@ function AudioPlayer({ track }) {
 
 AudioPlayer.propTypes = {
   track: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    track_file: PropTypes.string.isRequired,
+    id: PropTypes.any,
+    name: PropTypes.string,
+    author: PropTypes.string,
+    track_file: PropTypes.string,
   }).isRequired,
+  props: PropTypes.bool.isRequired,
 };
 
 export default AudioPlayer;

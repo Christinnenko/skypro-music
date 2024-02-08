@@ -1,4 +1,3 @@
-// import { mixArray } from "../../helpers";
 import {
   SET_CURRENT_TRACK,
   CLEAR_CURRENT_TRACK,
@@ -7,12 +6,10 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
-  ADD_TO_FAVORITES,
-  DELETE_FROM_FAVORITES,
-  UPDATE_FAV_TRACKS,
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
-} from "../actions/types/todo";
+  TOGGLE_LIKE,
+} from "../actions/types/types";
 
 // 1.
 const initialState = {
@@ -21,7 +18,7 @@ const initialState = {
   isPlaying: null,
   tracks: [],
   isMix: false,
-  favTrackIds: [],
+  likedTracks: [],
   isFavorite: false,
   playlist: [],
   searchQuery: "",
@@ -107,59 +104,13 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case MIX_TRACK: {
-      // const page = location.pathname;
-      // if (page === "/favotites") {
-      //   state.tracks = state.favTrackIds;
-      // }
       const isMixValue = action.payload.isMix;
       console.log(isMixValue);
       return {
         ...state,
 
         isMix: isMixValue ? isMixValue : !state.isMix,
-        // tracks: [...state.tracks].sort(() => 0.5 - Math.random()),
         mixTracks: [...state.tracks].sort(() => 0.5 - Math.random()),
-      };
-    }
-
-    // case MIX_TRACK:
-    //   if (!state.isMix) {
-    //     const mixTracks = mixArray([...state.playlist]);
-    //     return {
-    //       ...state,
-    //       mixTracks: mixTracks,
-    //       isMix: true,
-    //     };
-    //   } else {
-    //     const trackIndex = state.playlist.indexOf(state.track);
-    //     return {
-    //       ...state,
-    //       isMix: false,
-    //       mixTracks: [],
-    //       currentTrackIndex: trackIndex,
-    //     };
-    //   }
-
-    case ADD_TO_FAVORITES: {
-      return {
-        ...state,
-        favTrackIds: [...state.favTrackIds, action.payload.favTrackId],
-      };
-    }
-
-    case DELETE_FROM_FAVORITES: {
-      return {
-        ...state,
-        favTrackIds: state.favTrackIds.filter(
-          (id) => id !== action.payload.favTrackId
-        ),
-      };
-    }
-
-    case UPDATE_FAV_TRACKS: {
-      return {
-        ...state,
-        favTrackIds: action.payload,
       };
     }
 
@@ -175,6 +126,18 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         searchQuery: "",
+      };
+    }
+
+    case TOGGLE_LIKE: {
+      const { track } = action.payload;
+
+      return {
+        ...state,
+        likedTracks: state.likedTracks.includes(track)
+          ? state.likedTracks.filter((likedTrack) => likedTrack !== track)
+          : [...state.likedTracks, track],
+        isFavorite: !state.isFavorite,
       };
     }
 

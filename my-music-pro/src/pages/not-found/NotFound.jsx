@@ -1,6 +1,6 @@
 import * as S from "../Pages.styles.js";
-import * as St from "../register/register.styles";
-import * as Style from "./index.styles.js";
+import * as St from "../register/Register.styles.js";
+import * as Style from "./NotFound.styles.js";
 import Search from "../../components/Search/Search.jsx";
 import * as Sty from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import playerReducer from "./reducers/todo";
-import { getFavTracksApi } from "../services/todo";
+import playerReducer from "./reducers/reducers.js";
+import { getFavTracksApi } from "../services/Services";
 
 export const store = configureStore({
   reducer: {

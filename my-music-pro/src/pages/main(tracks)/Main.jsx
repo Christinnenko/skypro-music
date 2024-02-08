@@ -10,7 +10,7 @@ import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSearchQuery } from "../../store/actions/creators/todo.js";
+import { clearSearchQuery } from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();

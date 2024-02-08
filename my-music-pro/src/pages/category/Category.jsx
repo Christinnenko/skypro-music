@@ -8,7 +8,7 @@ import Search from "../../components/Search/Search.jsx";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
-import { useViewSelectionsByIdQuery } from "../../services/todo.js";
+import { useViewSelectionsByIdQuery } from "../../services/Services.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -60,6 +60,7 @@ export const Category = ({ handleLogout }) => {
             <Tracklist tracks={filteredTracks} refetch={refetch} />
           )}
         </div>
+
         <St.ContainerSidebar>
           <LoginSidebar handleLogout={handleLogout} />
         </St.ContainerSidebar>

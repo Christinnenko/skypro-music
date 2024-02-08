@@ -6,6 +6,7 @@ import {
   clearCurrentTrack,
   mixTracks,
   setCurrentTrack,
+  toggleLike,
 } from "../../store/actions/creators/creators.js";
 import {
   useAddToFavoritesMutation,
@@ -14,17 +15,44 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-function Tracklist({ tracks, getTracksError, refetch }) {
+function Tracklist({ tracks, getTracksError }) {
   console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
   const { currentTrack, isPlaying, isMix } = useSelector(
     (store) => store.player
   );
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.access);
 
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
+  const { isFavorite } = useSelector((store) => store.player);
+
+  const handleToggleLike = (track) => {
+    return () => {
+      if (isFavorite) {
+        deleteFromFavorites({ id: track.id })
+          .then(() => {
+            console.log("Toggling like for track:", track);
+          })
+          .catch((error) => {
+            console.error("Error deleting from favorites:", error);
+          });
+      } else {
+        addToFavorites({ id: track.id, token })
+          .then(() => {
+            console.log("Toggling like for track:", track);
+          })
+          .catch((error) => {
+            console.error("Error adding to favorites:", error);
+          });
+      }
+
+      // Обернуть трек в объект с именем "track"
+      dispatch(toggleLike({ track }));
+    };
+  };
 
   useEffect(() => {
     if (
@@ -42,28 +70,6 @@ function Tracklist({ tracks, getTracksError, refetch }) {
     dispatch(setCurrentTrack({ playlist: tracks, track: track }));
     if (isMix) {
       dispatch(mixTracks(true));
-    }
-  };
-
-  const currentUser = JSON.parse(localStorage.getItem("user"));
-  const token = JSON.parse(localStorage.access);
-
-  const isUserStarred = (track) => {
-    const trackIsLiked =
-      track.stared_user &&
-      track.stared_user.some((user) => user.id === currentUser.id);
-    return trackIsLiked || !track.stared_user;
-  };
-
-  const handleToggleFavoriteClick = (track) => {
-    if (isUserStarred(track)) {
-      deleteFromFavorites({ id: track.id, token }).then(() => {
-        refetch();
-      });
-    } else {
-      addToFavorites({ id: track.id, token }).then(() => {
-        refetch();
-      });
     }
   };
 
@@ -126,8 +132,8 @@ function Tracklist({ tracks, getTracksError, refetch }) {
               <Style.TrackLikeTime>
                 <Style.TrackLikeSvg
                   alt="like"
-                  onClick={() => handleToggleFavoriteClick(track)}
-                  $isFavorite={isUserStarred(track)}
+                  onClick={handleToggleLike(track)}
+                  isFavorite={isFavorite}
                 >
                   <use xlinkHref="/icon/sprite.svg#icon-like"></use>
                 </Style.TrackLikeSvg>

@@ -315,8 +315,8 @@ export const TrackPlayLikeSvg = styled.svg`
   width: 14px;
   height: 12px;
   margin-right: 17px;
-  fill: ${(props) => (props.$isFavorite ? "#B672FF" : "transparent")};
-  stroke: ${(props) => (props.$isFavorite ? "#B672FF" : "#696969")};
+  fill: ${(props) => (props.isFavorite ? "#B672FF" : "transparent")};
+  stroke: ${(props) => (props.isFavorite ? "#B672FF" : "#696969")};
   cursor: pointer;
 
   &:hover {

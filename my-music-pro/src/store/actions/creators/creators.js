@@ -8,8 +8,6 @@ import {
   PAUSE,
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
-  SET_FILTER,
-  SET_SORTER,
   TOGGLE_LIKE,
 } from "../types/types";
 
@@ -60,14 +58,4 @@ export const setSearchQuery = (query) => ({
 
 export const clearSearchQuery = () => ({
   type: CLEAR_SEARCH_QUERY,
-});
-
-export const setFilter = (filterIndex, selectedValues) => ({
-  type: SET_FILTER,
-  payload: { filterIndex, selectedValues },
-});
-
-export const setSorter = (sorterIndex, selectedValues) => ({
-  type: SET_SORTER,
-  payload: { sorterIndex, selectedValues },
 });

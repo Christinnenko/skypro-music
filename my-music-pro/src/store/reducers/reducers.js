@@ -8,8 +8,6 @@ import {
   PAUSE,
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
-  SET_SORTER,
-  SET_FILTER,
   TOGGLE_LIKE,
 } from "../actions/types/types";
 
@@ -24,8 +22,6 @@ const initialState = {
   isFavorite: false,
   playlist: [],
   searchQuery: "",
-  filterStates: [],
-  sorterStates: [],
 };
 
 // 2.
@@ -130,26 +126,6 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         searchQuery: "",
-      };
-    }
-
-    case SET_FILTER: {
-      return {
-        ...state,
-        filterStates: {
-          ...state.filterStates,
-          [action.payload.filterIndex]: action.payload.selectedValues,
-        },
-      };
-    }
-
-    case SET_SORTER: {
-      return {
-        ...state,
-        sorterStates: {
-          ...state.sorterStates,
-          [action.payload.sorterIndex]: action.payload.selectedValues,
-        },
       };
     }
 

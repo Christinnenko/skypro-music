@@ -9,6 +9,7 @@ import {
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
   TOGGLE_LIKE,
+  SET_PAGE_PLAYLIST,
 } from "../types/types";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -58,4 +59,9 @@ export const setSearchQuery = (query) => ({
 
 export const clearSearchQuery = () => ({
   type: CLEAR_SEARCH_QUERY,
+});
+
+export const setPagePlaylist = ({ fetchedTracks }) => ({
+  type: SET_PAGE_PLAYLIST,
+  payload: { fetchedTracks },
 });

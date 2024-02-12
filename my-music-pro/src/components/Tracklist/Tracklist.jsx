@@ -1,5 +1,4 @@
 import * as Style from "./Tracklist.styles.js";
-import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,20 +13,20 @@ import {
 } from "../../services/Services.js";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Track } from "../Track/Track.jsx";
 
 function Tracklist({ tracks, getTracksError }) {
   console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
-  const { currentTrack, isPlaying, isMix } = useSelector(
-    (store) => store.player
-  );
+  const { isMix } = useSelector((store) => store.player);
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.access);
 
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
-  const { isFavorite } = useSelector((store) => store.player);
+  const { isFavorite } = tracks;
+  console.log("like", tracks);
 
   const handleToggleLike = (track) => {
     return () => {
@@ -91,58 +90,11 @@ function Tracklist({ tracks, getTracksError }) {
       <Style.ContentPlaylist>
         {tracks.map((track) => (
           <Style.PlaylistItem key={track.id}>
-            <Style.PlaylistTrack>
-              <Style.TrackTitle>
-                <Style.TrackTitleImage>
-                  {currentTrack && currentTrack.id === track.id ? (
-                    <Style.BlinkingDot
-                      $isPlaying={isPlaying}
-                    ></Style.BlinkingDot>
-                  ) : (
-                    <Style.TrackTitleSvg alt="music">
-                      <use xlinkHref="/icon/sprite.svg#icon-note"></use>
-                      {track.logo}
-                    </Style.TrackTitleSvg>
-                  )}
-                </Style.TrackTitleImage>
-                <div>
-                  <Style.TrackTitleLink
-                    onClick={() => {
-                      handleCurrentTrackId(track);
-                    }}
-                  >
-                    {track.name} <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                  </Style.TrackTitleLink>
-                </div>
-              </Style.TrackTitle>
-              <Style.TrackAuthor>
-                <Style.TrackAuthorLink
-                  onClick={() => handleCurrentTrackId(track)}
-                >
-                  {track.author}
-                </Style.TrackAuthorLink>
-              </Style.TrackAuthor>
-              <Style.TrackAlbum>
-                <Style.TrackAlbumLink
-                  onClick={() => handleCurrentTrackId(track)}
-                >
-                  {track.album}
-                </Style.TrackAlbumLink>
-              </Style.TrackAlbum>
-              <Style.TrackLikeTime>
-                <Style.TrackLikeSvg
-                  alt="like"
-                  onClick={handleToggleLike(track)}
-                  isFavorite={isFavorite}
-                >
-                  <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                </Style.TrackLikeSvg>
-
-                <Style.TrackTimeText>
-                  {convertSecToMinAndSec(track.duration_in_seconds)}
-                </Style.TrackTimeText>
-              </Style.TrackLikeTime>
-            </Style.PlaylistTrack>
+            <Track
+              track={track}
+              handleCurrentTrackId={handleCurrentTrackId}
+              handleToggleLike={handleToggleLike}
+            />
           </Style.PlaylistItem>
         ))}
       </Style.ContentPlaylist>

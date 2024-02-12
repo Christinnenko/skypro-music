@@ -10,21 +10,27 @@ import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSearchQuery } from "../../store/actions/creators/creators.js";
+import {
+  clearSearchQuery,
+  setPagePlaylist,
+} from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [tracks, setTracks] = useState([]);
+
   const [tracksError, setTracksError] = useState([]);
   const [filteredTracks, setFilteredTracks] = useState([]);
 
   const searchQuery = useSelector((state) => state.player.searchQuery);
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
 
   const getTracks = async () => {
     try {
       const fetchedTracks = await getAllTracks();
-      setTracks(fetchedTracks);
+      console.log(fetchedTracks);
+      console.log(pagePlaylist);
+      dispatch(setPagePlaylist({ fetchedTracks }));
       setLoading(false);
     } catch (error) {
       setTracksError([
@@ -45,7 +51,7 @@ export const Main = ({ handleLogout }) => {
   }, []);
 
   useEffect(() => {
-    const updatedFilteredTracks = tracks.filter(
+    const updatedFilteredTracks = pagePlaylist.filter(
       (track) =>
         track.name &&
         track.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -54,10 +60,10 @@ export const Main = ({ handleLogout }) => {
     console.log("Search Query:", searchQuery);
     console.log("Filtered Tracks:", updatedFilteredTracks);
     setFilteredTracks(updatedFilteredTracks);
-  }, [searchQuery, tracks]);
+  }, [searchQuery, pagePlaylist]);
 
   return loading ? (
-    <EmulationApp handleLogout={handleLogout} tracks={tracks} />
+    <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
   ) : (
     <>
       <S.Main>
@@ -65,7 +71,7 @@ export const Main = ({ handleLogout }) => {
         <div>
           <Search />
           <S.CenterblockH2>Треки</S.CenterblockH2>
-          <Filters tracks={tracks} />
+          <Filters tracks={pagePlaylist} />
 
           <Tracklist
             tracks={filteredTracks}

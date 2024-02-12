@@ -9,6 +9,7 @@ import {
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
   TOGGLE_LIKE,
+  SET_PAGE_PLAYLIST,
 } from "../actions/types/types";
 
 // 1.
@@ -17,6 +18,7 @@ const initialState = {
   allIds: [],
   isPlaying: null,
   tracks: [],
+  pagePlaylist: [],
   isMix: false,
   likedTracks: [],
   isFavorite: false,
@@ -138,6 +140,18 @@ export default function playerReducer(state = initialState, action) {
           ? state.likedTracks.filter((likedTrack) => likedTrack !== track)
           : [...state.likedTracks, track],
         isFavorite: !state.isFavorite,
+      };
+    }
+
+    case SET_PAGE_PLAYLIST: {
+      const { fetchedTracks } = action.payload;
+      const playlistWithLikes = fetchedTracks.map((el) => {
+        return { ...el, isFavorite: false }; //добавить логику stared_user
+      });
+      console.log("rfrv", fetchedTracks);
+      return {
+        ...state,
+        pagePlaylist: playlistWithLikes,
       };
     }
 

@@ -5,7 +5,7 @@ import {
   clearCurrentTrack,
   mixTracks,
   setCurrentTrack,
-  toggleLike,
+  setPagePlaylist,
 } from "../../store/actions/creators/creators.js";
 import {
   useAddToFavoritesMutation,
@@ -25,31 +25,39 @@ function Tracklist({ tracks, getTracksError }) {
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
-  const { isFavorite } = tracks;
+  // const { isFavorite } = tracks;
   console.log("like", tracks);
+  const pagePlaylist = useSelector((state) => state.pagePlaylist);
 
   const handleToggleLike = (track) => {
     return () => {
-      if (isFavorite) {
-        deleteFromFavorites({ id: track.id })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error deleting from favorites:", error);
-          });
-      } else {
+      const updatedTrack = { ...track, isFavorite: !track.isFavorite };
+
+      if (updatedTrack.isFavorite) {
         addToFavorites({ id: track.id, token })
           .then(() => {
-            console.log("Toggling like for track:", track);
+            console.log("Toggling like for track:", updatedTrack);
+            const updatedTracks = pagePlaylist.map((t) =>
+              t.id === track.id ? updatedTrack : t
+            );
+            dispatch(setPagePlaylist({ fetchedTracks: updatedTracks }));
           })
           .catch((error) => {
             console.error("Error adding to favorites:", error);
           });
+      } else {
+        deleteFromFavorites({ id: track.id })
+          .then(() => {
+            console.log("Toggling like for track:", updatedTrack);
+            const updatedTracks = pagePlaylist.map((t) =>
+              t.id === track.id ? updatedTrack : t
+            );
+            dispatch(setPagePlaylist({ fetchedTracks: updatedTracks }));
+          })
+          .catch((error) => {
+            console.error("Error deleting from favorites:", error);
+          });
       }
-
-      // Обернуть трек в объект с именем "track"
-      dispatch(toggleLike({ track }));
     };
   };
 

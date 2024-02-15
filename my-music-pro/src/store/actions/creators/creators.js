@@ -8,7 +8,6 @@ import {
   PAUSE,
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
-  TOGGLE_LIKE,
   SET_PAGE_PLAYLIST,
 } from "../types/types";
 
@@ -20,10 +19,10 @@ export const setCurrentTrack = ({ playlist, track }) => ({
   },
 });
 
-export const toggleLike = (track) => ({
-  type: TOGGLE_LIKE,
-  payload: { track },
-});
+// export const toggleLike = (track) => ({
+//   type: TOGGLE_LIKE,
+//   payload: { track },
+// });
 
 export const clearCurrentTrack = () => ({
   type: CLEAR_CURRENT_TRACK,

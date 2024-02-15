@@ -6,7 +6,7 @@ export const MIX_TRACK = "MIX_TRACK";
 export const PLAY = "PLAY";
 export const PAUSE = "PAUSE";
 
-export const TOGGLE_LIKE = "TOGGLE_LIKE";
+// export const TOGGLE_LIKE = "TOGGLE_LIKE";
 
 export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
 export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";

@@ -8,7 +8,6 @@ import {
   PAUSE,
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
-  TOGGLE_LIKE,
   SET_PAGE_PLAYLIST,
 } from "../actions/types/types";
 
@@ -131,22 +130,31 @@ export default function playerReducer(state = initialState, action) {
       };
     }
 
-    case TOGGLE_LIKE: {
-      const { track } = action.payload;
+    // case TOGGLE_LIKE: {
+    //   const { track } = action.payload;
 
-      return {
-        ...state,
-        likedTracks: state.likedTracks.includes(track)
-          ? state.likedTracks.filter((likedTrack) => likedTrack !== track)
-          : [...state.likedTracks, track],
-        isFavorite: !state.isFavorite,
-      };
-    }
+    //   return {
+    //     ...state,
+    //     likedTracks: state.likedTracks.includes(track)
+    //       ? state.likedTracks.filter((likedTrack) => likedTrack !== track)
+    //       : [...state.likedTracks, track],
+    //     isFavorite: !state.isFavorite,
+    //   };
+    // }
 
     case SET_PAGE_PLAYLIST: {
       const { fetchedTracks } = action.payload;
+      const currentUser = JSON.parse(localStorage.getItem("user"));
+
       const playlistWithLikes = fetchedTracks.map((el) => {
-        return { ...el, isFavorite: false }; //добавить логику stared_user
+        let isFavorite = false;
+        if (el.stared_user) {
+          isFavorite = el.stared_user.some(
+            (user) => user.id === currentUser.id
+          );
+        }
+
+        return { ...el, isFavorite };
       });
       console.log("rfrv", fetchedTracks);
       return {

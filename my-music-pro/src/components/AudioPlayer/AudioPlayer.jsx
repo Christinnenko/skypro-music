@@ -8,7 +8,7 @@ import {
   mixTracks,
   play,
   pause,
-  toggleLike,
+  setPagePlaylist,
 } from "../../store/actions/creators/creators.js";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,7 +16,8 @@ import {
   useDeleteFromFavoritesMutation,
 } from "../../services/Services.js";
 
-function AudioPlayer({ track, props }) {
+function AudioPlayer({ track, props, tracks: initialTracks }) {
+  const [tracks, setTracks] = useState(initialTracks);
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
   //повторение трека по кругу
@@ -34,29 +35,53 @@ function AudioPlayer({ track, props }) {
   const token = JSON.parse(localStorage.access);
 
   const handleToggleLike = (track) => {
-    return () => {
-      if (isFavorite) {
-        deleteFromFavorites({ id: track.id })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error deleting from favorites:", error);
-          });
-      } else {
-        addToFavorites({ id: track.id, token })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error adding to favorites:", error);
-          });
-      }
+    return async () => {
+      try {
+        let updatedTracks;
+        if (track.isFavorite) {
+          await deleteFromFavorites({ id: track.id });
+          updatedTracks = tracks.map((t) =>
+            t.id === track.id ? { ...t, isFavorite: false } : t
+          );
+        } else {
+          await addToFavorites({ id: track.id, token });
+          updatedTracks = tracks.map((t) =>
+            t.id === track.id ? { ...t, isFavorite: true } : t
+          );
+        }
 
-      // Обернуть трек в объект с именем "track"
-      dispatch(toggleLike({ track }));
+        setTracks(updatedTracks); // Обновляем состояние треков
+        dispatch(setPagePlaylist({ fetchedTracks: updatedTracks }));
+      } catch (error) {
+        console.error("Error toggling like:", error);
+      }
     };
   };
+
+  // const handleToggleLike = (track) => {
+  //   return () => {
+  //     if (isFavorite) {
+  //       deleteFromFavorites({ id: track.id })
+  //         .then(() => {
+  //           console.log("Toggling like for track:", track);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error deleting from favorites:", error);
+  //         });
+  //     } else {
+  //       addToFavorites({ id: track.id, token })
+  //         .then(() => {
+  //           console.log("Toggling like for track:", track);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error adding to favorites:", error);
+  //         });
+  //     }
+
+  //     // Обернуть трек в объект с именем "track"
+  //     dispatch(setPagePlaylist({ fetchedTracks: tracks }));
+  //   };
+  // };
 
   const handleMix = () => {
     if (!isMix) {
@@ -316,8 +341,10 @@ AudioPlayer.propTypes = {
     name: PropTypes.string,
     author: PropTypes.string,
     track_file: PropTypes.string,
+    isFavorite: PropTypes.bool,
   }).isRequired,
   props: PropTypes.bool.isRequired,
+  tracks: PropTypes.array.isRequired,
 };
 
 export default AudioPlayer;

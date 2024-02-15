@@ -30,7 +30,7 @@ export const Category = ({ handleLogout }) => {
 
   useEffect(() => {
     if (data) {
-      const updatedSearchTracks = data
+      const updatedFilterTracks = data
         .map((track) => ({
           ...track,
           isFavorite: pagePlaylist.some(
@@ -43,7 +43,7 @@ export const Category = ({ handleLogout }) => {
             track.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
-      setSearchTracks(updatedSearchTracks);
+      setSearchTracks(updatedFilterTracks);
     }
   }, [data, searchQuery, pagePlaylist]);
 

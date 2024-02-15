@@ -65,3 +65,8 @@ export const toggleLike = (trackId) => ({
   type: TOGGLE_LIKE,
   payload: { trackId },
 });
+
+export const setFilteredTracks = ({ filterType, selectedItems }) => ({
+  type: "SET_FILTERED_TRACKS",
+  payload: { filterType, selectedItems },
+});

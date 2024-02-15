@@ -24,6 +24,7 @@ const initialState = {
   isFavorite: false,
   playlist: [],
   searchQuery: "",
+  filteredTracks: [],
 };
 
 // 2.
@@ -171,6 +172,31 @@ export default function playerReducer(state = initialState, action) {
       };
     }
 
+    case "SET_FILTERED_TRACKS": {
+      const { filterType, selectedItems } = action.payload;
+      console.log("Полученные данные:", action.payload);
+      let filteredTracks = [];
+
+      // Фильтрация треков в зависимости от типа фильтра
+      if (filterType === "исполнителю") {
+        filteredTracks = state.pagePlaylist.filter((track) =>
+          Array.isArray(selectedItems)
+            ? selectedItems.includes(track.author)
+            : selectedItems === track.author
+        );
+      } else if (filterType === "жанру") {
+        filteredTracks = state.pagePlaylist.filter((track) =>
+          Array.isArray(selectedItems)
+            ? selectedItems.includes(track.genre)
+            : selectedItems === track.genre
+        );
+      }
+
+      return {
+        ...state,
+        filteredTracks: filteredTracks,
+      };
+    }
     default:
       return state;
   }

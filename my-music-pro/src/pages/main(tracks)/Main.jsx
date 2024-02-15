@@ -16,6 +16,8 @@ import {
 } from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
+  const filteredTracks = useSelector((state) => state.player.filteredTracks);
+
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
@@ -71,7 +73,7 @@ export const Main = ({ handleLogout }) => {
           <Filters tracks={pagePlaylist} />
 
           <Tracklist
-            tracks={searchTracks}
+            tracks={[...searchTracks, ...filteredTracks]}
             tracksError={tracksError}
             refetch={getTracks}
           />

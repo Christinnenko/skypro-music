@@ -1,6 +1,8 @@
 import { useState } from "react";
 import * as S from "./Filters.styles.js";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { setFilteredTracks } from "../../store/actions/creators/creators.js";
 
 const Filter = ({
   buttonText,
@@ -9,6 +11,7 @@ const Filter = ({
   toggleFilter,
   selectedValues,
   onItemClick,
+  handleFilterChange,
 }) => (
   <div>
     <S.FilterButton $isOpen={isOpen} onClick={toggleFilter}>
@@ -24,7 +27,10 @@ const Filter = ({
             <div
               key={itemIndex}
               className={selectedValues.includes(item) ? "selected" : ""}
-              onClick={() => onItemClick(item)}
+              onClick={() => {
+                onItemClick(item);
+                handleFilterChange(buttonText, item);
+              }}
             >
               {item}
             </div>
@@ -42,6 +48,7 @@ Filter.propTypes = {
   selectedValues: PropTypes.arrayOf(PropTypes.string).isRequired,
   toggleFilter: PropTypes.func.isRequired,
   onItemClick: PropTypes.func.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
 };
 
 const Sorter = ({
@@ -160,6 +167,16 @@ function Filters({ tracks }) {
     }
   };
 
+  const dispatch = useDispatch();
+
+  // Добавьте обработчики изменения фильтров
+  const handleFilterChange = (filterType, selectedItems) => {
+    // Обновите состояние фильтров в Redux
+    dispatch(setFilteredTracks({ filterType, selectedItems }));
+    console.log("filterType", filterType);
+    console.log("selectedItems", selectedItems);
+  };
+
   return (
     <S.CenterblockFilter>
       <S.FilterBlock>
@@ -173,6 +190,7 @@ function Filters({ tracks }) {
             selectedValues={filterStates[index] || []}
             toggleFilter={() => toggleFilter(index, false)}
             onItemClick={(item) => handleItemClick(index, item, false)}
+            handleFilterChange={handleFilterChange}
           />
         ))}
       </S.FilterBlock>

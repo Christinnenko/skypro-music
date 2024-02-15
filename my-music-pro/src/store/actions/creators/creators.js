@@ -9,6 +9,7 @@ import {
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
   SET_PAGE_PLAYLIST,
+  TOGGLE_LIKE,
 } from "../types/types";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -18,11 +19,6 @@ export const setCurrentTrack = ({ playlist, track }) => ({
     track,
   },
 });
-
-// export const toggleLike = (track) => ({
-//   type: TOGGLE_LIKE,
-//   payload: { track },
-// });
 
 export const clearCurrentTrack = () => ({
   type: CLEAR_CURRENT_TRACK,
@@ -63,4 +59,9 @@ export const clearSearchQuery = () => ({
 export const setPagePlaylist = ({ fetchedTracks }) => ({
   type: SET_PAGE_PLAYLIST,
   payload: { fetchedTracks },
+});
+
+export const toggleLike = (trackId) => ({
+  type: TOGGLE_LIKE,
+  payload: { trackId },
 });

@@ -5,7 +5,7 @@ import {
   clearCurrentTrack,
   mixTracks,
   setCurrentTrack,
-  setPagePlaylist,
+  toggleLike,
 } from "../../store/actions/creators/creators.js";
 import {
   useAddToFavoritesMutation,
@@ -25,40 +25,27 @@ function Tracklist({ tracks, getTracksError }) {
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
-  // const { isFavorite } = tracks;
-  console.log("like", tracks);
-  const pagePlaylist = useSelector((state) => state.pagePlaylist);
 
-  const handleToggleLike = (track) => {
-    return () => {
-      const updatedTrack = { ...track, isFavorite: !track.isFavorite };
-
-      if (updatedTrack.isFavorite) {
-        addToFavorites({ id: track.id, token })
-          .then(() => {
-            console.log("Toggling like for track:", updatedTrack);
-            const updatedTracks = pagePlaylist.map((t) =>
-              t.id === track.id ? updatedTrack : t
-            );
-            dispatch(setPagePlaylist({ fetchedTracks: updatedTracks }));
-          })
-          .catch((error) => {
-            console.error("Error adding to favorites:", error);
-          });
-      } else {
-        deleteFromFavorites({ id: track.id })
-          .then(() => {
-            console.log("Toggling like for track:", updatedTrack);
-            const updatedTracks = pagePlaylist.map((t) =>
-              t.id === track.id ? updatedTrack : t
-            );
-            dispatch(setPagePlaylist({ fetchedTracks: updatedTracks }));
-          })
-          .catch((error) => {
-            console.error("Error deleting from favorites:", error);
-          });
-      }
-    };
+  const handleToggleLike = (trackId, track) => {
+    if (track.isFavorite) {
+      deleteFromFavorites({ id: trackId })
+        .then(() => {
+          console.log("Toggling like for track:", track);
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error deleting from favorites:", error);
+        });
+    } else {
+      addToFavorites({ id: trackId, token })
+        .then(() => {
+          console.log("Toggling like for track:", track);
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error adding to favorites:", error);
+        });
+    }
   };
 
   useEffect(() => {
@@ -101,7 +88,7 @@ function Tracklist({ tracks, getTracksError }) {
             <Track
               track={track}
               handleCurrentTrackId={handleCurrentTrackId}
-              handleToggleLike={handleToggleLike}
+              handleToggleLike={() => handleToggleLike(track.id, track)}
             />
           </Style.PlaylistItem>
         ))}

@@ -9,6 +9,7 @@ import {
   SET_SEARCH_QUERY,
   CLEAR_SEARCH_QUERY,
   SET_PAGE_PLAYLIST,
+  TOGGLE_LIKE,
 } from "../actions/types/types";
 
 // 1.
@@ -130,18 +131,6 @@ export default function playerReducer(state = initialState, action) {
       };
     }
 
-    // case TOGGLE_LIKE: {
-    //   const { track } = action.payload;
-
-    //   return {
-    //     ...state,
-    //     likedTracks: state.likedTracks.includes(track)
-    //       ? state.likedTracks.filter((likedTrack) => likedTrack !== track)
-    //       : [...state.likedTracks, track],
-    //     isFavorite: !state.isFavorite,
-    //   };
-    // }
-
     case SET_PAGE_PLAYLIST: {
       const { fetchedTracks } = action.payload;
       const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -160,6 +149,18 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         pagePlaylist: playlistWithLikes,
+      };
+    }
+
+    case TOGGLE_LIKE: {
+      const { trackId } = action.payload;
+      return {
+        ...state,
+        pagePlaylist: state.pagePlaylist.map((track) =>
+          track.id === trackId
+            ? { ...track, isFavorite: !track.isFavorite }
+            : track
+        ),
       };
     }
 

@@ -206,15 +206,23 @@ export const TrackLikeSvg = styled.svg`
   width: 14px;
   height: 12px;
   margin-right: 17px;
-  fill: ${(props) => (props.isFavorite ? "#B672FF" : "transparent")};
-  stroke: ${(props) => (props.isFavorite ? "#B672FF" : "#696969")};
   cursor: pointer;
 
-  &:hover {
+  use {
+    fill: transparent;
+    stroke: #696969;
+  }
+
+  &.liked use {
+    fill: #b672ff;
+    stroke: #b672ff;
+  }
+
+  &:hover use {
     stroke: #acacac;
   }
 
-  &:active {
+  &:active use {
     fill: #696969;
     stroke: #fff;
   }

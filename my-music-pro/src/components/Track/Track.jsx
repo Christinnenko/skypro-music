@@ -43,8 +43,8 @@ export const Track = ({ track, handleCurrentTrackId, handleToggleLike }) => {
       <Style.TrackLikeTime>
         <Style.TrackLikeSvg
           alt="like"
-          onClick={handleToggleLike(track)}
-          isFavorite={isFavorite}
+          onClick={() => handleToggleLike(track.id, track)}
+          className={isFavorite ? "liked" : ""}
         >
           <use xlinkHref="/icon/sprite.svg#icon-like"></use>
         </Style.TrackLikeSvg>

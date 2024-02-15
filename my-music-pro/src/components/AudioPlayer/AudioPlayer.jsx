@@ -8,16 +8,16 @@ import {
   mixTracks,
   play,
   pause,
-  setPagePlaylist,
+  toggleLike,
 } from "../../store/actions/creators/creators.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
 } from "../../services/Services.js";
 
-function AudioPlayer({ track, props, tracks: initialTracks }) {
-  const [tracks, setTracks] = useState(initialTracks);
+function AudioPlayer({ track }) {
+  // const [tracks, setTracks] = useState(initialTracks);
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
   //повторение трека по кругу
@@ -27,61 +27,33 @@ function AudioPlayer({ track, props, tracks: initialTracks }) {
 
   const dispatch = useDispatch();
 
-  const { isFavorite } = useSelector((store) => store.player);
-
   const [addToFavorites] = useAddToFavoritesMutation();
   const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
 
   const token = JSON.parse(localStorage.access);
+  const isFavorite = track.isFavorite;
 
-  const handleToggleLike = (track) => {
-    return async () => {
-      try {
-        let updatedTracks;
-        if (track.isFavorite) {
-          await deleteFromFavorites({ id: track.id });
-          updatedTracks = tracks.map((t) =>
-            t.id === track.id ? { ...t, isFavorite: false } : t
-          );
-        } else {
-          await addToFavorites({ id: track.id, token });
-          updatedTracks = tracks.map((t) =>
-            t.id === track.id ? { ...t, isFavorite: true } : t
-          );
-        }
-
-        setTracks(updatedTracks); // Обновляем состояние треков
-        dispatch(setPagePlaylist({ fetchedTracks: updatedTracks }));
-      } catch (error) {
-        console.error("Error toggling like:", error);
-      }
-    };
+  const handleToggleLike = (trackId, track) => {
+    if (isFavorite) {
+      deleteFromFavorites({ id: trackId })
+        .then(() => {
+          console.log("Toggling like for track:", track);
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error deleting from favorites:", error);
+        });
+    } else {
+      addToFavorites({ id: trackId, token })
+        .then(() => {
+          console.log("Toggling like for track:", track);
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error adding to favorites:", error);
+        });
+    }
   };
-
-  // const handleToggleLike = (track) => {
-  //   return () => {
-  //     if (isFavorite) {
-  //       deleteFromFavorites({ id: track.id })
-  //         .then(() => {
-  //           console.log("Toggling like for track:", track);
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error deleting from favorites:", error);
-  //         });
-  //     } else {
-  //       addToFavorites({ id: track.id, token })
-  //         .then(() => {
-  //           console.log("Toggling like for track:", track);
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error adding to favorites:", error);
-  //         });
-  //     }
-
-  //     // Обернуть трек в объект с именем "track"
-  //     dispatch(setPagePlaylist({ fetchedTracks: tracks }));
-  //   };
-  // };
 
   const handleMix = () => {
     if (!isMix) {
@@ -293,9 +265,8 @@ function AudioPlayer({ track, props, tracks: initialTracks }) {
                   <S.TrackPlayLike>
                     <S.TrackPlayLikeSvg
                       alt="like"
-                      onClick={handleToggleLike(track)}
-                      {...props}
-                      isFavorite={isFavorite}
+                      onClick={() => handleToggleLike(track.id, track)}
+                      className={isFavorite ? "liked" : ""}
                     >
                       <use xlinkHref="/icon/sprite.svg#icon-like"></use>
                     </S.TrackPlayLikeSvg>
@@ -343,8 +314,6 @@ AudioPlayer.propTypes = {
     track_file: PropTypes.string,
     isFavorite: PropTypes.bool,
   }).isRequired,
-  props: PropTypes.bool.isRequired,
-  tracks: PropTypes.array.isRequired,
 };
 
 export default AudioPlayer;

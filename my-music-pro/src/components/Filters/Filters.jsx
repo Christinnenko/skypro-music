@@ -105,19 +105,8 @@ function Filters({ tracks }) {
       ).sort(),
     },
     {
-      buttonText: "году выпуска",
-      listItems: Array.from(
-        new Set(
-          tracks
-            .filter((track) => track.release_date) // Фильтруем треки без release_date
-            .map((track) => track.release_date.substring(0, 4))
-        )
-      ).sort((a, b) => b - a),
-    },
-
-    {
       buttonText: "жанру",
-      listItems: Array.from(new Set(tracks.map((track) => track.genre))),
+      listItems: Array.from(new Set(tracks.map((track) => track.genre))).sort(),
     },
   ];
 

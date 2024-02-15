@@ -58,19 +58,17 @@ export const Favorites = ({ handleLogout }) => {
   const refreshToken = JSON.parse(localStorage.refresh);
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
   const searchQuery = useSelector((state) => state.player.searchQuery);
-  const [filteredTracks, setFilteredTracks] = useState([]);
+  const [searchTracks, setSearchTracks] = useState([]);
 
   useEffect(() => {
     if (data) {
-      const updatedFilteredTracks = data.filter(
+      const updatedSearchTracks = data.filter(
         (track) =>
           track.name &&
           track.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
-      console.log("Search Query:", searchQuery);
-      console.log("Filtered Tracks:", updatedFilteredTracks);
-      setFilteredTracks(updatedFilteredTracks);
+      setSearchTracks(updatedSearchTracks);
     }
   }, [searchQuery, data]);
 
@@ -106,7 +104,7 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
-            <Tracklist tracks={filteredTracks} refetch={refetch} />
+            <Tracklist tracks={searchTracks} refetch={refetch} />
           )}
         </div>
         <St.ContainerSidebar>

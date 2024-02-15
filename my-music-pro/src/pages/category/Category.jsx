@@ -24,13 +24,13 @@ export const Category = ({ handleLogout }) => {
     id: categoryId,
   });
   const searchQuery = useSelector((state) => state.player.searchQuery);
-  const [filteredTracks, setFilteredTracks] = useState([]);
+  const [searchTracks, setSearchTracks] = useState([]);
 
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
 
   useEffect(() => {
     if (data) {
-      const updatedFilteredTracks = data
+      const updatedSearchTracks = data
         .map((track) => ({
           ...track,
           isFavorite: pagePlaylist.some(
@@ -43,7 +43,7 @@ export const Category = ({ handleLogout }) => {
             track.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
-      setFilteredTracks(updatedFilteredTracks);
+      setSearchTracks(updatedSearchTracks);
     }
   }, [data, searchQuery, pagePlaylist]);
 
@@ -63,7 +63,7 @@ export const Category = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Треки в разделе отсутствуют`
           ) : (
-            <Tracklist tracks={filteredTracks} refetch={refetch} />
+            <Tracklist tracks={searchTracks} refetch={refetch} />
           )}
         </div>
 

@@ -20,7 +20,7 @@ export const Main = ({ handleLogout }) => {
   const [loading, setLoading] = useState(true);
 
   const [tracksError, setTracksError] = useState([]);
-  const [filteredTracks, setFilteredTracks] = useState([]);
+  const [searchTracks, setSearchTracks] = useState([]);
 
   const searchQuery = useSelector((state) => state.player.searchQuery);
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
@@ -51,15 +51,12 @@ export const Main = ({ handleLogout }) => {
   }, []);
 
   useEffect(() => {
-    const updatedFilteredTracks = pagePlaylist.filter(
+    const updatedSearchTracks = pagePlaylist.filter(
       (track) =>
         track.name &&
         track.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-    console.log("Search Query:", searchQuery);
-    console.log("Filtered Tracks:", updatedFilteredTracks);
-    setFilteredTracks(updatedFilteredTracks);
+    setSearchTracks(updatedSearchTracks);
   }, [searchQuery, pagePlaylist]);
 
   return loading ? (
@@ -74,7 +71,7 @@ export const Main = ({ handleLogout }) => {
           <Filters tracks={pagePlaylist} />
 
           <Tracklist
-            tracks={filteredTracks}
+            tracks={searchTracks}
             tracksError={tracksError}
             refetch={getTracks}
           />

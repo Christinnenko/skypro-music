@@ -47,7 +47,9 @@ export const getFavTracksApi = createApi({
         method: "GET",
       }),
       transformResponse: (response) => {
-        return response.items.map((track) => ({ ...track, isFavorite: true }));
+        return response.items.map((track) => ({
+          ...track,
+        }));
       },
     }),
   }),

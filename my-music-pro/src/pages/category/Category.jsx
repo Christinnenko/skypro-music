@@ -23,23 +23,29 @@ export const Category = ({ handleLogout }) => {
   const { data, isLoading, error, refetch } = useViewSelectionsByIdQuery({
     id: categoryId,
   });
-
   const searchQuery = useSelector((state) => state.player.searchQuery);
   const [filteredTracks, setFilteredTracks] = useState([]);
 
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+
   useEffect(() => {
     if (data) {
-      const updatedFilteredTracks = data.filter(
-        (track) =>
-          track.name &&
-          track.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const updatedFilteredTracks = data
+        .map((track) => ({
+          ...track,
+          isFavorite: pagePlaylist.some(
+            (pTrack) => pTrack.id === track.id && pTrack.isFavorite
+          ), // Проверяем наличие лайка для каждого трека
+        }))
+        .filter(
+          (track) =>
+            track.name &&
+            track.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
-      console.log("Search Query:", searchQuery);
-      console.log("Filtered Tracks:", updatedFilteredTracks);
       setFilteredTracks(updatedFilteredTracks);
     }
-  }, [searchQuery, data]);
+  }, [data, searchQuery, pagePlaylist]);
 
   const isEmptyList = !isLoading && !data?.length;
 

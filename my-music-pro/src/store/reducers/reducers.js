@@ -161,6 +161,13 @@ export default function playerReducer(state = initialState, action) {
             ? { ...track, isFavorite: !track.isFavorite }
             : track
         ),
+        currentTrack:
+          state.currentTrack && state.currentTrack.id === trackId
+            ? {
+                ...state.currentTrack,
+                isFavorite: !state.currentTrack.isFavorite,
+              }
+            : state.currentTrack,
       };
     }
 

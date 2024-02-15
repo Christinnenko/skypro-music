@@ -17,7 +17,6 @@ import {
 } from "../../services/Services.js";
 
 function AudioPlayer({ track }) {
-  // const [tracks, setTracks] = useState(initialTracks);
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
   //повторение трека по кругу

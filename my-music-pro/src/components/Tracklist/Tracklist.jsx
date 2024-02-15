@@ -89,6 +89,7 @@ function Tracklist({ tracks, getTracksError }) {
               track={track}
               handleCurrentTrackId={handleCurrentTrackId}
               handleToggleLike={() => handleToggleLike(track.id, track)}
+              isFavorite={track.isFavorite}
             />
           </Style.PlaylistItem>
         ))}

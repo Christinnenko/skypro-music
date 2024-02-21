@@ -41,8 +41,8 @@ export const FilterButton = styled.div`
   text-align: center;
   position: relative;
 
-  border-color: ${(props) => (props.$isOpen ? "#ad61ff" : "")};
-  color: ${(props) => (props.$isOpen ? "#ad61ff" : "")};
+  border-color: ${(props) => (props.$isActive ? "#ad61ff" : "")};
+  color: ${(props) => (props.$isActive ? "#ad61ff" : "")};
 
   &:hover {
     border-color: #d9b6ff;

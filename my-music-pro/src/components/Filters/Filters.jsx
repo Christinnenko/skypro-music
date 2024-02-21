@@ -1,216 +1,190 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./Filters.styles.js";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import { setFilteredTracks } from "../../store/actions/creators/creators.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setFilter,
+  setInitialTracksForFilter,
+} from "../../store/actions/creators/creators.js";
 
 const Filter = ({
-  buttonText,
-  listItems,
-  isOpen,
-  toggleFilter,
-  selectedValues,
-  onItemClick,
-  handleFilterChange,
-}) => (
-  <div>
-    <S.FilterButton $isOpen={isOpen} onClick={toggleFilter}>
-      {buttonText}
-      {selectedValues.length > 0 && (
-        <S.SelectedCount>{selectedValues.length}</S.SelectedCount>
+  type,
+  filterName,
+  filterOptions,
+  tracks,
+  isActive,
+  onShow,
+  onHide,
+}) => {
+  const dispatch = useDispatch();
+  const [isFilter, setIsFilter] = useState(false);
+
+  const toggleFilter = ({ item, name }) => {
+    setIsFilter(!isFilter);
+    dispatch(setFilter({ item, name, tracks }));
+  };
+
+  const sortedOptions = filterOptions.slice().sort();
+
+  return (
+    <div>
+      <S.FilterButton $isActive={isActive} onClick={isActive ? onHide : onShow}>
+        {type}
+      </S.FilterButton>
+      {isActive && (
+        <S.FilterPopup>
+          <S.FilterPopupScrollable>
+            {sortedOptions.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => toggleFilter({ item, name: filterName, tracks })}
+              >
+                {item}
+              </div>
+            ))}
+          </S.FilterPopupScrollable>
+        </S.FilterPopup>
       )}
-    </S.FilterButton>
-    {isOpen && (
-      <S.FilterPopup>
-        <S.FilterPopupScrollable>
-          {listItems.map((item, itemIndex) => (
-            <div
-              key={itemIndex}
-              className={selectedValues.includes(item) ? "selected" : ""}
-              onClick={() => {
-                onItemClick(item);
-                handleFilterChange(buttonText, item);
-              }}
-            >
-              {item}
-            </div>
-          ))}
-        </S.FilterPopupScrollable>
-      </S.FilterPopup>
-    )}
-  </div>
-);
+    </div>
+  );
+};
 
 Filter.propTypes = {
-  buttonText: PropTypes.string.isRequired,
-  listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  selectedValues: PropTypes.arrayOf(PropTypes.string).isRequired,
-  toggleFilter: PropTypes.func.isRequired,
-  onItemClick: PropTypes.func.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  filterName: PropTypes.string.isRequired,
+  filterOptions: PropTypes.array.isRequired,
+  tracks: PropTypes.array.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onShow: PropTypes.func.isRequired,
+  onHide: PropTypes.func.isRequired,
 };
 
 const Sorter = ({
-  buttonText,
-  listItems,
-  isOpen,
-  toggleFilter,
-  selectedValues,
-  onItemClick,
-}) => (
-  <div>
-    <S.FilterButton $isOpen={isOpen} onClick={toggleFilter}>
-      {buttonText}
-      {selectedValues.length > 0 && (
-        <S.SelectedCount>{selectedValues.length}</S.SelectedCount>
-      )}
-    </S.FilterButton>
-    {isOpen && (
-      <S.FilterPopup>
-        <S.FilterPopupScrollable>
-          {listItems.map((item, itemIndex) => (
-            <div
-              key={itemIndex}
-              className={
-                selectedValues.includes(item) || item === "По умолчанию"
-                  ? "selected"
-                  : ""
-              }
-              onClick={() => onItemClick(item)}
-            >
-              {item}
-            </div>
-          ))}
-        </S.FilterPopupScrollable>
-      </S.FilterPopup>
-    )}
-  </div>
-);
+  type,
+  filterName,
+  filterOptions,
+  tracks,
+  isActive,
+  onShow,
+  onHide,
+}) => {
+  const dispatch = useDispatch();
+  const [isFilter, setIsFilter] = useState(false);
 
-Sorter.propTypes = {
-  buttonText: PropTypes.string.isRequired,
-  listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  selectedValues: PropTypes.arrayOf(PropTypes.string).isRequired,
-  toggleFilter: PropTypes.func.isRequired,
-  onItemClick: PropTypes.func.isRequired,
+  const toggleFilter = ({ item, name }) => {
+    setIsFilter(!isFilter);
+    dispatch(setFilter({ item, name, tracks }));
+  };
+
+  const sortedOptions = filterOptions.slice().sort();
+
+  return (
+    <div>
+      <S.FilterButton $isActive={isActive} onClick={isActive ? onHide : onShow}>
+        {type}
+      </S.FilterButton>
+      {isActive && (
+        <S.FilterPopup>
+          <S.FilterPopupScrollable>
+            {sortedOptions.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => toggleFilter({ item, name: filterName, tracks })}
+              >
+                {item}
+              </div>
+            ))}
+          </S.FilterPopupScrollable>
+        </S.FilterPopup>
+      )}
+    </div>
+  );
 };
 
-function Filters({ tracks }) {
-  const [openFilter, setOpenFilter] = useState(null);
-  const [openSorter, setOpenSorter] = useState(null);
-  const [filterStates, setFilterStates] = useState([]);
-  const [sorterStates, setSorterStates] = useState([]);
-  const [selectedSort, setSelectedSort] = useState("По умолчанию"); //текст на кнопке
+Sorter.propTypes = {
+  type: PropTypes.string.isRequired,
+  filterName: PropTypes.string.isRequired,
+  filterOptions: PropTypes.array.isRequired,
+  tracks: PropTypes.array.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onShow: PropTypes.func.isRequired,
+  onHide: PropTypes.func.isRequired,
+};
 
-  const filterData = [
-    {
-      buttonText: "исполнителю",
-      listItems: Array.from(
-        new Set(tracks.map((track) => track.author))
-      ).sort(),
-    },
-    {
-      buttonText: "жанру",
-      listItems: Array.from(new Set(tracks.map((track) => track.genre))).sort(),
-    },
-  ];
-
-  const sortData = [
-    {
-      buttonText: "По умолчанию",
-      listItems: ["По умолчанию", "Сначала старые", "Сначала новые"],
-    },
-  ];
-
-  const toggleFilter = (index, isSorter) => {
-    if (isSorter) {
-      setOpenSorter((prevFilter) => (prevFilter === index ? null : index));
-      setOpenFilter(null);
-    } else {
-      setOpenFilter((prevFilter) => (prevFilter === index ? null : index));
-      setOpenSorter(null);
-    }
-  };
-
-  const handleItemClick = (index, item, isSorter) => {
-    if (isSorter) {
-      setSorterStates((prevStates) => {
-        let updatedItems;
-
-        if (item === "По умолчанию") {
-          updatedItems = [];
-        } else {
-          updatedItems = [item];
-        }
-
-        setSelectedSort(updatedItems[0] || "По умолчанию");
-
-        return {
-          ...prevStates,
-          [index]: updatedItems,
-        };
-      });
-    } else {
-      setFilterStates((prevStates) => {
-        const prevItems = prevStates[index] || [];
-        const updatedItems = prevItems.includes(item)
-          ? prevItems.filter((prevItem) => prevItem !== item)
-          : [...prevItems, item];
-
-        return {
-          ...prevStates,
-          [index]: updatedItems,
-        };
-      });
-    }
-  };
+const Filters = ({ tracks }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const dispatch = useDispatch();
 
-  // Добавьте обработчики изменения фильтров
-  const handleFilterChange = (filterType, selectedItems) => {
-    // Обновите состояние фильтров в Redux
-    dispatch(setFilteredTracks({ filterType, selectedItems }));
-    console.log("filterType", filterType);
-    console.log("selectedItems", selectedItems);
-  };
+  const filteredTrackList = useSelector(
+    (store) => store.player.filteredPlaylist
+  );
+  const initialTracksForFilter = useSelector(
+    (store) => store.player.initialTracksForFilter
+  );
+  const filteredByGenre = useSelector(
+    (store) => store.player.FilterCriteria.isActiveGenre
+  );
+  const filteredByAuthor = useSelector(
+    (store) => store.player.FilterCriteria.isActiveAuthor
+  );
+  const isSorted = useSelector(
+    (store) => store.player.FilterCriteria.isActiveSort
+  );
+
+  const genres = [...new Set(tracks.map((track) => track.genre))];
+  const author = [...new Set(tracks.map((track) => track.author))];
+  const years = ["По умолчанию", "Сначала новые", "Сначала старые"];
+
+  useEffect(() => {
+    if (tracks) {
+      dispatch(setInitialTracksForFilter({ tracks }));
+    }
+  }, []);
+
+  const filteredData =
+    filteredByGenre || filteredByAuthor || isSorted
+      ? filteredTrackList
+      : initialTracksForFilter;
 
   return (
     <S.CenterblockFilter>
       <S.FilterBlock>
         <S.FilterTitle>Искать по:</S.FilterTitle>
-        {filterData.map((filter, index) => (
-          <Filter
-            key={index}
-            buttonText={filter.buttonText}
-            listItems={filter.listItems}
-            isOpen={openFilter === index}
-            selectedValues={filterStates[index] || []}
-            toggleFilter={() => toggleFilter(index, false)}
-            onItemClick={(item) => handleItemClick(index, item, false)}
-            handleFilterChange={handleFilterChange}
-          />
-        ))}
+        <Filter
+          type="исполнителю"
+          filterName="author"
+          filterOptions={author}
+          tracks={filteredData}
+          isActive={activeIndex === 1}
+          onShow={() => setActiveIndex(1)}
+          onHide={() => setActiveIndex(0)}
+        />
+        <Filter
+          type="жанру"
+          filterName="genre"
+          filterOptions={genres}
+          tracks={filteredData}
+          isActive={activeIndex === 3}
+          onShow={() => setActiveIndex(3)}
+          onHide={() => setActiveIndex(0)}
+        />
       </S.FilterBlock>
       <S.FilterBlock>
         <S.FilterTitle>Сортировка:</S.FilterTitle>
-        {sortData.map((filter, index) => (
-          <Sorter
-            key={index}
-            buttonText={selectedSort}
-            listItems={filter.listItems}
-            isOpen={openSorter === index}
-            selectedValues={sorterStates[index] || []}
-            toggleFilter={() => toggleFilter(index, true)}
-            onItemClick={(item) => handleItemClick(index, item, true)}
-          />
-        ))}
+        <Sorter
+          type="году выпуска"
+          filterName="release_date"
+          filterOptions={years}
+          tracks={filteredData}
+          isActive={activeIndex === 2}
+          onShow={() => setActiveIndex(2)}
+          onHide={() => setActiveIndex(0)}
+        />
       </S.FilterBlock>
     </S.CenterblockFilter>
   );
-}
+};
 
 Filters.propTypes = {
   tracks: PropTypes.array.isRequired,

@@ -11,21 +11,26 @@ import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearSearchQuery,
+  // setInitialTracksForFilter,
   setPagePlaylist,
 } from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
-  const filteredTracks = useSelector((state) => state.player.filteredTracks);
-
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
   const [tracksError, setTracksError] = useState([]);
-  const [searchTracks, setSearchTracks] = useState([]);
 
-  const searchQuery = useSelector((state) => state.player.searchQuery);
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
+  // const initialTracksForFilter = useSelector(
+  //   (state) => state.player.initialTracksForFilter
+  // );
+
+  // const isActiveAuthor = useSelector((state) => state.player.isActiveAuthor);
+  // const isActiveGenre = useSelector((state) => state.player.isActiveGenre);
 
   const getTracks = async () => {
     try {
@@ -43,23 +48,10 @@ export const Main = ({ handleLogout }) => {
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(clearSearchQuery());
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
     getTracks();
   }, []);
 
-  useEffect(() => {
-    const updatedSearchTracks = pagePlaylist.filter(
-      (track) =>
-        track.name &&
-        track.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setSearchTracks(updatedSearchTracks);
-  }, [searchQuery, pagePlaylist]);
+  console.log("filteredPlaylist", filteredPlaylist);
 
   return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
@@ -71,13 +63,23 @@ export const Main = ({ handleLogout }) => {
           <Search />
           <S.CenterblockH2>Треки</S.CenterblockH2>
           <Filters tracks={pagePlaylist} />
-
-          <Tracklist
-            tracks={[...searchTracks, ...filteredTracks]}
-            tracksError={tracksError}
-            refetch={getTracks}
-          />
+          {typeof filteredPlaylist !== "undefined" ? (
+            filteredPlaylist.length > 0 ? (
+              <Tracklist
+                tracks={
+                  filteredPlaylist.length > 0 ? filteredPlaylist : pagePlaylist
+                }
+                tracksError={tracksError}
+                refetch={getTracks}
+              />
+            ) : (
+              <p>Треки отсутствуют</p>
+            )
+          ) : (
+            <p>Загрузка...</p>
+          )}
         </div>
+
         <St.ContainerSidebar>
           <LoginSidebar handleLogout={handleLogout} />
           <Sidebar handleLogout={handleLogout} />

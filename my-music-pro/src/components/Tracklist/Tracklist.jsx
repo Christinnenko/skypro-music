@@ -26,6 +26,17 @@ function Tracklist({ tracks, getTracksError }) {
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
 
+  useEffect(() => {
+    if (
+      (errorAdd && errorAdd.status == 401) ||
+      (errorDelete && errorDelete.status == 401)
+    ) {
+      localStorage.removeItem("user");
+      dispatch(clearCurrentTrack());
+      navigate("/login");
+    }
+  }, [errorAdd, errorDelete]);
+
   const handleToggleLike = (trackId, track) => {
     if (track.isFavorite) {
       deleteFromFavorites({ id: trackId })
@@ -47,17 +58,6 @@ function Tracklist({ tracks, getTracksError }) {
         });
     }
   };
-
-  useEffect(() => {
-    if (
-      (errorAdd && errorAdd.status == 401) ||
-      (errorDelete && errorDelete.status == 401)
-    ) {
-      localStorage.removeItem("user");
-      dispatch(clearCurrentTrack());
-      navigate("/login");
-    }
-  }, [errorAdd, errorDelete]);
 
   const handleCurrentTrackId = (track) => {
     console.log("Handling current track ID:", track.id);
@@ -100,7 +100,6 @@ function Tracklist({ tracks, getTracksError }) {
 Tracklist.propTypes = {
   tracks: PropTypes.array.isRequired,
   getTracksError: PropTypes.any,
-  refetch: PropTypes.func.isRequired,
 };
 
 export default Tracklist;

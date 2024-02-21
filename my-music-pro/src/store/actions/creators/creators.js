@@ -10,6 +10,9 @@ import {
   CLEAR_SEARCH_QUERY,
   SET_PAGE_PLAYLIST,
   TOGGLE_LIKE,
+  SET_INITIAL_TRACKS,
+  SET_FILTER,
+  SET_SEARCH,
 } from "../types/types";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -66,7 +69,26 @@ export const toggleLike = (trackId) => ({
   payload: { trackId },
 });
 
-export const setFilteredTracks = ({ filterType, selectedItems }) => ({
-  type: "SET_FILTERED_TRACKS",
-  payload: { filterType, selectedItems },
+export const setInitialTracksForFilter = ({ tracks }) => ({
+  type: SET_INITIAL_TRACKS,
+  payload: {
+    data: tracks,
+  },
+});
+
+export const setFilter = ({ name, item, tracks }) => ({
+  type: SET_FILTER,
+  payload: {
+    name,
+    item,
+    tracks,
+  },
+});
+
+export const setSearch = ({ value, tracks }) => ({
+  type: SET_SEARCH,
+  payload: {
+    value,
+    tracks,
+  },
 });

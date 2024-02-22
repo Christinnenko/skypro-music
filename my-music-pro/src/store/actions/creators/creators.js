@@ -6,8 +6,6 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
-  SET_SEARCH_QUERY,
-  CLEAR_SEARCH_QUERY,
   SET_PAGE_PLAYLIST,
   TOGGLE_LIKE,
   SET_INITIAL_TRACKS,
@@ -48,15 +46,6 @@ export const mixTracks = (isMix) => ({
   payload: {
     isMix,
   },
-});
-
-export const setSearchQuery = (query) => ({
-  type: SET_SEARCH_QUERY,
-  payload: query,
-});
-
-export const clearSearchQuery = () => ({
-  type: CLEAR_SEARCH_QUERY,
 });
 
 export const setPagePlaylist = ({ fetchedTracks }) => ({

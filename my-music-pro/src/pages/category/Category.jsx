@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Categories } from "../../constants.js";
 import { useParams } from "react-router-dom";
 import * as Style from "../Pages.styles.js";
@@ -10,7 +11,6 @@ import * as St from "../Pages.styles.js";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useViewSelectionsByIdQuery } from "../../services/Services.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export const Category = ({ handleLogout }) => {
@@ -23,29 +23,20 @@ export const Category = ({ handleLogout }) => {
   const { data, isLoading, error, refetch } = useViewSelectionsByIdQuery({
     id: categoryId,
   });
-  const searchQuery = useSelector((state) => state.player.searchQuery);
-  const [searchTracks, setSearchTracks] = useState([]);
-
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const [updatedFilterTracks, setUpdatedFilterTracks] = useState([]);
 
   useEffect(() => {
     if (data) {
-      const updatedFilterTracks = data
-        .map((track) => ({
-          ...track,
-          isFavorite: pagePlaylist.some(
-            (pTrack) => pTrack.id === track.id && pTrack.isFavorite
-          ), // Проверяем наличие лайка для каждого трека
-        }))
-        .filter(
-          (track) =>
-            track.name &&
-            track.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-
-      setSearchTracks(updatedFilterTracks);
+      const updatedFilterTracks = data.map((track) => ({
+        ...track,
+        isFavorite: pagePlaylist.some(
+          (pTrack) => pTrack.id === track.id && pTrack.isFavorite
+        ), // Проверяем наличие лайка для каждого трека
+      }));
+      setUpdatedFilterTracks(updatedFilterTracks);
     }
-  }, [data, searchQuery, pagePlaylist]);
+  }, [data, pagePlaylist]);
 
   const isEmptyList = !isLoading && !data?.length;
 
@@ -63,7 +54,7 @@ export const Category = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Треки в разделе отсутствуют`
           ) : (
-            <Tracklist tracks={searchTracks} refetch={refetch} />
+            <Tracklist tracks={updatedFilterTracks} refetch={refetch} />
           )}
         </div>
 

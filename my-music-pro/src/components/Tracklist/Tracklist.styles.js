@@ -69,7 +69,7 @@ export const PlaylistTitleColCol04 = styled.div`
   color: #696969;
   text-transform: uppercase;
   width: 60px;
-  text-align: flex-end;
+  text-align: end;
 `;
 
 export const PlaylistTitleSvg = styled.svg`

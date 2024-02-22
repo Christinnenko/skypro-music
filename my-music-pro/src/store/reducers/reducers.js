@@ -6,8 +6,6 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
-  SET_SEARCH_QUERY,
-  CLEAR_SEARCH_QUERY,
   SET_PAGE_PLAYLIST,
   TOGGLE_LIKE,
   SET_INITIAL_TRACKS,
@@ -26,7 +24,6 @@ const initialState = {
   likedTracks: [],
   isFavorite: false,
   playlist: [],
-  searchQuery: "",
   filteredPlaylist: [],
   FilterCriteria: {
     author: [],
@@ -37,7 +34,8 @@ const initialState = {
   },
   initialTracksForFilter: [],
   initialTracksForSearch: [],
-  filtered: true,
+  searchValue: "",
+  searchedPlaylist: [],
 };
 
 // 2.
@@ -130,21 +128,6 @@ export default function playerReducer(state = initialState, action) {
       };
     }
 
-    case SET_SEARCH_QUERY: {
-      const query = action.payload;
-      return {
-        ...state,
-        searchQuery: query,
-      };
-    }
-
-    case CLEAR_SEARCH_QUERY: {
-      return {
-        ...state,
-        searchQuery: "",
-      };
-    }
-
     case SET_PAGE_PLAYLIST: {
       const { fetchedTracks } = action.payload;
       const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -202,9 +185,6 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case SET_FILTER: {
-      console.log("Current state:", state);
-      console.log("FilterCriteria:", state.FilterCriteria);
-
       const currentPlaylist = action.payload.tracks;
 
       if (action.payload.name === "genre") {
@@ -344,7 +324,9 @@ export default function playerReducer(state = initialState, action) {
       }
 
       if (action.payload.name === "release_date") {
+        let sortButtonText = "По умолчанию";
         if (action.payload.item === "Сначала старые") {
+          sortButtonText = "Сначала старые";
           return {
             ...state,
             filteredPlaylist: currentPlaylist
@@ -358,10 +340,12 @@ export default function playerReducer(state = initialState, action) {
               author: state.FilterCriteria.author,
               isActiveGenre: state.FilterCriteria.isActiveGenre,
               genre: state.FilterCriteria.genre,
+              sortButtonText: sortButtonText,
             },
           };
         }
         if (action.payload.item === "Сначала новые") {
+          sortButtonText = "Сначала новые";
           return {
             ...state,
             filteredPlaylist: currentPlaylist
@@ -375,10 +359,12 @@ export default function playerReducer(state = initialState, action) {
               author: state.FilterCriteria.author,
               isActiveGenre: state.FilterCriteria.isActiveGenre,
               genre: state.FilterCriteria.genre,
+              sortButtonText: sortButtonText,
             },
           };
         }
         if (action.payload.item === "По умолчанию") {
+          sortButtonText = "По умолчанию";
           return {
             ...state,
             filteredPlaylist: currentPlaylist
@@ -390,6 +376,7 @@ export default function playerReducer(state = initialState, action) {
               author: state.FilterCriteria.author,
               isActiveGenre: state.FilterCriteria.isActiveGenre,
               genre: state.FilterCriteria.genre,
+              sortButtonText: sortButtonText,
             },
           };
         }
@@ -402,33 +389,35 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case SET_SEARCH: {
-      const currentPlaylist = action.payload.tracks;
+      const currentPlaylist = action.payload.tracks || [];
+      const searchValue = action.payload.value || "";
+      let searchedPlaylist = [];
 
-      if (action.payload.value.length > 0) {
-        const searchedPlaylist = currentPlaylist.filter((item) =>
+      if (searchValue.length > 0) {
+        searchedPlaylist = currentPlaylist.filter((item) =>
           item.name
             .toLocaleLowerCase()
-            .includes(action.payload.value.toLocaleLowerCase())
+            .includes(searchValue.toLocaleLowerCase())
         );
+      }
 
-        if (
-          state.FilterCriteria.isActiveAuthor ||
-          state.FilterCriteria.isActiveGenre ||
-          state.FilterCriteria.isActiveSort
-        ) {
-          return {
-            ...state,
-            filteredPlaylist: searchedPlaylist,
-          };
-        }
-
+      if (
+        state.FilterCriteria.isActiveAuthor ||
+        state.FilterCriteria.isActiveGenre ||
+        state.FilterCriteria.isActiveSort
+      ) {
         return {
           ...state,
-          initialTracksForFilter: searchedPlaylist,
+          filteredPlaylist: searchedPlaylist,
+          searchedPlaylist: searchedPlaylist,
         };
       }
 
-      return state;
+      return {
+        ...state,
+        initialTracksForFilter: searchedPlaylist,
+        searchedPlaylist: searchedPlaylist,
+      };
     }
 
     default:

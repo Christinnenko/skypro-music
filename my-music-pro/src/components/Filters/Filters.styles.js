@@ -123,7 +123,9 @@ export const SelectedCount = styled.span`
   background-color: #ad61ff;
   color: white;
   border-radius: 50%;
-  padding: 6px 9px 6px 9px;
+  padding: ${({ count }) =>
+    count > 9 ? "6px 12px 6px 6px" : "6px 9px 6px 9px"};
+
   font-size: 13px;
   line-height: 13px;
   position: absolute;

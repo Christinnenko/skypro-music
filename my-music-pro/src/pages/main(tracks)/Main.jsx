@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   // setInitialTracksForFilter,
   setPagePlaylist,
+  setSearch,
 } from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
@@ -25,6 +26,10 @@ export const Main = ({ handleLogout }) => {
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
+  const searchedPlaylist = useSelector(
+    (state) => state.player.searchedPlaylist
+  );
+
   // const initialTracksForFilter = useSelector(
   //   (state) => state.player.initialTracksForFilter
   // );
@@ -53,6 +58,13 @@ export const Main = ({ handleLogout }) => {
 
   console.log("filteredPlaylist", filteredPlaylist);
 
+  const handleSearchChange = (event) => {
+    const searchValue = event.target.value;
+    dispatch(setSearch(searchValue, searchedPlaylist));
+    console.log("searchValue", searchValue);
+    console.log("searchedPlaylist", searchedPlaylist);
+  };
+
   return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
   ) : (
@@ -60,24 +72,16 @@ export const Main = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search />
+          <Search onChange={handleSearchChange} />
           <S.CenterblockH2>Треки</S.CenterblockH2>
           <Filters tracks={pagePlaylist} />
-          {typeof filteredPlaylist !== "undefined" ? (
-            filteredPlaylist.length > 0 ? (
-              <Tracklist
-                tracks={
-                  filteredPlaylist.length > 0 ? filteredPlaylist : pagePlaylist
-                }
-                tracksError={tracksError}
-                refetch={getTracks}
-              />
-            ) : (
-              <p>Треки отсутствуют</p>
-            )
-          ) : (
-            <p>Загрузка...</p>
-          )}
+          <Tracklist
+            tracks={
+              filteredPlaylist.length > 0 ? filteredPlaylist : pagePlaylist
+            }
+            tracksError={tracksError}
+            refetch={getTracks}
+          />
         </div>
 
         <St.ContainerSidebar>

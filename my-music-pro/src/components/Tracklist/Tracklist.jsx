@@ -16,7 +16,6 @@ import { useEffect } from "react";
 import { Track } from "../Track/Track.jsx";
 
 function Tracklist({ tracks, getTracksError }) {
-  console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
   const { isMix } = useSelector((store) => store.player);
   const navigate = useNavigate();
@@ -67,6 +66,12 @@ function Tracklist({ tracks, getTracksError }) {
     }
   };
 
+  // const filteredPlaylist = useSelector(
+  //   (state) => state.player.filteredPlaylist
+  // );
+  // const isActiveAuthor = useSelector((state) => state.player.isActiveAuthor);
+  // const isActiveGenre = useSelector((state) => state.player.isActiveGenre);
+
   return (
     <Style.CenterblockContent>
       <Style.ContentTitle>
@@ -83,15 +88,19 @@ function Tracklist({ tracks, getTracksError }) {
       <p>{getTracksError}</p>
 
       <Style.ContentPlaylist>
-        {tracks.map((track) => (
-          <Style.PlaylistItem key={track.id}>
-            <Track
-              track={track}
-              handleCurrentTrackId={handleCurrentTrackId}
-              handleToggleLike={() => handleToggleLike(track.id, track)}
-            />
-          </Style.PlaylistItem>
-        ))}
+        {tracks.length === 0 ? (
+          <p>Треков нет</p>
+        ) : (
+          tracks.map((track) => (
+            <Style.PlaylistItem key={track.id}>
+              <Track
+                track={track}
+                handleCurrentTrackId={handleCurrentTrackId}
+                handleToggleLike={() => handleToggleLike(track.id, track)}
+              />
+            </Style.PlaylistItem>
+          ))
+        )}
       </Style.ContentPlaylist>
     </Style.CenterblockContent>
   );

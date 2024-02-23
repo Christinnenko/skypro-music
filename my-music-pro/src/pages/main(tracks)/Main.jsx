@@ -10,11 +10,7 @@ import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  // setInitialTracksForFilter,
-  setPagePlaylist,
-  setSearch,
-} from "../../store/actions/creators/creators.js";
+import { setPagePlaylist } from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();
@@ -26,16 +22,6 @@ export const Main = ({ handleLogout }) => {
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
-  const searchedPlaylist = useSelector(
-    (state) => state.player.searchedPlaylist
-  );
-
-  // const initialTracksForFilter = useSelector(
-  //   (state) => state.player.initialTracksForFilter
-  // );
-
-  // const isActiveAuthor = useSelector((state) => state.player.isActiveAuthor);
-  // const isActiveGenre = useSelector((state) => state.player.isActiveGenre);
 
   const getTracks = async () => {
     try {
@@ -58,13 +44,6 @@ export const Main = ({ handleLogout }) => {
 
   console.log("filteredPlaylist", filteredPlaylist);
 
-  const handleSearchChange = (event) => {
-    const searchValue = event.target.value;
-    dispatch(setSearch(searchValue, searchedPlaylist));
-    console.log("searchValue", searchValue);
-    console.log("searchedPlaylist", searchedPlaylist);
-  };
-
   return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
   ) : (
@@ -72,7 +51,7 @@ export const Main = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search onChange={handleSearchChange} />
+          <Search />
           <S.CenterblockH2>Треки</S.CenterblockH2>
           <Filters tracks={pagePlaylist} />
           <Tracklist

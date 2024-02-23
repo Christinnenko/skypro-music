@@ -389,35 +389,29 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case SET_SEARCH: {
-      const currentPlaylist = action.payload.tracks || [];
-      const searchValue = action.payload.value || "";
-      let searchedPlaylist = [];
+      const currentPlaylist = action.payload.tracks;
+      const searchValue = action.payload.value.trim().toLowerCase();
 
       if (searchValue.length > 0) {
-        searchedPlaylist = currentPlaylist.filter((item) =>
-          item.name
-            .toLocaleLowerCase()
-            .includes(searchValue.toLocaleLowerCase())
+        console.log("currentPlaylist", currentPlaylist);
+        const searchedPlaylist = currentPlaylist.filter((track) =>
+          track.name.toLocaleLowerCase().includes(searchValue)
         );
-      }
 
-      if (
-        state.FilterCriteria.isActiveAuthor ||
-        state.FilterCriteria.isActiveGenre ||
-        state.FilterCriteria.isActiveSort
-      ) {
         return {
           ...state,
-          filteredPlaylist: searchedPlaylist,
           searchedPlaylist: searchedPlaylist,
+          filteredPlaylist: searchedPlaylist, // Update filteredPlaylist with search results
+          searchValue: action.payload.value, // Optionally, you might want to store the search value
+        };
+      } else {
+        return {
+          ...state,
+          searchedPlaylist: [], // Clear searchedPlaylist when search value is empty
+          filteredPlaylist: state.initialTracksForFilter, // Restore filteredPlaylist to initial state
+          searchValue: "", // Optionally, you might want to clear searchValue
         };
       }
-
-      return {
-        ...state,
-        initialTracksForFilter: searchedPlaylist,
-        searchedPlaylist: searchedPlaylist,
-      };
     }
 
     default:

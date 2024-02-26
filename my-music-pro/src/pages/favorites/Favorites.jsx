@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
+import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 // const mockFavoritesTracks = [
 //   {
@@ -53,6 +55,9 @@ import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoadi
 // ];
 
 export const Favorites = ({ handleLogout }) => {
+  const searchedPlaylist = useSelector(
+    (state) => state.player.searchedPlaylist
+  );
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
@@ -80,7 +85,7 @@ export const Favorites = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
-          <Search />
+          <Search tracks={data} />
           <S.CenterblockH2>Мои треки</S.CenterblockH2>
           {error ? (
             <p>Не удалось загрузить плейлист, попробуйте позже</p>
@@ -89,7 +94,10 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
-            <Tracklist tracks={data} refetch={refetch} />
+            <Tracklist
+              tracks={searchedPlaylist.length > 0 ? searchedPlaylist : data}
+              refetch={refetch}
+            />
           )}
         </div>
         <St.ContainerSidebar>

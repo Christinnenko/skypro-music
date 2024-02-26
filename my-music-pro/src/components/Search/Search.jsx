@@ -1,10 +1,18 @@
 import * as S from "./Search.styles.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSearch } from "../../store/actions/creators/creators.js";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
-function Search() {
+function Search({ tracks }) {
   const dispatch = useDispatch();
-  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const [searchText, setSearchText] = useState("");
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSearchText(value);
+    dispatch(setSearch({ value: value, tracks: tracks }));
+  };
 
   return (
     <S.CenterblockSearch>
@@ -15,12 +23,15 @@ function Search() {
         type="search"
         placeholder="Поиск"
         name="search"
-        onChange={(e) => {
-          dispatch(setSearch({ value: e.target.value, tracks: pagePlaylist }));
-        }}
+        value={searchText}
+        onChange={handleChange}
       />
     </S.CenterblockSearch>
   );
 }
+
+Search.propTypes = {
+  tracks: PropTypes.array.isRequired,
+};
 
 export default Search;

@@ -51,7 +51,7 @@ export const Main = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search />
+          <Search tracks={pagePlaylist} />
           <S.CenterblockH2>Треки</S.CenterblockH2>
           <Filters tracks={pagePlaylist} />
           <Tracklist

@@ -151,13 +151,14 @@ export default function playerReducer(state = initialState, action) {
 
     case TOGGLE_LIKE: {
       const { trackId } = action.payload;
+
       const updatedPagePlaylist = state.pagePlaylist.map((track) =>
         track.id === trackId
           ? { ...track, isFavorite: !track.isFavorite }
           : track
       );
 
-      const updatedFilteredTracks = state.filteredTracks.map((track) =>
+      const updatedFilteredPlaylist = state.filteredPlaylist.map((track) =>
         track.id === trackId
           ? { ...track, isFavorite: !track.isFavorite }
           : track
@@ -166,7 +167,7 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         pagePlaylist: updatedPagePlaylist,
-        filteredTracks: updatedFilteredTracks,
+        filteredPlaylist: updatedFilteredPlaylist,
         currentTrack:
           state.currentTrack && state.currentTrack.id === trackId
             ? {
@@ -186,6 +187,9 @@ export default function playerReducer(state = initialState, action) {
 
     case SET_FILTER: {
       const currentPlaylist = action.payload.tracks;
+      const searchedPlaylist = [...state.searchedPlaylist];
+      const playlistToFilter =
+        searchedPlaylist.length > 0 ? searchedPlaylist : currentPlaylist;
 
       if (action.payload.name === "genre") {
         // для опции, если есть параллельно фильтры по имени
@@ -235,9 +239,11 @@ export default function playerReducer(state = initialState, action) {
           action.payload.item,
         ];
 
-        const PL = state.FilterCriteria.isActiveAuthor
-          ? playlistWithAuthorFilter
-          : state.initialTracksForFilter;
+        const PL =
+          state.FilterCriteria.isActiveAuthor ||
+          state.searchedPlaylist.length > 0
+            ? playlistToFilter
+            : state.initialTracksForFilter;
 
         const newFilteredPlaylist = PL.filter((track) =>
           newGenresFilter.includes(track.genre)
@@ -303,9 +309,11 @@ export default function playerReducer(state = initialState, action) {
           action.payload.item,
         ];
 
-        const PL = state.FilterCriteria.isActiveGenre
-          ? playlistWithGenreFilter
-          : state.initialTracksForFilter;
+        const PL =
+          state.FilterCriteria.isActiveGenre ||
+          state.searchedPlaylist.length > 0
+            ? playlistWithGenreFilter
+            : state.initialTracksForFilter;
 
         const newFilteredPlaylist = PL.filter((track) =>
           newAuthorFilter.includes(track.author)
@@ -401,15 +409,15 @@ export default function playerReducer(state = initialState, action) {
         return {
           ...state,
           searchedPlaylist: searchedPlaylist,
-          filteredPlaylist: searchedPlaylist, // Update filteredPlaylist with search results
-          searchValue: action.payload.value, // Optionally, you might want to store the search value
+          filteredPlaylist: searchedPlaylist,
+          searchValue: action.payload.value,
         };
       } else {
         return {
           ...state,
-          searchedPlaylist: [], // Clear searchedPlaylist when search value is empty
-          filteredPlaylist: state.initialTracksForFilter, // Restore filteredPlaylist to initial state
-          searchValue: "", // Optionally, you might want to clear searchValue
+          searchedPlaylist: [],
+          filteredPlaylist: state.initialTracksForFilter,
+          searchValue: "",
         };
       }
     }

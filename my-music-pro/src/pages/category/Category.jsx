@@ -40,12 +40,16 @@ export const Category = ({ handleLogout }) => {
 
   const isEmptyList = !isLoading && !data?.length;
 
+  const searchedPlaylist = useSelector(
+    (state) => state.player.searchedPlaylist
+  );
+
   return (
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
-          <Search />
+          <Search tracks={updatedFilterTracks} />
           <Style.Text>{`${title}`}</Style.Text>
           {error ? (
             <p>Не удалось загрузить плейлист, попробуйте позже</p>
@@ -54,7 +58,14 @@ export const Category = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Треки в разделе отсутствуют`
           ) : (
-            <Tracklist tracks={updatedFilterTracks} refetch={refetch} />
+            <Tracklist
+              tracks={
+                searchedPlaylist.length > 0
+                  ? searchedPlaylist
+                  : updatedFilterTracks
+              }
+              refetch={refetch}
+            />
           )}
         </div>
 

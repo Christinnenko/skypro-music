@@ -201,13 +201,13 @@ export default function playerReducer(state = initialState, action) {
             ...state.FilterCriteria.author,
             action.payload.item,
           ];
-          filteredPlaylist = state.searchedPlaylist.filter((track) =>
+          const newFilteredPlaylist = state.searchedPlaylist.filter((track) =>
             newAuthorFilter.includes(track.author)
           );
-          isFilter = true;
           return {
             ...state,
-            filteredPlaylist: filteredPlaylist,
+            filteredPlaylist: newFilteredPlaylist,
+            searchedPlaylist: newFilteredPlaylist,
             FilterCriteria: {
               isActiveAuthor: true,
               author: newAuthorFilter,
@@ -224,13 +224,13 @@ export default function playerReducer(state = initialState, action) {
             ...state.FilterCriteria.genre,
             action.payload.item,
           ];
-          const filteredPlaylist = state.searchedPlaylist.filter((track) =>
+          const newFilteredPlaylist = state.searchedPlaylist.filter((track) =>
             newGenresFilter.includes(track.genre)
           );
-          isFilter = true;
           return {
             ...state,
-            filteredPlaylist: filteredPlaylist,
+            filteredPlaylist: newFilteredPlaylist,
+            searchedPlaylist: newFilteredPlaylist,
             FilterCriteria: {
               isActiveGenre: true,
               genre: newGenresFilter,

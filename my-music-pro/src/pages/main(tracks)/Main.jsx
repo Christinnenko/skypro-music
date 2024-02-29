@@ -66,10 +66,10 @@ export const Main = ({ handleLogout }) => {
 
           <Tracklist
             tracks={
-              isFilter
-                ? filteredPlaylist
-                : isSearch
+              searchedPlaylist.length > 0
                 ? searchedPlaylist
+                : filteredPlaylist.length > 0
+                ? filteredPlaylist
                 : pagePlaylist
             }
             tracksError={tracksError}

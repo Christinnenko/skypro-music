@@ -44,6 +44,15 @@ export const Main = ({ handleLogout }) => {
 
   console.log("filteredPlaylist", filteredPlaylist);
 
+  // const filteredPlaylist = useSelector(
+  //   (state) => state.player.filteredPlaylist
+  // );
+  const searchedPlaylist = useSelector(
+    (state) => state.player.searchedPlaylist
+  );
+  const isFilter = useSelector((state) => state.player.FilterCriteria.isFilter);
+  const isSearch = useSelector((state) => state.player.isSearch);
+
   return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
   ) : (
@@ -51,12 +60,17 @@ export const Main = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search tracks={pagePlaylist} />
+          <Search tracks={isFilter ? filteredPlaylist : pagePlaylist} />
           <S.CenterblockH2>Треки</S.CenterblockH2>
-          <Filters tracks={pagePlaylist} />
+          <Filters tracks={isSearch ? searchedPlaylist : pagePlaylist} />
+
           <Tracklist
             tracks={
-              filteredPlaylist.length > 0 ? filteredPlaylist : pagePlaylist
+              isFilter
+                ? filteredPlaylist
+                : isSearch
+                ? searchedPlaylist
+                : pagePlaylist
             }
             tracksError={tracksError}
             refetch={getTracks}

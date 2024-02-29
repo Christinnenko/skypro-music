@@ -11,6 +11,7 @@ import {
   SET_INITIAL_TRACKS,
   SET_FILTER,
   SET_SEARCH,
+  CLEAR_FILTERS,
 } from "../actions/types/types";
 
 // 1.
@@ -30,12 +31,12 @@ const initialState = {
     isActiveAuthor: false,
     genre: [],
     isActiveGenre: false,
-    isActiveSort: false,
   },
   initialTracksForFilter: [],
   initialTracksForSearch: [],
   searchValue: "",
   searchedPlaylist: [],
+  isSearch: false,
 };
 
 // 2.
@@ -187,212 +188,334 @@ export default function playerReducer(state = initialState, action) {
 
     case SET_FILTER: {
       const currentPlaylist = action.payload.tracks;
-      const searchedPlaylist = [...state.searchedPlaylist];
-      const playlistToFilter =
-        searchedPlaylist.length > 0 ? searchedPlaylist : currentPlaylist;
 
-      if (action.payload.name === "genre") {
-        // для опции, если есть параллельно фильтры по имени
-        const playlistWithAuthorFilter = state.initialTracksForFilter.filter(
-          (track) => state.FilterCriteria.author?.includes(track.author)
-        );
+      let filteredPlaylist = [];
 
-        // удаляем фильтр при повторном нажатии
-        if (state.FilterCriteria.genre?.includes(action.payload.item)) {
-          const newGenresFilter = state.FilterCriteria.genre.filter(
-            (item) => item !== action.payload.item
+      let isFilter = false;
+
+      if (state.isSearch) {
+        // Если поиск активен, фильтруем массив searchedPlaylist
+        if (action.payload.name === "author") {
+          // Фильтруем по автору
+          const newAuthorFilter = [
+            ...state.FilterCriteria.author,
+            action.payload.item,
+          ];
+          filteredPlaylist = state.searchedPlaylist.filter((track) =>
+            newAuthorFilter.includes(track.author)
           );
-
-          if (newGenresFilter.length > 0) {
-            const newFilteredPlaylist = currentPlaylist.filter((track) =>
-              newGenresFilter.includes(track.genre)
-            );
-
-            return {
-              ...state,
-              filteredPlaylist: newFilteredPlaylist,
-              FilterCriteria: {
-                isActiveGenre: true,
-                genre: newGenresFilter,
-                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
-                author: state.FilterCriteria.author,
-              },
-            };
-          }
-
+          isFilter = true;
           return {
             ...state,
-            filteredPlaylist: state.FilterCriteria.isActiveAuthor
-              ? playlistWithAuthorFilter
-              : state.initialTracksForFilter,
+            filteredPlaylist: filteredPlaylist,
             FilterCriteria: {
-              isActiveGenre: false,
-              genre: newGenresFilter,
-              isActiveAuthor: state.FilterCriteria.isActiveAuthor,
-              author: state.FilterCriteria.author,
-            },
-          };
-        }
-
-        const newGenresFilter = [
-          ...state.FilterCriteria.genre,
-          action.payload.item,
-        ];
-
-        const PL =
-          state.FilterCriteria.isActiveAuthor ||
-          state.searchedPlaylist.length > 0
-            ? playlistToFilter
-            : state.initialTracksForFilter;
-
-        const newFilteredPlaylist = PL.filter((track) =>
-          newGenresFilter.includes(track.genre)
-        );
-
-        return {
-          ...state,
-          filteredPlaylist: newFilteredPlaylist,
-          FilterCriteria: {
-            isActiveGenre: true,
-            genre: newGenresFilter,
-            isActiveAuthor: state.FilterCriteria.isActiveAuthor,
-            author: state.FilterCriteria.author,
-          },
-        };
-      }
-
-      if (action.payload.name === "author") {
-        // для опции, если есть параллельно фильтры по жанру
-        const playlistWithGenreFilter = state.initialTracksForFilter.filter(
-          (track) => state.FilterCriteria.genre?.includes(track.genre)
-        );
-
-        // удаляем фильтр при повторном нажатии
-        if (state.FilterCriteria.author?.includes(action.payload.item)) {
-          const newAuthorFilter = state.FilterCriteria.author.filter(
-            (item) => item !== action.payload.item
-          );
-
-          if (newAuthorFilter.length > 0) {
-            const newFilteredPlaylist = currentPlaylist.filter((track) =>
-              newAuthorFilter.includes(track.author)
-            );
-
-            return {
-              ...state,
-              filteredPlaylist: newFilteredPlaylist,
-              FilterCriteria: {
-                isActiveAuthor: true,
-                author: newAuthorFilter,
-                isActiveGenre: state.FilterCriteria.isActiveGenre,
-                genre: state.FilterCriteria.genre,
-              },
-            };
-          }
-
-          return {
-            ...state,
-            filteredPlaylist: state.FilterCriteria.isActiveGenre
-              ? playlistWithGenreFilter
-              : state.initialTracksForFilter,
-            FilterCriteria: {
-              isActiveAuthor: false,
+              isActiveAuthor: true,
               author: newAuthorFilter,
               isActiveGenre: state.FilterCriteria.isActiveGenre,
               genre: state.FilterCriteria.genre,
+              isFilter: isFilter,
             },
           };
         }
 
-        const newAuthorFilter = [
-          ...state.FilterCriteria.author,
-          action.payload.item,
-        ];
-
-        const PL =
-          state.FilterCriteria.isActiveGenre ||
-          state.searchedPlaylist.length > 0
-            ? playlistWithGenreFilter
-            : state.initialTracksForFilter;
-
-        const newFilteredPlaylist = PL.filter((track) =>
-          newAuthorFilter.includes(track.author)
-        );
-
-        return {
-          ...state,
-          filteredPlaylist: newFilteredPlaylist,
-          FilterCriteria: {
-            isActiveAuthor: true,
-            author: newAuthorFilter,
-            isActiveGenre: state.FilterCriteria.isActiveGenre,
-            genre: state.FilterCriteria.genre,
-          },
-        };
-      }
-
-      if (action.payload.name === "release_date") {
-        let sortButtonText = "По умолчанию";
-        if (action.payload.item === "Сначала старые") {
-          sortButtonText = "Сначала старые";
+        if (action.payload.name === "genre") {
+          // Фильтруем по жанру
+          const newGenresFilter = [
+            ...state.FilterCriteria.genre,
+            action.payload.item,
+          ];
+          const filteredPlaylist = state.searchedPlaylist.filter((track) =>
+            newGenresFilter.includes(track.genre)
+          );
+          isFilter = true;
           return {
             ...state,
-            filteredPlaylist: currentPlaylist
-              .slice()
-              .sort(
-                (a, b) => new Date(a.release_date) - new Date(b.release_date)
-              ),
+            filteredPlaylist: filteredPlaylist,
             FilterCriteria: {
-              isActiveSort: true,
+              isActiveGenre: true,
+              genre: newGenresFilter,
               isActiveAuthor: state.FilterCriteria.isActiveAuthor,
               author: state.FilterCriteria.author,
-              isActiveGenre: state.FilterCriteria.isActiveGenre,
-              genre: state.FilterCriteria.genre,
-              sortButtonText: sortButtonText,
+              isFilter: isFilter,
             },
           };
         }
-        if (action.payload.item === "Сначала новые") {
-          sortButtonText = "Сначала новые";
+
+        if (action.payload.name === "release_date") {
+          let sortButtonText = "По умолчанию";
+          if (action.payload.item === "Сначала старые") {
+            sortButtonText = "Сначала старые";
+            return {
+              ...state,
+              searchedPlaylist: state.searchedPlaylist
+                .slice()
+                .sort(
+                  (a, b) => new Date(a.release_date) - new Date(b.release_date)
+                ),
+              FilterCriteria: {
+                isActiveSort: true,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                sortButtonText: sortButtonText,
+              },
+            };
+          }
+          if (action.payload.item === "Сначала новые") {
+            sortButtonText = "Сначала новые";
+            return {
+              ...state,
+              searchedPlaylist: state.searchedPlaylist
+                .slice()
+                .sort(
+                  (a, b) => new Date(b.release_date) - new Date(a.release_date)
+                ),
+              FilterCriteria: {
+                isActiveSort: true,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                sortButtonText: sortButtonText,
+              },
+            };
+          }
+          if (action.payload.item === "По умолчанию") {
+            sortButtonText = "По умолчанию";
+            return {
+              ...state,
+              searchedPlaylist: state.searchedPlaylist
+                .slice()
+                .sort((a, b) => new Date(a.id) - new Date(b.id)),
+              FilterCriteria: {
+                isActiveSort: false,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                sortButtonText: sortButtonText,
+              },
+            };
+          }
+        }
+      } else {
+        if (action.payload.name === "author") {
+          // для опции, если есть параллельно фильтры по жанру
+          const playlistWithGenreFilter = state.initialTracksForFilter.filter(
+            (track) => state.FilterCriteria.genre?.includes(track.genre)
+          );
+          isFilter = true;
+
+          // удаляем фильтр при повторном нажатии
+          if (state.FilterCriteria.author?.includes(action.payload.item)) {
+            const newAuthorFilter = state.FilterCriteria.author.filter(
+              (item) => item !== action.payload.item
+            );
+
+            isFilter = false;
+
+            if (newAuthorFilter.length > 0) {
+              const newFilteredPlaylist = currentPlaylist.filter((track) =>
+                newAuthorFilter.includes(track.author)
+              );
+              isFilter = true;
+
+              return {
+                ...state,
+                filteredPlaylist: newFilteredPlaylist,
+                FilterCriteria: {
+                  isActiveAuthor: true,
+                  author: newAuthorFilter,
+                  isActiveGenre: state.FilterCriteria.isActiveGenre,
+                  genre: state.FilterCriteria.genre,
+                  isFilter: isFilter,
+                },
+              };
+            }
+
+            return {
+              ...state,
+              filteredPlaylist: state.FilterCriteria.isActiveGenre
+                ? playlistWithGenreFilter
+                : state.initialTracksForFilter,
+              FilterCriteria: {
+                isActiveAuthor: false,
+                author: newAuthorFilter,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                isFilter: isFilter,
+              },
+            };
+          }
+
+          const newAuthorFilter = [
+            ...state.FilterCriteria.author,
+            action.payload.item,
+          ];
+
+          const PL =
+            state.FilterCriteria.isActiveGenre ||
+            state.searchedPlaylist.length > 0
+              ? playlistWithGenreFilter
+              : state.initialTracksForFilter;
+
+          const newFilteredPlaylist = PL.filter((track) =>
+            newAuthorFilter.includes(track.author)
+          );
+
           return {
             ...state,
-            filteredPlaylist: currentPlaylist
-              .slice()
-              .sort(
-                (a, b) => new Date(b.release_date) - new Date(a.release_date)
-              ),
+            filteredPlaylist: newFilteredPlaylist,
             FilterCriteria: {
-              isActiveSort: true,
-              isActiveAuthor: state.FilterCriteria.isActiveAuthor,
-              author: state.FilterCriteria.author,
+              isActiveAuthor: true,
+              author: newAuthorFilter,
               isActiveGenre: state.FilterCriteria.isActiveGenre,
               genre: state.FilterCriteria.genre,
-              sortButtonText: sortButtonText,
+              isFilter: isFilter,
             },
           };
         }
-        if (action.payload.item === "По умолчанию") {
-          sortButtonText = "По умолчанию";
+
+        if (action.payload.name === "genre") {
+          // для опции, если есть параллельно фильтры по имени
+          const playlistWithAuthorFilter = state.initialTracksForFilter.filter(
+            (track) => state.FilterCriteria.author?.includes(track.author)
+          );
+          isFilter = true;
+
+          // удаляем фильтр при повторном нажатии
+          if (state.FilterCriteria.genre?.includes(action.payload.item)) {
+            const newGenresFilter = state.FilterCriteria.genre.filter(
+              (item) => item !== action.payload.item
+            );
+            isFilter = false;
+
+            if (newGenresFilter.length > 0) {
+              const newFilteredPlaylist = currentPlaylist.filter((track) =>
+                newGenresFilter.includes(track.genre)
+              );
+              isFilter = true;
+
+              return {
+                ...state,
+                filteredPlaylist: newFilteredPlaylist,
+                FilterCriteria: {
+                  isActiveGenre: true,
+                  genre: newGenresFilter,
+                  isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                  author: state.FilterCriteria.author,
+                  isFilter: isFilter,
+                },
+              };
+            }
+
+            return {
+              ...state,
+              filteredPlaylist: state.FilterCriteria.isActiveAuthor
+                ? playlistWithAuthorFilter
+                : state.initialTracksForFilter,
+              FilterCriteria: {
+                isActiveGenre: false,
+                genre: newGenresFilter,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isFilter: isFilter,
+              },
+            };
+          }
+
+          const newGenresFilter = [
+            ...state.FilterCriteria.genre,
+            action.payload.item,
+          ];
+
+          const PL =
+            state.FilterCriteria.isActiveAuthor ||
+            state.searchedPlaylist.length > 0
+              ? playlistWithAuthorFilter
+              : state.initialTracksForFilter;
+
+          const newFilteredPlaylist = PL.filter((track) =>
+            newGenresFilter.includes(track.genre)
+          );
+
           return {
             ...state,
-            filteredPlaylist: currentPlaylist
-              .slice()
-              .sort((a, b) => new Date(a.id) - new Date(b.id)),
+            filteredPlaylist: newFilteredPlaylist,
             FilterCriteria: {
-              isActiveSort: false,
+              isActiveGenre: true,
+              genre: newGenresFilter,
               isActiveAuthor: state.FilterCriteria.isActiveAuthor,
               author: state.FilterCriteria.author,
-              isActiveGenre: state.FilterCriteria.isActiveGenre,
-              genre: state.FilterCriteria.genre,
-              sortButtonText: sortButtonText,
+              isFilter: isFilter,
             },
           };
+        }
+
+        if (action.payload.name === "release_date") {
+          let sortButtonText = "По умолчанию";
+          if (action.payload.item === "Сначала старые") {
+            sortButtonText = "Сначала старые";
+            return {
+              ...state,
+              filteredPlaylist: currentPlaylist
+                .slice()
+                .sort(
+                  (a, b) => new Date(a.release_date) - new Date(b.release_date)
+                ),
+              FilterCriteria: {
+                isActiveSort: true,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                sortButtonText: sortButtonText,
+              },
+            };
+          }
+          if (action.payload.item === "Сначала новые") {
+            sortButtonText = "Сначала новые";
+            return {
+              ...state,
+              filteredPlaylist: currentPlaylist
+                .slice()
+                .sort(
+                  (a, b) => new Date(b.release_date) - new Date(a.release_date)
+                ),
+              FilterCriteria: {
+                isActiveSort: true,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                sortButtonText: sortButtonText,
+              },
+            };
+          }
+          if (action.payload.item === "По умолчанию") {
+            sortButtonText = "По умолчанию";
+            return {
+              ...state,
+              filteredPlaylist: currentPlaylist
+                .slice()
+                .sort((a, b) => new Date(a.id) - new Date(b.id)),
+              FilterCriteria: {
+                isActiveSort: false,
+                isActiveAuthor: state.FilterCriteria.isActiveAuthor,
+                author: state.FilterCriteria.author,
+                isActiveGenre: state.FilterCriteria.isActiveGenre,
+                genre: state.FilterCriteria.genre,
+                sortButtonText: sortButtonText,
+              },
+            };
+          }
         }
       }
 
       return {
         ...state,
-        filteredPlaylist: [],
+        filteredPlaylist: filteredPlaylist,
       };
     }
 
@@ -400,27 +523,57 @@ export default function playerReducer(state = initialState, action) {
       const currentPlaylist = action.payload.tracks;
       const searchValue = action.payload.value.trim().toLowerCase();
 
-      if (searchValue.length > 0) {
-        console.log("currentPlaylist", currentPlaylist);
-        const searchedPlaylist = currentPlaylist.filter((track) =>
-          track.name.toLocaleLowerCase().includes(searchValue)
-        );
+      let isSearch = false;
+      let searchedPlaylist = [];
+      let filteredPlaylist = state.filteredPlaylist;
 
-        return {
-          ...state,
-          searchedPlaylist: searchedPlaylist,
-          filteredPlaylist: searchedPlaylist,
-          searchValue: action.payload.value,
-        };
+      if (searchValue.length > 0) {
+        isSearch = true;
+
+        // Если есть активные фильтры, фильтруем уже отфильтрованный плейлист
+        if (state.isFilter) {
+          searchedPlaylist = state.filteredPlaylist.filter((track) =>
+            track.name.toLowerCase().includes(searchValue)
+          );
+        } else {
+          searchedPlaylist = currentPlaylist.filter((track) =>
+            track.name.toLowerCase().includes(searchValue)
+          );
+        }
       } else {
-        return {
-          ...state,
-          searchedPlaylist: [],
-          filteredPlaylist: state.initialTracksForFilter,
-          searchValue: "",
-        };
+        if (state.isFilter) {
+          // Если строка поиска пустая, но есть активные фильтры, отображаем отфильтрованный плейлист
+          searchedPlaylist = state.filteredPlaylist;
+        } else {
+          // Если и строка поиска и фильтры пусты, отображаем полный плейлист
+          searchedPlaylist = currentPlaylist;
+        }
       }
+
+      return {
+        ...state,
+        searchedPlaylist: searchedPlaylist,
+        filteredPlaylist: filteredPlaylist,
+        searchValue: action.payload.value,
+        isSearch: isSearch,
+      };
     }
+
+    case CLEAR_FILTERS:
+      return {
+        ...state,
+        FilterCriteria: {
+          isActiveGenre: false,
+          isActiveAuthor: false,
+          isActiveSort: false,
+          genre: [],
+          author: [],
+          sortButtonText: "По умолчанию",
+        },
+        filteredPlaylist: state.initialTracksForFilter,
+        searchedPlaylist: [],
+        isSearch: false,
+      };
 
     default:
       return state;

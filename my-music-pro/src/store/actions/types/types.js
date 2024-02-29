@@ -14,3 +14,4 @@ export const TOGGLE_LIKE = "TOGGLE_LIKE";
 export const SET_INITIAL_TRACKS = "SET_INITIAL_TRACKS";
 export const SET_FILTER = "SET_FILTER";
 export const SET_SEARCH = "SET_SEARCH";
+export const CLEAR_FILTERS = "CLEAR_FILTERS";

@@ -167,8 +167,10 @@ const Filters = ({ tracks }) => {
     (store) => store.player.FilterCriteria.sortButtonText
   );
 
-  const genres = [...new Set(tracks.map((track) => track.genre))];
-  const author = [...new Set(tracks.map((track) => track.author))];
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+
+  const genres = [...new Set(pagePlaylist.map((track) => track.genre))];
+  const author = [...new Set(pagePlaylist.map((track) => track.author))];
   const years = ["По умолчанию", "Сначала новые", "Сначала старые"];
 
   useEffect(() => {

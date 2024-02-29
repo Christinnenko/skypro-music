@@ -6,6 +6,7 @@ import { UserContext } from "./Authorization.js";
 import { useNavigate } from "react-router-dom";
 import {
   clearCurrentTrack,
+  clearFilters,
   setCurrentTrack,
 } from "./store/actions/creators/creators.js";
 import { useDispatch } from "react-redux";
@@ -21,6 +22,7 @@ function App() {
     localStorage.removeItem("user");
     navigate("/login");
     dispatch(clearCurrentTrack());
+    dispatch(clearFilters());
   };
 
   return (

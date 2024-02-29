@@ -3,7 +3,10 @@ import * as S from "./Register.styles";
 import { useContext, useEffect, useRef, useState } from "react";
 import { registerUser } from "../../api";
 import { UserContext } from "../../Authorization";
-import { clearCurrentTrack } from "../../store/actions/creators/creators";
+import {
+  clearCurrentTrack,
+  clearFilters,
+} from "../../store/actions/creators/creators";
 import { useDispatch } from "react-redux";
 
 export default function Register() {
@@ -49,6 +52,7 @@ export default function Register() {
         localStorage.setItem("user", JSON.stringify(user));
         changingUserData(user);
         navigate("/login");
+        dispatch(clearFilters());
         dispatch(clearCurrentTrack());
       } else {
         if (response.status === 400) {

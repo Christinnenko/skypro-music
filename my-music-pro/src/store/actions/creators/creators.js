@@ -11,6 +11,7 @@ import {
   SET_INITIAL_TRACKS,
   SET_FILTER,
   SET_SEARCH,
+  CLEAR_FILTERS,
 } from "../types/types";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -72,6 +73,10 @@ export const setFilter = ({ name, item, tracks }) => ({
     item,
     tracks,
   },
+});
+
+export const clearFilters = () => ({
+  type: CLEAR_FILTERS,
 });
 
 export const setSearch = ({ value, tracks }) => ({

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCurrentTrack,
+  clearFilters,
   mixTracks,
   setCurrentTrack,
   toggleLike,
@@ -33,6 +34,7 @@ function Tracklist({ tracks, getTracksError }) {
       localStorage.removeItem("user");
       dispatch(clearCurrentTrack());
       navigate("/login");
+      dispatch(clearFilters());
     }
   }, [errorAdd, errorDelete]);
 
@@ -66,11 +68,14 @@ function Tracklist({ tracks, getTracksError }) {
     }
   };
 
-  // const filteredPlaylist = useSelector(
-  //   (state) => state.player.filteredPlaylist
-  // );
-  // const isActiveAuthor = useSelector((state) => state.player.isActiveAuthor);
-  // const isActiveGenre = useSelector((state) => state.player.isActiveGenre);
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
+  const searchedPlaylist = useSelector(
+    (state) => state.player.searchedPlaylist
+  );
+  const isFilter = useSelector((state) => state.player.FilterCriteria.isFilter);
+  const isSearch = useSelector((state) => state.player.isSearch);
 
   return (
     <Style.CenterblockContent>
@@ -88,8 +93,9 @@ function Tracklist({ tracks, getTracksError }) {
       <p>{getTracksError}</p>
 
       <Style.ContentPlaylist>
-        {tracks.length === 0 ? (
-          <p>Треков нет</p>
+        {(isFilter && filteredPlaylist.length === 0) ||
+        (isSearch && searchedPlaylist.length === 0) ? (
+          <>Ничего не найдено *_*</>
         ) : (
           tracks.map((track) => (
             <Style.PlaylistItem key={track.id}>

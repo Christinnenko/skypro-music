@@ -19,9 +19,6 @@ export const Main = ({ handleLogout }) => {
   const [tracksError, setTracksError] = useState([]);
 
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
-  const filteredPlaylist = useSelector(
-    (state) => state.player.filteredPlaylist
-  );
 
   const getTracks = async () => {
     try {
@@ -42,16 +39,23 @@ export const Main = ({ handleLogout }) => {
     getTracks();
   }, []);
 
-  console.log("filteredPlaylist", filteredPlaylist);
+  const isActiveAuthor = useSelector(
+    (state) => state.player.FilterCriteria.isActiveAuthor
+  );
+  const isActiveGenre = useSelector(
+    (state) => state.player.FilterCriteria.isActiveGenre
+  );
 
-  // const filteredPlaylist = useSelector(
-  //   (state) => state.player.filteredPlaylist
-  // );
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
   const searchedPlaylist = useSelector(
     (state) => state.player.searchedPlaylist
   );
-  const isFilter = useSelector((state) => state.player.FilterCriteria.isFilter);
+
+  const isFilter = isActiveAuthor || isActiveGenre;
   const isSearch = useSelector((state) => state.player.isSearch);
+  const isSort = useSelector((state) => state.player.isSort);
 
   return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
@@ -60,15 +64,21 @@ export const Main = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search tracks={isFilter ? filteredPlaylist : pagePlaylist} />
+          <Search tracks={pagePlaylist} />
           <S.CenterblockH2>Треки</S.CenterblockH2>
-          <Filters tracks={isSearch ? searchedPlaylist : pagePlaylist} />
+          <Filters tracks={pagePlaylist} />
 
           <Tracklist
             tracks={
-              searchedPlaylist.length > 0
-                ? searchedPlaylist
-                : filteredPlaylist.length > 0
+              isSearch
+                ? isFilter
+                  ? filteredPlaylist
+                  : isSort
+                  ? filteredPlaylist
+                  : searchedPlaylist
+                : isFilter
+                ? filteredPlaylist
+                : isSort
                 ? filteredPlaylist
                 : pagePlaylist
             }

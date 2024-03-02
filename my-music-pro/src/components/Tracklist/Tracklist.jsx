@@ -71,11 +71,21 @@ function Tracklist({ tracks, getTracksError }) {
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
-  const searchedPlaylist = useSelector(
-    (state) => state.player.searchedPlaylist
+  // const searchedPlaylist = useSelector(
+  //   (state) => state.player.searchedPlaylist
+  // );
+  // const isFilter = useSelector((state) => state.player.FilterCriteria.isFilter);
+  const isActiveAuthor = useSelector(
+    (state) => state.player.FilterCriteria.isActiveAuthor
   );
-  const isFilter = useSelector((state) => state.player.FilterCriteria.isFilter);
+  const isActiveGenre = useSelector(
+    (state) => state.player.FilterCriteria.isActiveGenre
+  );
+  const isFilter = isActiveAuthor || isActiveGenre;
   const isSearch = useSelector((state) => state.player.isSearch);
+  const initialTracksForFilter = useSelector(
+    (state) => state.player.initialTracksForFilter
+  );
 
   return (
     <Style.CenterblockContent>
@@ -94,7 +104,7 @@ function Tracklist({ tracks, getTracksError }) {
 
       <Style.ContentPlaylist>
         {(isFilter && filteredPlaylist.length === 0) ||
-        (isSearch && searchedPlaylist.length === 0) ? (
+        (isSearch && initialTracksForFilter.length === 0) ? (
           <>Ничего не найдено *_*</>
         ) : (
           tracks.map((track) => (

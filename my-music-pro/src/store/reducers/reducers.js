@@ -36,7 +36,6 @@ const initialState = {
   initialTracksForSearch: [],
 
   searchValue: "",
-  searchedPlaylist: [],
   isSearch: false,
   isSort: false,
 };
@@ -122,7 +121,6 @@ export default function playerReducer(state = initialState, action) {
 
     case MIX_TRACK: {
       const isMixValue = action.payload.isMix;
-      console.log(isMixValue);
       return {
         ...state,
 
@@ -145,7 +143,6 @@ export default function playerReducer(state = initialState, action) {
 
         return { ...el, isFavorite };
       });
-      console.log("rfrv", fetchedTracks);
       return {
         ...state,
         pagePlaylist: playlistWithLikes,
@@ -171,13 +168,6 @@ export default function playerReducer(state = initialState, action) {
         ...state,
         pagePlaylist: updatedPagePlaylist,
         filteredPlaylist: updatedFilteredPlaylist,
-        currentTrack:
-          state.currentTrack && state.currentTrack.id === trackId
-            ? {
-                ...state.currentTrack,
-                isFavorite: !state.currentTrack.isFavorite,
-              }
-            : state.currentTrack,
       };
     }
 
@@ -189,22 +179,32 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case SET_FILTER: {
+      // Получаем текущий плейлист
       const currentPlaylist = action.payload.tracks;
-      const searchedPlaylist = state.searchedPlaylist;
+
+      // Получаем информацию о том, активен ли поиск
+      const isSearch = state.isSearch;
+      // получаем сохраненный отфильтрованный после поиска плейлист
+      const searchedPlaylist = state.copySearchedPlaylist;
+
+      // Если фильтр по жанру
       if (action.payload.name === "genre") {
-        // для опции, если есть параллельно фильтры по имени
+        // Для опции, если есть параллельно фильтры по автору
         const playlistWithAuthorFilter = state.initialTracksForFilter.filter(
           (track) => state.FilterCriteria.author?.includes(track.author)
         );
 
-        // удаляем фильтр при повторном нажатии
+        // Удаляем фильтр при повторном нажатии
         if (state.FilterCriteria.genre?.includes(action.payload.item)) {
+          // Создаем новый массив жанров без удаленного жанра
           const newGenresFilter = state.FilterCriteria.genre.filter(
             (item) => item !== action.payload.item
           );
 
+          // Если после удаления остались другие жанры
           if (newGenresFilter.length > 0) {
-            const newFilteredPlaylist = state.isSearch
+            // Фильтруем отфильтрованный плейлист по новым жанрам
+            const newFilteredPlaylist = isSearch
               ? searchedPlaylist.filter((track) =>
                   newGenresFilter.includes(track.genre)
                 )
@@ -215,6 +215,7 @@ export default function playerReducer(state = initialState, action) {
             return {
               ...state,
               filteredPlaylist: newFilteredPlaylist,
+              copyFilteredPlaylist: newFilteredPlaylist,
               FilterCriteria: {
                 isActiveGenre: true,
                 genre: newGenresFilter,
@@ -224,11 +225,23 @@ export default function playerReducer(state = initialState, action) {
             };
           }
 
+          // Если больше нет других жанров, сбрасываем фильтр по жанру
           return {
             ...state,
-            filteredPlaylist: state.FilterCriteria.isActiveAuthor
-              ? playlistWithAuthorFilter
-              : state.initialTracksForFilter,
+            filteredPlaylist: isSearch
+              ? searchedPlaylist.filter((track) =>
+                  track.author.includes(state.FilterCriteria.author)
+                )
+              : currentPlaylist.filter((track) =>
+                  track.author.includes(state.FilterCriteria.author)
+                ),
+            copyFilteredPlaylist: isSearch
+              ? searchedPlaylist.filter((track) =>
+                  track.author.includes(state.FilterCriteria.author)
+                )
+              : currentPlaylist.filter((track) =>
+                  track.author.includes(state.FilterCriteria.author)
+                ),
             FilterCriteria: {
               isActiveGenre: false,
               genre: newGenresFilter,
@@ -238,16 +251,19 @@ export default function playerReducer(state = initialState, action) {
           };
         }
 
+        // Добавляем выбранный жанр в список фильтров
         const newGenresFilter = [
           ...state.FilterCriteria.genre,
           action.payload.item,
         ];
 
+        // Выбираем изначальный плейлист в зависимости от активности фильтра по автору
         const PL = state.FilterCriteria.isActiveAuthor
           ? playlistWithAuthorFilter
           : state.initialTracksForFilter;
 
-        const newFilteredPlaylist = state.isSearch
+        // Фильтруем плейлист в зависимости от активности поиска
+        const newFilteredPlaylist = isSearch
           ? searchedPlaylist.filter((track) =>
               newGenresFilter.includes(track.genre)
             )
@@ -256,6 +272,7 @@ export default function playerReducer(state = initialState, action) {
         return {
           ...state,
           filteredPlaylist: newFilteredPlaylist,
+          copyFilteredPlaylist: newFilteredPlaylist,
           FilterCriteria: {
             isActiveGenre: true,
             genre: newGenresFilter,
@@ -265,20 +282,24 @@ export default function playerReducer(state = initialState, action) {
         };
       }
 
+      // Если фильтр по автору
       if (action.payload.name === "author") {
-        // для опции, если есть параллельно фильтры по жанру
+        // Для опции, если есть параллельно фильтры по жанру
         const playlistWithGenreFilter = state.initialTracksForFilter.filter(
           (track) => state.FilterCriteria.genre?.includes(track.genre)
         );
 
-        // удаляем фильтр при повторном нажатии
+        // Удаляем фильтр при повторном нажатии
         if (state.FilterCriteria.author?.includes(action.payload.item)) {
+          // Создаем новый массив авторов без удаленного автора
           const newAuthorFilter = state.FilterCriteria.author.filter(
             (item) => item !== action.payload.item
           );
 
+          // Если после удаления остались другие авторы
           if (newAuthorFilter.length > 0) {
-            const newFilteredPlaylist = state.isSearch
+            // Фильтруем отфильтрованный плейлист по новым авторам
+            const newFilteredPlaylist = isSearch
               ? searchedPlaylist.filter((track) =>
                   newAuthorFilter.includes(track.author)
                 )
@@ -289,6 +310,7 @@ export default function playerReducer(state = initialState, action) {
             return {
               ...state,
               filteredPlaylist: newFilteredPlaylist,
+              copyFilteredPlaylist: newFilteredPlaylist,
               FilterCriteria: {
                 isActiveAuthor: true,
                 author: newAuthorFilter,
@@ -298,12 +320,24 @@ export default function playerReducer(state = initialState, action) {
             };
           }
 
+          // Если больше нет других авторов, сбрасываем фильтр по автору
           return {
             ...state,
-            filteredPlaylist: state.FilterCriteria.isActiveGenre
-              ? playlistWithGenreFilter
-              : state.initialTracksForFilter,
+            filteredPlaylist: isSearch
+              ? searchedPlaylist.filter((track) =>
+                  track.genre.includes(state.FilterCriteria.genre)
+                )
+              : currentPlaylist.filter((track) =>
+                  track.genre.includes(state.FilterCriteria.genre)
+                ),
 
+            copyFilteredPlaylist: isSearch
+              ? searchedPlaylist.filter((track) =>
+                  track.genre.includes(state.FilterCriteria.genre)
+                )
+              : currentPlaylist.filter((track) =>
+                  track.genre.includes(state.FilterCriteria.genre)
+                ),
             FilterCriteria: {
               isActiveAuthor: false,
               author: newAuthorFilter,
@@ -313,16 +347,19 @@ export default function playerReducer(state = initialState, action) {
           };
         }
 
+        // Добавляем выбранного автора в список фильтров
         const newAuthorFilter = [
           ...state.FilterCriteria.author,
           action.payload.item,
         ];
 
+        // Выбираем плейлист в зависимости от активности поиска и фильтра по жанру
         const PL = state.FilterCriteria.isActiveGenre
           ? playlistWithGenreFilter
           : state.initialTracksForFilter;
 
-        const newFilteredPlaylist = state.isSearch
+        // Фильтруем плейлист по выбранному автору
+        const newFilteredPlaylist = isSearch
           ? searchedPlaylist.filter((track) =>
               newAuthorFilter.includes(track.author)
             )
@@ -331,7 +368,7 @@ export default function playerReducer(state = initialState, action) {
         return {
           ...state,
           filteredPlaylist: newFilteredPlaylist,
-
+          copyFilteredPlaylist: newFilteredPlaylist,
           FilterCriteria: {
             isActiveAuthor: true,
             author: newAuthorFilter,
@@ -341,16 +378,23 @@ export default function playerReducer(state = initialState, action) {
         };
       }
 
+      // Если фильтр по дате релиза
       if (action.payload.name === "release_date") {
         let sortButtonText = "По умолчанию";
-        let isSort = false; // Добавляем флаг isSort
+        let isSort = false;
 
+        // Сортировка плейлиста по дате релиза
         if (action.payload.item === "Сначала старые") {
           sortButtonText = "Сначала старые";
-          isSort = true; // Устанавливаем флаг isSort в true
+          isSort = true;
           return {
             ...state,
             filteredPlaylist: currentPlaylist
+              .slice()
+              .sort(
+                (a, b) => new Date(a.release_date) - new Date(b.release_date)
+              ),
+            copyFilteredPlaylist: currentPlaylist
               .slice()
               .sort(
                 (a, b) => new Date(a.release_date) - new Date(b.release_date)
@@ -363,15 +407,20 @@ export default function playerReducer(state = initialState, action) {
               genre: state.FilterCriteria.genre,
               sortButtonText: sortButtonText,
             },
-            isSort: isSort, // Устанавливаем флаг isSort в state
+            isSort: isSort,
           };
         }
         if (action.payload.item === "Сначала новые") {
           sortButtonText = "Сначала новые";
-          isSort = true; // Устанавливаем флаг isSort в true
+          isSort = true;
           return {
             ...state,
             filteredPlaylist: currentPlaylist
+              .slice()
+              .sort(
+                (a, b) => new Date(b.release_date) - new Date(a.release_date)
+              ),
+            copyFilteredPlaylist: currentPlaylist
               .slice()
               .sort(
                 (a, b) => new Date(b.release_date) - new Date(a.release_date)
@@ -384,15 +433,18 @@ export default function playerReducer(state = initialState, action) {
               genre: state.FilterCriteria.genre,
               sortButtonText: sortButtonText,
             },
-            isSort: isSort, // Устанавливаем флаг isSort в state
+            isSort: isSort,
           };
         }
         if (action.payload.item === "По умолчанию") {
           sortButtonText = "По умолчанию";
-          isSort = false; // Устанавливаем флаг isSort в false
+          isSort = false;
           return {
             ...state,
             filteredPlaylist: currentPlaylist
+              .slice()
+              .sort((a, b) => new Date(a.id) - new Date(b.id)),
+            copyFilteredPlaylist: currentPlaylist
               .slice()
               .sort((a, b) => new Date(a.id) - new Date(b.id)),
             FilterCriteria: {
@@ -403,24 +455,26 @@ export default function playerReducer(state = initialState, action) {
               genre: state.FilterCriteria.genre,
               sortButtonText: sortButtonText,
             },
-            isSort: isSort, // Устанавливаем флаг isSort в state
+            isSort: isSort,
           };
         }
       }
 
+      // Если фильтр не указан, возвращаем оригинальный отфильтрованный плейлист
       return {
         ...state,
         filteredPlaylist: [],
+        copyFilteredPlaylist: [],
       };
     }
 
     case SET_SEARCH: {
-      const currentPlaylist = action.payload.tracks;
-      const searchValue = action.payload.value.trim().toLowerCase();
+      const currentPlaylist = action.payload.tracks; // Получаем текущий плейлист
+      const searchValue = action.payload.value.trim().toLowerCase(); // Получаем значение строки поиска и приводим его к нижнему регистру
+      const copyFilteredPlaylist = state.copyFilteredPlaylist;
 
       let isSearch = false;
       let searchedPlaylist = [];
-      let filteredPlaylist = state.filteredPlaylist; // Используем filteredPlaylist из состояния по умолчанию
 
       if (searchValue.length > 0) {
         isSearch = true;
@@ -430,12 +484,12 @@ export default function playerReducer(state = initialState, action) {
           track.name.toLowerCase().includes(searchValue)
         );
 
-        // Если есть активные фильтры, фильтруем также отфильтрованный плейлист
+        // Если есть активные фильтры, фильтруем отфильтрованный плейлист
         if (
           state.FilterCriteria.isActiveAuthor ||
           state.FilterCriteria.isActiveGenre
         ) {
-          filteredPlaylist = state.filteredPlaylist.filter((track) =>
+          searchedPlaylist = copyFilteredPlaylist.filter((track) =>
             track.name.toLowerCase().includes(searchValue)
           );
         }
@@ -445,16 +499,15 @@ export default function playerReducer(state = initialState, action) {
           state.FilterCriteria.isActiveAuthor ||
           state.FilterCriteria.isActiveGenre
         ) {
-          filteredPlaylist = state.filteredPlaylist;
+          searchedPlaylist = copyFilteredPlaylist;
         }
       }
 
       return {
         ...state,
-        searchedPlaylist: searchedPlaylist,
-        filteredPlaylist: filteredPlaylist,
-
-        searchValue: action.payload.value,
+        filteredPlaylist: searchedPlaylist, // Обновляем отфильтрованный плейлист
+        copySearchedPlaylist: [...searchedPlaylist], // Сохраняем копию отфильтрованного плейлиста после поиска
+        searchValue: action.payload.value, // Устанавливаем значение строки поиска
         isSearch: isSearch,
       };
     }
@@ -470,9 +523,7 @@ export default function playerReducer(state = initialState, action) {
           author: [],
           sortButtonText: "По умолчанию",
         },
-        filteredPlaylist: state.initialTracksForFilter,
-
-        searchedPlaylist: [],
+        filteredPlaylist: [],
         isSearch: false,
       };
 

@@ -24,6 +24,9 @@ export const Category = ({ handleLogout }) => {
     id: categoryId,
   });
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
   const [updatedFilterTracks, setUpdatedFilterTracks] = useState([]);
 
   useEffect(() => {
@@ -39,10 +42,6 @@ export const Category = ({ handleLogout }) => {
   }, [data, pagePlaylist]);
 
   const isEmptyList = !isLoading && !data?.length;
-
-  const searchedPlaylist = useSelector(
-    (state) => state.player.searchedPlaylist
-  );
 
   return (
     <>
@@ -60,8 +59,8 @@ export const Category = ({ handleLogout }) => {
           ) : (
             <Tracklist
               tracks={
-                searchedPlaylist.length > 0
-                  ? searchedPlaylist
+                filteredPlaylist.length > 0
+                  ? filteredPlaylist
                   : updatedFilterTracks
               }
               refetch={refetch}

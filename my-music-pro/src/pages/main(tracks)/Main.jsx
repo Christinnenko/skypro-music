@@ -23,8 +23,6 @@ export const Main = ({ handleLogout }) => {
   const getTracks = async () => {
     try {
       const fetchedTracks = await getAllTracks();
-      console.log(fetchedTracks);
-      console.log(pagePlaylist);
       dispatch(setPagePlaylist({ fetchedTracks }));
       setLoading(false);
     } catch (error) {
@@ -49,13 +47,14 @@ export const Main = ({ handleLogout }) => {
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
-  const searchedPlaylist = useSelector(
-    (state) => state.player.searchedPlaylist
-  );
 
   const isFilter = isActiveAuthor || isActiveGenre;
   const isSearch = useSelector((state) => state.player.isSearch);
   const isSort = useSelector((state) => state.player.isSort);
+
+  const copySearchedPlaylist = useSelector(
+    (state) => state.player.copySearchedPlaylist
+  );
 
   return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
@@ -75,7 +74,7 @@ export const Main = ({ handleLogout }) => {
                   ? filteredPlaylist
                   : isSort
                   ? filteredPlaylist
-                  : searchedPlaylist
+                  : copySearchedPlaylist
                 : isFilter
                 ? filteredPlaylist
                 : isSort

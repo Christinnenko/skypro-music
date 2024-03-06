@@ -35,7 +35,7 @@ const Filter = ({
   const sortedOptions = filterOptions.slice().sort();
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <S.FilterButton $isActive={isActive} onClick={isActive ? onHide : onShow}>
         {type}
         {selectedItems.length > 0 && (
@@ -48,13 +48,13 @@ const Filter = ({
         <S.FilterPopup>
           <S.FilterPopupScrollable>
             {sortedOptions.map((item, index) => (
-              <div
+              <S.FilterPopupItem
                 key={index}
                 className={selectedItems.includes(item) ? "selected" : ""}
                 onClick={() => toggleFilter({ item, name: filterName, tracks })}
               >
                 {item}
-              </div>
+              </S.FilterPopupItem>
             ))}
           </S.FilterPopupScrollable>
         </S.FilterPopup>
@@ -96,7 +96,7 @@ const Sorter = ({
   };
 
   useEffect(() => {
-    // Если ни один элемент не выбран, установите "По умолчанию"
+    // Если ни один элемент не выбран -  "По умолчанию"
     if (!selectedItem) {
       setSelectedItem("По умолчанию");
     }
@@ -107,7 +107,7 @@ const Sorter = ({
   const showCounter = selectedItem && selectedItem !== "По умолчанию";
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <S.FilterButton $isActive={isActive} onClick={isActive ? onHide : onShow}>
         {buttonText}
         {showCounter && (
@@ -118,13 +118,13 @@ const Sorter = ({
         <S.FilterPopup>
           <S.FilterPopupScrollable>
             {sortedOptions.map((item, index) => (
-              <div
+              <S.FilterPopupItem
                 key={index}
                 className={selectedItem === item ? "selected" : ""}
                 onClick={() => toggleFilter({ item, name: filterName, tracks })}
               >
                 {item}
-              </div>
+              </S.FilterPopupItem>
             ))}
           </S.FilterPopupScrollable>
         </S.FilterPopup>
@@ -134,7 +134,6 @@ const Sorter = ({
 };
 
 Sorter.propTypes = {
-  sortButtonText: PropTypes.string.isRequired,
   filterName: PropTypes.string.isRequired,
   filterOptions: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,

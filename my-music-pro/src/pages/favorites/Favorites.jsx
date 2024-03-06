@@ -10,7 +10,6 @@ import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
 import { useSelector } from "react-redux";
-// import { useSelector } from "react-redux";
 
 // const mockFavoritesTracks = [
 //   {
@@ -55,8 +54,8 @@ import { useSelector } from "react-redux";
 // ];
 
 export const Favorites = ({ handleLogout }) => {
-  const searchedPlaylist = useSelector(
-    (state) => state.player.searchedPlaylist
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
   );
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
@@ -66,7 +65,6 @@ export const Favorites = ({ handleLogout }) => {
     if (error && error.status === 401) {
       refreshTokenUser(refreshToken)
         .then((res) => {
-          console.log("Обновленный токен:", res);
           localStorage.setItem("access", JSON.stringify(res.access));
         })
         .then(() => {
@@ -95,7 +93,7 @@ export const Favorites = ({ handleLogout }) => {
             `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
             <Tracklist
-              tracks={searchedPlaylist.length > 0 ? searchedPlaylist : data}
+              tracks={filteredPlaylist.length > 0 ? filteredPlaylist : data}
               refetch={refetch}
             />
           )}

@@ -9,7 +9,6 @@ import { useViewSelectionsByIdQuery } from "../../services/Services.js";
 const PageLayout = () => {
   const currentTrack = useSelector((state) => state.player.currentTrack);
   const { isFavorite } = useSelector((state) => state.player);
-
   const { refetch } = useViewSelectionsByIdQuery();
 
   return (

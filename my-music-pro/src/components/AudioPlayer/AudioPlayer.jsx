@@ -10,7 +10,7 @@ import {
   pause,
   toggleLike,
 } from "../../store/actions/creators/creators.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
@@ -19,10 +19,8 @@ import {
 function AudioPlayer({ track }) {
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
-  //повторение трека по кругу
-  const [isLooped, setIsLooped] = useState(false);
-  //текущее время воспроизведения аудио
-  const [currentTime, setCurrentTime] = useState(0);
+  const [isLooped, setIsLooped] = useState(false); //повторение трека по кругу
+  const [currentTime, setCurrentTime] = useState(0); //текущее время воспроизведения аудио
 
   const dispatch = useDispatch();
 
@@ -30,7 +28,11 @@ function AudioPlayer({ track }) {
   const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
 
   const token = JSON.parse(localStorage.access);
-  const isFavorite = track.isFavorite;
+  const currentTrackId = useSelector((state) => state.player.currentTrack?.id);
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const isFavorite = currentTrackId
+    ? pagePlaylist.find((track) => track.id === currentTrackId).isFavorite
+    : false;
 
   const handleToggleLike = (trackId, track) => {
     if (isFavorite) {
@@ -45,7 +47,6 @@ function AudioPlayer({ track }) {
     } else {
       addToFavorites({ id: trackId, token })
         .then(() => {
-          console.log("Toggling like for track:", track);
           dispatch(toggleLike(trackId));
         })
         .catch((error) => {
@@ -80,7 +81,7 @@ function AudioPlayer({ track }) {
     dispatch(pause());
   };
 
-  //кнопка плей/пауза
+  //кнопка play/pause
   const togglePlay = isPlaying ? handleStop : handleStart;
 
   const handleNextTrack = () => {
@@ -144,7 +145,7 @@ function AudioPlayer({ track }) {
       audioRef.current.addEventListener("ended", handleTrackEnd);
     }
 
-    updateCurrentTime(); // Вызов функции
+    updateCurrentTime();
 
     // Удаление слушателя при размонтировании компонента
     return () => {
@@ -172,6 +173,7 @@ function AudioPlayer({ track }) {
     audioRef.current.loop = true;
     setIsLooped(true);
   };
+
   //выключение
   const handleUnloop = () => {
     audioRef.current.loop = false;
@@ -269,12 +271,6 @@ function AudioPlayer({ track }) {
                     >
                       <use xlinkHref="/icon/sprite.svg#icon-like"></use>
                     </S.TrackPlayLikeSvg>
-                    {/* <S.TrackPlayLikeSvg alt="like">
-                      <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                    </S.TrackPlayLikeSvg>
-                    <S.TrackPlayDislikeSvg alt="dislike">
-                      <use xlinkHref="/icon/sprite.svg#icon-dislike"></use>
-                    </S.TrackPlayDislikeSvg> */}
                   </S.TrackPlayLike>
                 </S.TrackPlayLikeDis>
               </S.PlayerTrackPlay>

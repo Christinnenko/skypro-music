@@ -58,45 +58,24 @@ export const FilterButton = styled.div`
 `;
 
 export const FilterPopup = styled.div`
-  margin-top: 10px;
-  border-radius: 12px;
   background: #313131;
-  display: flex;
-  flex-direction: column;
-  padding: 34px;
-  font-size: 20px;
-  line-height: 24px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  left: 0;
+  min-width: 269px;
+  /* min-height: 305px; */
+  padding: 32px;
   position: absolute;
-  max-height: 237px;
-  max-width: 242px;
-  overflow-y: auto;
+  top: 50px;
 `;
 
-export const FilterPopupScrollable = styled.div`
+export const FilterPopupScrollable = styled.ul`
+  max-height: 236px;
+  max-width: 242px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 28px;
-  list-style: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 19px;
-  line-height: 24px;
-  width: 100%;
-
-  div:hover {
-    color: #b672ff;
-    text-decoration-line: underline;
-  }
-
-  div:active {
-    color: #b672ff;
-    font-weight: bold;
-  }
-
-  div.selected {
-    color: #b672ff;
-    font-weight: bold;
-  }
 
   scrollbar-color: #ffffff #4b4949; /* Для Firefox */
   scrollbar-width: 4px; /* Для Firefox */
@@ -114,6 +93,34 @@ export const FilterPopupScrollable = styled.div`
 
   &::-webkit-scrollbar-track {
     background-color: #4b4949;
+  }
+`;
+
+export const FilterPopupItem = styled.li`
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    color: #b672ff;
+    text-decoration-line: underline;
+  }
+
+  &:active {
+    color: #b672ff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  &.selected {
+    color: #b672ff;
+    font-weight: bold;
   }
 `;
 

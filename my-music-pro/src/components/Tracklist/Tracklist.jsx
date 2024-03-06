@@ -42,7 +42,6 @@ function Tracklist({ tracks, getTracksError }) {
     if (track.isFavorite) {
       deleteFromFavorites({ id: trackId })
         .then(() => {
-          console.log("Toggling like for track:", track);
           dispatch(toggleLike(trackId));
         })
         .catch((error) => {
@@ -51,7 +50,6 @@ function Tracklist({ tracks, getTracksError }) {
     } else {
       addToFavorites({ id: trackId, token })
         .then(() => {
-          console.log("Toggling like for track:", track);
           dispatch(toggleLike(trackId));
         })
         .catch((error) => {
@@ -61,7 +59,6 @@ function Tracklist({ tracks, getTracksError }) {
   };
 
   const handleCurrentTrackId = (track) => {
-    console.log("Handling current track ID:", track.id);
     dispatch(setCurrentTrack({ playlist: tracks, track: track }));
     if (isMix) {
       dispatch(mixTracks(true));
@@ -71,10 +68,6 @@ function Tracklist({ tracks, getTracksError }) {
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
-  // const searchedPlaylist = useSelector(
-  //   (state) => state.player.searchedPlaylist
-  // );
-  // const isFilter = useSelector((state) => state.player.FilterCriteria.isFilter);
   const isActiveAuthor = useSelector(
     (state) => state.player.FilterCriteria.isActiveAuthor
   );
@@ -83,9 +76,6 @@ function Tracklist({ tracks, getTracksError }) {
   );
   const isFilter = isActiveAuthor || isActiveGenre;
   const isSearch = useSelector((state) => state.player.isSearch);
-  const initialTracksForFilter = useSelector(
-    (state) => state.player.initialTracksForFilter
-  );
 
   return (
     <Style.CenterblockContent>
@@ -104,7 +94,7 @@ function Tracklist({ tracks, getTracksError }) {
 
       <Style.ContentPlaylist>
         {(isFilter && filteredPlaylist.length === 0) ||
-        (isSearch && initialTracksForFilter.length === 0) ? (
+        (isSearch && filteredPlaylist.length === 0) ? (
           <>Ничего не найдено *_*</>
         ) : (
           tracks.map((track) => (

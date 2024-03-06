@@ -75,14 +75,14 @@ export const setFilter = ({ name, item, tracks }) => ({
   },
 });
 
-export const clearFilters = () => ({
-  type: CLEAR_FILTERS,
-});
-
 export const setSearch = ({ value, tracks }) => ({
   type: SET_SEARCH,
   payload: {
     value,
     tracks,
   },
+});
+
+export const clearFilters = () => ({
+  type: CLEAR_FILTERS,
 });

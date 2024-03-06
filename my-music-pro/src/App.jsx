@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-  const [loading, setLoading] = useState(true); //показ эмуляции загрузки(скелетон)
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

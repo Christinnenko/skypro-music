@@ -31,7 +31,7 @@ function AudioPlayer({ track }) {
   const currentTrackId = useSelector((state) => state.player.currentTrack?.id);
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
   const isFavorite = currentTrackId
-    ? pagePlaylist.find((track) => track.id === currentTrackId).isFavorite
+    ? pagePlaylist.find((track) => track.id === currentTrackId)?.isFavorite
     : false;
 
   const handleToggleLike = (trackId, track) => {

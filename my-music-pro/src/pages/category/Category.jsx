@@ -11,9 +11,11 @@ import * as St from "../Pages.styles.js";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useViewSelectionsByIdQuery } from "../../services/Services.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setPagePlaylist } from "../../store/actions/creators/creators.js";
 
 export const Category = ({ handleLogout }) => {
+  const dispatch = useDispatch();
   const params = useParams();
   const category = Categories.find(
     (category) => category.id === Number(params.id)
@@ -42,6 +44,12 @@ export const Category = ({ handleLogout }) => {
   }, [data, pagePlaylist]);
 
   const isEmptyList = !isLoading && !data?.length;
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setPagePlaylist({ fetchedTracks: data }));
+    }
+  }, [data]);
 
   return (
     <>

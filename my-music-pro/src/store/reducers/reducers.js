@@ -131,21 +131,10 @@ export default function playerReducer(state = initialState, action) {
 
     case SET_PAGE_PLAYLIST: {
       const { fetchedTracks } = action.payload;
-      const currentUser = JSON.parse(localStorage.getItem("user"));
 
-      const playlistWithLikes = fetchedTracks.map((el) => {
-        let isFavorite = false;
-        if (el.stared_user) {
-          isFavorite = el.stared_user.some(
-            (user) => user.id === currentUser.id
-          );
-        }
-
-        return { ...el, isFavorite };
-      });
       return {
         ...state,
-        pagePlaylist: playlistWithLikes,
+        pagePlaylist: fetchedTracks,
       };
     }
 
@@ -180,7 +169,7 @@ export default function playerReducer(state = initialState, action) {
 
     case SET_FILTER: {
       // Получаем текущий плейлист
-      const currentPlaylist = action.payload.tracks;
+      const currentPlaylist = [...state.initialTracksForFilter]; // использовать на всех фильтрах это значение и храним его в первоначальном виде. Автор жанры потом даты
 
       // Получаем информацию о том, активен ли поиск
       const isSearch = state.isSearch;
@@ -324,20 +313,19 @@ export default function playerReducer(state = initialState, action) {
           return {
             ...state,
             filteredPlaylist: isSearch
-              ? searchedPlaylist.filter((track) =>
-                  track.genre.includes(state.FilterCriteria.genre)
-                )
-              : currentPlaylist.filter((track) =>
-                  track.genre.includes(state.FilterCriteria.genre)
-                ),
-
+              ? searchedPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id))
+              : currentPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id)),
             copyFilteredPlaylist: isSearch
-              ? searchedPlaylist.filter((track) =>
-                  track.genre.includes(state.FilterCriteria.genre)
-                )
-              : currentPlaylist.filter((track) =>
-                  track.genre.includes(state.FilterCriteria.genre)
-                ),
+              ? searchedPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id))
+              : currentPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id)),
             FilterCriteria: {
               isActiveAuthor: false,
               author: newAuthorFilter,
@@ -389,16 +377,32 @@ export default function playerReducer(state = initialState, action) {
           isSort = true;
           return {
             ...state,
-            filteredPlaylist: currentPlaylist
-              .slice()
-              .sort(
-                (a, b) => new Date(a.release_date) - new Date(b.release_date)
-              ),
-            copyFilteredPlaylist: currentPlaylist
-              .slice()
-              .sort(
-                (a, b) => new Date(a.release_date) - new Date(b.release_date)
-              ),
+            filteredPlaylist: isSearch
+              ? searchedPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(a.release_date) - new Date(b.release_date)
+                  )
+              : currentPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(a.release_date) - new Date(b.release_date)
+                  ),
+            copyFilteredPlaylist: isSearch
+              ? searchedPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(a.release_date) - new Date(b.release_date)
+                  )
+              : currentPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(a.release_date) - new Date(b.release_date)
+                  ),
             FilterCriteria: {
               isActiveSort: true,
               isActiveAuthor: state.FilterCriteria.isActiveAuthor,
@@ -415,16 +419,32 @@ export default function playerReducer(state = initialState, action) {
           isSort = true;
           return {
             ...state,
-            filteredPlaylist: currentPlaylist
-              .slice()
-              .sort(
-                (a, b) => new Date(b.release_date) - new Date(a.release_date)
-              ),
-            copyFilteredPlaylist: currentPlaylist
-              .slice()
-              .sort(
-                (a, b) => new Date(b.release_date) - new Date(a.release_date)
-              ),
+            filteredPlaylist: isSearch
+              ? searchedPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(b.release_date) - new Date(a.release_date)
+                  )
+              : currentPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(b.release_date) - new Date(a.release_date)
+                  ),
+            copyFilteredPlaylist: isSearch
+              ? searchedPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(b.release_date) - new Date(a.release_date)
+                  )
+              : currentPlaylist
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(b.release_date) - new Date(a.release_date)
+                  ),
             FilterCriteria: {
               isActiveSort: true,
               isActiveAuthor: state.FilterCriteria.isActiveAuthor,
@@ -441,12 +461,20 @@ export default function playerReducer(state = initialState, action) {
           isSort = false;
           return {
             ...state,
-            filteredPlaylist: currentPlaylist
-              .slice()
-              .sort((a, b) => new Date(a.id) - new Date(b.id)),
-            copyFilteredPlaylist: currentPlaylist
-              .slice()
-              .sort((a, b) => new Date(a.id) - new Date(b.id)),
+            filteredPlaylist: isSearch
+              ? searchedPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id))
+              : currentPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id)),
+            copyFilteredPlaylist: isSearch
+              ? searchedPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id))
+              : currentPlaylist
+                  .slice()
+                  .sort((a, b) => new Date(a.id) - new Date(b.id)),
             FilterCriteria: {
               isActiveSort: false,
               isActiveAuthor: state.FilterCriteria.isActiveAuthor,
@@ -470,6 +498,7 @@ export default function playerReducer(state = initialState, action) {
 
     case SET_SEARCH: {
       const currentPlaylist = action.payload.tracks; // Получаем текущий плейлист
+      const pagePlaylist = state.pagePlaylist;
       const searchValue = action.payload.value.trim().toLowerCase(); // Получаем значение строки поиска и приводим его к нижнему регистру
       const copyFilteredPlaylist = state.copyFilteredPlaylist;
 
@@ -500,6 +529,29 @@ export default function playerReducer(state = initialState, action) {
           state.FilterCriteria.isActiveGenre
         ) {
           searchedPlaylist = copyFilteredPlaylist;
+        }
+
+        // Добавляем условие для isSort
+        if (state.isSort) {
+          // В зависимости от выбранной сортировки изменяем порядок плейлиста
+          if (state.FilterCriteria.sortButtonText === "Сначала старые") {
+            searchedPlaylist = pagePlaylist
+              .slice()
+              .sort(
+                (a, b) => new Date(a.release_date) - new Date(b.release_date)
+              );
+          } else if (state.FilterCriteria.sortButtonText === "Сначала новые") {
+            searchedPlaylist = pagePlaylist
+              .slice()
+              .sort(
+                (a, b) => new Date(b.release_date) - new Date(a.release_date)
+              );
+          } else {
+            // По умолчанию сортируем по id
+            searchedPlaylist = pagePlaylist
+              .slice()
+              .sort((a, b) => new Date(a.id) - new Date(b.id));
+          }
         }
       }
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as S from "../../App.styles.js";
 import Filters from "../../components/Filters/Filters.jsx";
 import NavMenu from "../../components/NavMenu/NavMenu.jsx";
@@ -6,23 +6,36 @@ import Search from "../../components/Search/Search.jsx";
 import { LoginSidebar, Sidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
+import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setPagePlaylist } from "../../store/actions/creators/creators.js";
-import { useGetAllTracksQuery } from "../../services/Services.js";
 
 export const Main = ({ handleLogout }) => {
-  const { data, isLoading, error, refetch } = useGetAllTracksQuery();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
+  const [tracksError, setTracksError] = useState([]);
 
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
 
-  useEffect(() => {
-    if (data) {
-      dispatch(setPagePlaylist({ fetchedTracks: data }));
+  const getTracks = async () => {
+    try {
+      const fetchedTracks = await getAllTracks();
+      dispatch(setPagePlaylist({ fetchedTracks }));
+      setLoading(false);
+    } catch (error) {
+      setTracksError([
+        `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`,
+      ]);
+      setLoading(false);
     }
-  }, [data]);
+  };
+
+  useEffect(() => {
+    getTracks();
+  }, []);
 
   const isActiveAuthor = useSelector(
     (state) => state.player.FilterCriteria.isActiveAuthor
@@ -43,7 +56,7 @@ export const Main = ({ handleLogout }) => {
     (state) => state.player.copySearchedPlaylist
   );
 
-  return isLoading ? (
+  return loading ? (
     <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
   ) : (
     <>
@@ -68,8 +81,8 @@ export const Main = ({ handleLogout }) => {
                 ? filteredPlaylist
                 : pagePlaylist
             }
-            tracksError={error}
-            refetch={refetch}
+            tracksError={tracksError}
+            refetch={getTracks}
           />
         </div>
 

@@ -7,10 +7,6 @@ export const Track = ({ track, handleCurrentTrackId, handleToggleLike }) => {
   const { currentTrack, isPlaying } = useSelector((store) => store.player);
   const { isFavorite } = track;
 
-  if (!track || typeof track.id === "undefined") {
-    return null;
-  }
-
   return (
     <Style.PlaylistTrack>
       <Style.TrackTitle>

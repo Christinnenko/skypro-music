@@ -9,8 +9,7 @@ import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
-import { useDispatch, useSelector } from "react-redux";
-import { setPagePlaylist } from "../../store/actions/creators/creators.js";
+import { useSelector } from "react-redux";
 
 // const mockFavoritesTracks = [
 //   {
@@ -55,7 +54,6 @@ import { setPagePlaylist } from "../../store/actions/creators/creators.js";
 // ];
 
 export const Favorites = ({ handleLogout }) => {
-  const dispatch = useDispatch();
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
@@ -77,12 +75,6 @@ export const Favorites = ({ handleLogout }) => {
         });
     }
   }, [error]);
-
-  useEffect(() => {
-    if (data) {
-      dispatch(setPagePlaylist({ fetchedTracks: data }));
-    }
-  }, [data]);
 
   const isEmptyList = !isLoading && !data?.length;
 

@@ -97,7 +97,7 @@ function Tracklist({ tracks, getTracksError }) {
         (isSearch && filteredPlaylist.length === 0) ? (
           <>Ничего не найдено *_*</>
         ) : (
-          tracks.map((track) => (
+          filteredPlaylist.map((track) => (
             <Style.PlaylistItem key={track.id}>
               <Track
                 track={track}

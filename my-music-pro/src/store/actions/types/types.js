@@ -6,7 +6,10 @@ export const MIX_TRACK = "MIX_TRACK";
 export const PLAY = "PLAY";
 export const PAUSE = "PAUSE";
 
+export const SET_PAGE_PLAYLIST = "SET_PAGE_PLAYLIST";
 export const TOGGLE_LIKE = "TOGGLE_LIKE";
 
-export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
-export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
+export const SET_INITIAL_TRACKS = "SET_INITIAL_TRACKS";
+export const SET_FILTER = "SET_FILTER";
+export const SET_SEARCH = "SET_SEARCH";
+export const CLEAR_FILTERS = "CLEAR_FILTERS";

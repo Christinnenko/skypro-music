@@ -6,9 +6,12 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
-  SET_SEARCH_QUERY,
-  CLEAR_SEARCH_QUERY,
+  SET_PAGE_PLAYLIST,
   TOGGLE_LIKE,
+  SET_INITIAL_TRACKS,
+  SET_FILTER,
+  SET_SEARCH,
+  CLEAR_FILTERS,
 } from "../types/types";
 
 export const setCurrentTrack = ({ playlist, track }) => ({
@@ -17,11 +20,6 @@ export const setCurrentTrack = ({ playlist, track }) => ({
     playlist,
     track,
   },
-});
-
-export const toggleLike = (track) => ({
-  type: TOGGLE_LIKE,
-  payload: { track },
 });
 
 export const clearCurrentTrack = () => ({
@@ -51,11 +49,40 @@ export const mixTracks = (isMix) => ({
   },
 });
 
-export const setSearchQuery = (query) => ({
-  type: SET_SEARCH_QUERY,
-  payload: query,
+export const setPagePlaylist = ({ fetchedTracks }) => ({
+  type: SET_PAGE_PLAYLIST,
+  payload: { fetchedTracks },
 });
 
-export const clearSearchQuery = () => ({
-  type: CLEAR_SEARCH_QUERY,
+export const toggleLike = (trackId) => ({
+  type: TOGGLE_LIKE,
+  payload: { trackId },
+});
+
+export const setInitialTracksForFilter = ({ tracks }) => ({
+  type: SET_INITIAL_TRACKS,
+  payload: {
+    data: tracks,
+  },
+});
+
+export const setFilter = ({ name, item, tracks }) => ({
+  type: SET_FILTER,
+  payload: {
+    name,
+    item,
+    tracks,
+  },
+});
+
+export const setSearch = ({ value, tracks }) => ({
+  type: SET_SEARCH,
+  payload: {
+    value,
+    tracks,
+  },
+});
+
+export const clearFilters = () => ({
+  type: CLEAR_FILTERS,
 });

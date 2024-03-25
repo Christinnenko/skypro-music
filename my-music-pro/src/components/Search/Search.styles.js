@@ -37,6 +37,7 @@ export const SearchText = styled.input`
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
+  outline: none;
 
   &::-webkit-input-placeholder,
   &:-ms-input-placeholder,
@@ -50,39 +51,3 @@ export const SearchText = styled.input`
     line-height: 24px;
   }
 `;
-
-// .search__text::-webkit-input-placeholder {
-//   background-color: transparent;
-//   color: #ffffff;
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 16px;
-//   line-height: 24px;
-// }
-
-// .search__text:-ms-input-placeholder {
-//   background-color: transparent;
-//   color: #ffffff;
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 16px;
-//   line-height: 24px;
-// }
-
-// .search__text::-ms-input-placeholder {
-//   background-color: transparent;
-//   color: #ffffff;
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 16px;
-//   line-height: 24px;
-// }
-
-// .search__text::placeholder {
-//   background-color: transparent;
-//   color: #ffffff;
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 16px;
-//   line-height: 24px;
-// }

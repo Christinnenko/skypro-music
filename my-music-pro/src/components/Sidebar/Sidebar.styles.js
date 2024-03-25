@@ -38,6 +38,10 @@ export const SidebarIcon = styled.div`
   background-color: #313131;
   border-radius: 50%;
   cursor: pointer;
+
+  svg {
+    width: 50px;
+  }
 `;
 
 export const SidebarBlock = styled.div`

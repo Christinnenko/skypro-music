@@ -17,10 +17,12 @@ import { useEffect } from "react";
 import { Track } from "../Track/Track.jsx";
 
 function Tracklist({ tracks, getTracksError }) {
-  const { FilterCriteria } = useSelector((store) => store.player);
   const dispatch = useDispatch();
-  const { isMix } = useSelector((store) => store.player);
   const navigate = useNavigate();
+
+  const { FilterCriteria } = useSelector((store) => store.player);
+  const { isMix } = useSelector((store) => store.player);
+
   const token = JSON.parse(localStorage.access);
 
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();

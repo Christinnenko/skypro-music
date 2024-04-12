@@ -9,7 +9,11 @@ import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  setInitialTracksForFilter,
+  setSearch,
+} from "../../store/actions/creators/creators.js";
 
 // const mockFavoritesTracks = [
 //   {
@@ -54,9 +58,8 @@ import { useSelector } from "react-redux";
 // ];
 
 export const Favorites = ({ handleLogout }) => {
-  const filteredPlaylist = useSelector(
-    (state) => state.player.filteredPlaylist
-  );
+  const dispatch = useDispatch();
+
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
@@ -76,6 +79,12 @@ export const Favorites = ({ handleLogout }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (data) {
+      dispatch(setInitialTracksForFilter({ tracks: data }));
+      dispatch(setSearch({ value: "" }));
+    }
+  }, [data]);
   const isEmptyList = !isLoading && !data?.length;
 
   return (
@@ -92,10 +101,7 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
-            <Tracklist
-              tracks={filteredPlaylist.length > 0 ? filteredPlaylist : data}
-              refetch={refetch}
-            />
+            <Tracklist tracks={data} refetch={refetch} />
           )}
         </div>
         <St.ContainerSidebar>

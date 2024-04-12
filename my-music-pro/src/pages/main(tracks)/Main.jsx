@@ -15,7 +15,6 @@ import { setPagePlaylist } from "../../store/actions/creators/creators.js";
 export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-
   const [tracksError, setTracksError] = useState([]);
 
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
@@ -24,6 +23,7 @@ export const Main = ({ handleLogout }) => {
     try {
       const fetchedTracks = await getAllTracks();
       dispatch(setPagePlaylist({ fetchedTracks }));
+
       setLoading(false);
     } catch (error) {
       setTracksError([

@@ -51,7 +51,10 @@ export const getFavTracksApi = createApi({
           Authorization: `Bearer ${JSON.parse(localStorage.access)}`,
         },
       }),
-      invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
+      invalidatesTags: [
+        { type: "isFavorite", id: "LIST" },
+        { type: "categoryTracks", id: "LIST" },
+      ],
     }),
     deleteFromFavorites: builder.mutation({
       query: ({ id }) => ({
@@ -61,7 +64,10 @@ export const getFavTracksApi = createApi({
           Authorization: `Bearer ${JSON.parse(localStorage.access)}`,
         },
       }),
-      invalidatesTags: [{ type: "isFavorite", id: "LIST" }],
+      invalidatesTags: [
+        { type: "isFavorite", id: "LIST" },
+        { type: "categoryTracks", id: "LIST" },
+      ],
     }),
     viewSelectionsById: builder.query({
       query: ({ id }) => ({
@@ -81,6 +87,10 @@ export const getFavTracksApi = createApi({
           }
         });
       },
+      providesTags: (result) =>
+        result
+          ? [{ type: "categoryTracks", id: "LIST" }]
+          : [{ type: "categoryTracks", id: "LIST" }],
     }),
   }),
 });

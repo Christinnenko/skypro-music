@@ -14,43 +14,26 @@ import {
   CLEAR_FILTERS,
 } from "../actions/types/types";
 
-// 1.
 const initialState = {
   currentTrack: null,
-  allIds: [],
   isPlaying: null,
   tracks: [],
   pagePlaylist: [],
   isMix: false,
-  likedTracks: [],
-  isFavorite: false,
   playlist: [],
-  searchedPlaylist: [],
   filteredPlaylist: [],
   FilterCriteria: {
     author: [],
-    isActiveAuthor: false,
     genre: [],
-    isActiveGenre: false,
   },
   initialTracksForFilter: [],
-  initialTracksForSearch: [],
-
-  searchValue: "",
-  isSearch: false,
-  isSort: false,
 };
 
-// 2.
 export default function playerReducer(state = initialState, action) {
   switch (action.type) {
-    // 3.
     case SET_CURRENT_TRACK: {
-      // 4.
-
       const { track, playlist } = action.payload;
 
-      // 5.
       return {
         ...state,
         currentTrack: track,
@@ -180,14 +163,9 @@ export default function playerReducer(state = initialState, action) {
     }
 
     case SET_FILTER: {
-      // Получаем текущий плейлист
-      // получаем сохраненный отфильтрованный после поиска плейлист
-      let searchedPlaylist = state.searchedPlaylist;
       let genres = [...state.FilterCriteria.genre];
       let authors = [...state.FilterCriteria.author];
       let sortButtonText = action.payload.item;
-
-      let isFilter = false; // Переменная для флага фильтра
 
       // Если фильтр по жанру
       if (action.payload.name === "author") {
@@ -205,71 +183,28 @@ export default function playerReducer(state = initialState, action) {
         }
       }
 
-      if (genres.length) {
-        searchedPlaylist = searchedPlaylist.filter((elem) =>
-          genres.includes(elem.genre)
-        );
-        isFilter = true; // Устанавливаем флаг фильтра в true
-      }
-      if (authors.length) {
-        searchedPlaylist = searchedPlaylist.filter((elem) =>
-          authors.includes(elem.author)
-        );
-        isFilter = true; // Устанавливаем флаг фильтра в true
-      }
-
-      // Сортировка плейлиста по дате релиза
-      if (sortButtonText === "Сначала старые") {
-        searchedPlaylist = searchedPlaylist
-          .slice()
-          .sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
-        isFilter = true; // Устанавливаем флаг фильтра в true
-      }
-
-      if (sortButtonText === "Сначала новые") {
-        searchedPlaylist = searchedPlaylist
-          .slice()
-          .sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-        isFilter = true; // Устанавливаем флаг фильтра в true
-      }
-
-      if (sortButtonText === "По умолчанию") {
-        searchedPlaylist = [...searchedPlaylist];
-      }
-
       return {
         ...state,
-        filteredPlaylist: searchedPlaylist,
         FilterCriteria: {
           ...state.FilterCriteria,
           author: authors,
           genre: genres,
+          sortButtonText,
         },
-        isFilter: isFilter, // Устанавливаем флаг фильтра в состояние
       };
     }
 
     case SET_SEARCH: {
       const searchValue = action.payload.value.trim().toLowerCase();
-      const isFilter = action.isFilter; // Получаем isFilter из действия
+      let searchedPlaylist;
 
-      let filteredPlaylist = state.filteredPlaylist;
-      let searchedPlaylist; // Объявляем переменную здесь
-
-      if (isFilter) {
-        searchedPlaylist = filteredPlaylist.filter((track) =>
-          track.name.toLowerCase().includes(searchValue)
-        );
-      } else {
-        const copyFilteredPlaylist = state.initialTracksForFilter;
-        searchedPlaylist = copyFilteredPlaylist.filter((track) =>
-          track.name.toLowerCase().includes(searchValue)
-        );
-      }
+      const copyFilteredPlaylist = state.initialTracksForFilter;
+      searchedPlaylist = copyFilteredPlaylist.filter((track) =>
+        track.name.toLowerCase().includes(searchValue)
+      );
 
       return {
         ...state,
-        searchedPlaylist: searchedPlaylist,
         filteredPlaylist: searchedPlaylist,
       };
     }
@@ -278,15 +213,11 @@ export default function playerReducer(state = initialState, action) {
       return {
         ...state,
         FilterCriteria: {
-          isActiveGenre: false,
-          isActiveAuthor: false,
-          isActiveSort: false,
           genre: [],
           author: [],
           sortButtonText: "По умолчанию",
         },
         filteredPlaylist: [],
-        isSearch: false,
       };
 
     default:

@@ -101,7 +101,6 @@ export const FilterPopupItem = styled.li`
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;

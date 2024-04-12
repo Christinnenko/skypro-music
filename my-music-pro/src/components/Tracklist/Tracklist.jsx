@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { Track } from "../Track/Track.jsx";
 
 function Tracklist({ tracks, getTracksError }) {
+  const { FilterCriteria } = useSelector((store) => store.player);
   const dispatch = useDispatch();
   const { isMix } = useSelector((store) => store.player);
   const navigate = useNavigate();
@@ -68,14 +69,36 @@ function Tracklist({ tracks, getTracksError }) {
   const filteredPlaylist = useSelector(
     (state) => state.player.filteredPlaylist
   );
-  const isActiveAuthor = useSelector(
-    (state) => state.player.FilterCriteria.isActiveAuthor
-  );
-  const isActiveGenre = useSelector(
-    (state) => state.player.FilterCriteria.isActiveGenre
-  );
-  const isFilter = isActiveAuthor || isActiveGenre;
-  const isSearch = useSelector((state) => state.player.isSearch);
+
+  const filterTracks = () => {
+    let tracks = [...filteredPlaylist];
+    if (FilterCriteria.author.length) {
+      tracks = tracks.filter((el) => FilterCriteria.author.includes(el.author));
+    }
+
+    if (FilterCriteria.genre.length) {
+      tracks = tracks.filter((el) => FilterCriteria.genre.includes(el.genre));
+    }
+    console.log(FilterCriteria.sortButtonText);
+    switch (FilterCriteria.sortButtonText) {
+      case "Сначала старые":
+        tracks.sort(
+          (a, b) => new Date(a.release_date) - new Date(b.release_date)
+        );
+        break;
+      case "Сначала новые":
+        tracks.sort(
+          (a, b) => new Date(b.release_date) - new Date(a.release_date)
+        );
+        break;
+      default:
+        console.log(tracks);
+    }
+
+    return tracks;
+  };
+
+  const filteredTracks = filterTracks();
 
   return (
     <Style.CenterblockContent>
@@ -93,11 +116,10 @@ function Tracklist({ tracks, getTracksError }) {
       <p>{getTracksError}</p>
 
       <Style.ContentPlaylist>
-        {(isFilter && filteredPlaylist.length === 0) ||
-        (isSearch && filteredPlaylist.length === 0) ? (
+        {!filteredTracks.length ? (
           <>Ничего не найдено *_*</>
         ) : (
-          filteredPlaylist.map((track) => (
+          filteredTracks.map((track) => (
             <Style.PlaylistItem key={track.id}>
               <Track
                 track={track}

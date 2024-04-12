@@ -12,7 +12,11 @@ import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useViewSelectionsByIdQuery } from "../../services/Services.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { setPagePlaylist } from "../../store/actions/creators/creators.js";
+import {
+  setInitialTracksForFilter,
+  setPagePlaylist,
+  setSearch,
+} from "../../store/actions/creators/creators.js";
 
 export const Category = ({ handleLogout }) => {
   const dispatch = useDispatch();
@@ -48,6 +52,8 @@ export const Category = ({ handleLogout }) => {
   useEffect(() => {
     if (data) {
       dispatch(setPagePlaylist({ fetchedTracks: data }));
+      dispatch(setInitialTracksForFilter({ tracks: data }));
+      dispatch(setSearch({ value: "" }));
     }
   }, [data]);
 

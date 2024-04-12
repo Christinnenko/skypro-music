@@ -72,6 +72,7 @@ function Tracklist({ tracks, getTracksError }) {
 
   const filterTracks = () => {
     let tracks = [...filteredPlaylist];
+
     if (FilterCriteria.author.length) {
       tracks = tracks.filter((el) => FilterCriteria.author.includes(el.author));
     }
@@ -79,7 +80,7 @@ function Tracklist({ tracks, getTracksError }) {
     if (FilterCriteria.genre.length) {
       tracks = tracks.filter((el) => FilterCriteria.genre.includes(el.genre));
     }
-    console.log(FilterCriteria.sortButtonText);
+
     switch (FilterCriteria.sortButtonText) {
       case "Сначала старые":
         tracks.sort(
@@ -92,7 +93,7 @@ function Tracklist({ tracks, getTracksError }) {
         );
         break;
       default:
-        console.log(tracks);
+        break;
     }
 
     return tracks;

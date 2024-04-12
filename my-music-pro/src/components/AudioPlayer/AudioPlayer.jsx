@@ -34,11 +34,10 @@ function AudioPlayer({ track }) {
     ? pagePlaylist.find((track) => track.id === currentTrackId)?.isFavorite
     : false;
 
-  const handleToggleLike = (trackId, track) => {
+  const handleToggleLike = (trackId) => {
     if (isFavorite) {
       deleteFromFavorites({ id: trackId })
         .then(() => {
-          console.log("Toggling like for track:", track);
           dispatch(toggleLike(trackId));
         })
         .catch((error) => {

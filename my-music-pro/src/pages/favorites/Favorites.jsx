@@ -92,7 +92,7 @@ export const Favorites = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
-          <Search tracks={data} />
+          <Search tracks={data || []} />
           <S.CenterblockH2>Мои треки</S.CenterblockH2>
           {error ? (
             <p>Не удалось загрузить плейлист, попробуйте позже</p>

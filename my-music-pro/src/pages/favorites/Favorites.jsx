@@ -5,11 +5,15 @@ import * as S from "../../App.styles.js";
 import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useGetFavTracksQuery } from "../../services/Services.js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { refreshTokenUser } from "../../api.js";
 import * as St from "../Pages.styles.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  setInitialTracksForFilter,
+  setSearch,
+} from "../../store/actions/creators/creators.js";
 
 // const mockFavoritesTracks = [
 //   {
@@ -54,31 +58,16 @@ import { useSelector } from "react-redux";
 // ];
 
 export const Favorites = ({ handleLogout }) => {
+  const dispatch = useDispatch();
+
   const token = JSON.parse(localStorage.access);
   const refreshToken = JSON.parse(localStorage.refresh);
   const { data, isLoading, error, refetch } = useGetFavTracksQuery({ token });
-  const searchQuery = useSelector((state) => state.player.searchQuery);
-  const [filteredTracks, setFilteredTracks] = useState([]);
-
-  useEffect(() => {
-    if (data) {
-      const updatedFilteredTracks = data.filter(
-        (track) =>
-          track.name &&
-          track.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      console.log("Search Query:", searchQuery);
-      console.log("Filtered Tracks:", updatedFilteredTracks);
-      setFilteredTracks(updatedFilteredTracks);
-    }
-  }, [searchQuery, data]);
 
   useEffect(() => {
     if (error && error.status === 401) {
       refreshTokenUser(refreshToken)
         .then((res) => {
-          console.log("Обновленный токен:", res);
           localStorage.setItem("access", JSON.stringify(res.access));
         })
         .then(() => {
@@ -90,6 +79,12 @@ export const Favorites = ({ handleLogout }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (data) {
+      dispatch(setInitialTracksForFilter({ tracks: data }));
+      dispatch(setSearch({ value: "" }));
+    }
+  }, [data]);
   const isEmptyList = !isLoading && !data?.length;
 
   return (
@@ -97,7 +92,7 @@ export const Favorites = ({ handleLogout }) => {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
-          <Search />
+          <Search tracks={data || []} />
           <S.CenterblockH2>Мои треки</S.CenterblockH2>
           {error ? (
             <p>Не удалось загрузить плейлист, попробуйте позже</p>
@@ -106,7 +101,7 @@ export const Favorites = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Любимые треки отсутствуют. Вы можете их добавить, нажав на кнопку "♥" рядом с понравившимся треком`
           ) : (
-            <Tracklist tracks={filteredTracks} refetch={refetch} />
+            <Tracklist tracks={data} refetch={refetch} />
           )}
         </div>
         <St.ContainerSidebar>

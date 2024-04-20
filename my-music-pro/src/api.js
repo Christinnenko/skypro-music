@@ -56,8 +56,6 @@ export function getTokenUser({ email, password }) {
 
 // Рефреш токена
 export function refreshTokenUser(token) {
-  console.log("Отправка запроса на обновление токена...");
-
   return fetch("https://skypro-music-api.skyeng.tech/user/token/refresh/", {
     method: "POST",
     body: JSON.stringify({

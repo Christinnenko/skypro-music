@@ -20,6 +20,7 @@ export const ModalForm = styled.div`
   border-radius: 12px;
   padding: 43px 47px 47px 40px;
 `;
+
 export const ModalLogo = styled.div`
   display: flex;
   justify-content: center;
@@ -53,7 +54,6 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   text-decoration: none;
-
   width: 278px;
   height: 52px;
   border-radius: 6px;
@@ -79,6 +79,7 @@ export const PrimaryButton = styled(Button)`
     background-color: #271a58;
   }
 `;
+
 export const SecondaryButton = styled(Button)`
   color: #000000;
   background-color: transparent;

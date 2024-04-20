@@ -1,13 +1,21 @@
-import { useDispatch } from "react-redux";
 import * as S from "./Search.styles.js";
-import { setSearchQuery } from "../../store/actions/creators/creators.js";
+import { useDispatch } from "react-redux";
+import { setSearch } from "../../store/actions/creators/creators.js";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 function Search() {
   const dispatch = useDispatch();
-  const handleSearchChange = (event) => {
-    const query = event.target.value;
-    console.log("Search Query Change:", query);
-    dispatch(setSearchQuery(query));
+  const [searchText, setSearchText] = useState("");
+
+  useEffect(() => {
+    dispatch(setSearch({ value: searchText }));
+  }, []);
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSearchText(value);
+    dispatch(setSearch({ value: value }));
   };
 
   return (
@@ -19,10 +27,15 @@ function Search() {
         type="search"
         placeholder="Поиск"
         name="search"
-        onChange={handleSearchChange}
+        value={searchText}
+        onChange={handleChange}
       />
     </S.CenterblockSearch>
   );
 }
+
+Search.propTypes = {
+  tracks: PropTypes.array.isRequired,
+};
 
 export default Search;

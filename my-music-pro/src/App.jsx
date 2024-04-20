@@ -6,13 +6,14 @@ import { UserContext } from "./Authorization.js";
 import { useNavigate } from "react-router-dom";
 import {
   clearCurrentTrack,
+  clearFilters,
   setCurrentTrack,
 } from "./store/actions/creators/creators.js";
 import { useDispatch } from "react-redux";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-  const [loading, setLoading] = useState(true); //показ эмуляции загрузки(скелетон)
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ function App() {
     localStorage.removeItem("user");
     navigate("/login");
     dispatch(clearCurrentTrack());
+    dispatch(clearFilters());
   };
 
   return (

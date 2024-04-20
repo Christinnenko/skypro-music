@@ -15,7 +15,7 @@ function EmulationApp({ handleLogout, tracks }) {
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search />
+          <Search tracks={tracks} />
           <S.CenterblockH2>Треки</S.CenterblockH2>
           <Filters tracks={tracks} />
           <EmulationTracklist />
@@ -31,6 +31,5 @@ export { EmulationApp };
 
 EmulationApp.propTypes = {
   handleLogout: PropTypes.func.isRequired,
-  handleSearchChange: PropTypes.func.isRequired,
   tracks: PropTypes.array.isRequired,
 };

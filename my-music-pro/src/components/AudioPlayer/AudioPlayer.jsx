@@ -16,46 +16,42 @@ import {
   useDeleteFromFavoritesMutation,
 } from "../../services/Services.js";
 
-function AudioPlayer({ track, props }) {
+function AudioPlayer({ track }) {
   const [isPlaying, setIsPlaying] = useState(false); //воспроизведение трека
   const [isMix, setIsMix] = useState(false);
-  //повторение трека по кругу
-  const [isLooped, setIsLooped] = useState(false);
-  //текущее время воспроизведения аудио
-  const [currentTime, setCurrentTime] = useState(0);
+  const [isLooped, setIsLooped] = useState(false); //повторение трека по кругу
+  const [currentTime, setCurrentTime] = useState(0); //текущее время воспроизведения аудио
 
   const dispatch = useDispatch();
-
-  const { isFavorite } = useSelector((store) => store.player);
 
   const [addToFavorites] = useAddToFavoritesMutation();
   const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
 
   const token = JSON.parse(localStorage.access);
+  const currentTrackId = useSelector((state) => state.player.currentTrack?.id);
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const isFavorite = currentTrackId
+    ? pagePlaylist.find((track) => track.id === currentTrackId)?.isFavorite
+    : false;
 
-  const handleToggleLike = (track) => {
-    return () => {
-      if (isFavorite) {
-        deleteFromFavorites({ id: track.id })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error deleting from favorites:", error);
-          });
-      } else {
-        addToFavorites({ id: track.id, token })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error adding to favorites:", error);
-          });
-      }
-
-      // Обернуть трек в объект с именем "track"
-      dispatch(toggleLike({ track }));
-    };
+  const handleToggleLike = (trackId) => {
+    if (isFavorite) {
+      deleteFromFavorites({ id: trackId })
+        .then(() => {
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error deleting from favorites:", error);
+        });
+    } else {
+      addToFavorites({ id: trackId, token })
+        .then(() => {
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error adding to favorites:", error);
+        });
+    }
   };
 
   const handleMix = () => {
@@ -84,7 +80,7 @@ function AudioPlayer({ track, props }) {
     dispatch(pause());
   };
 
-  //кнопка плей/пауза
+  //кнопка play/pause
   const togglePlay = isPlaying ? handleStop : handleStart;
 
   const handleNextTrack = () => {
@@ -148,7 +144,7 @@ function AudioPlayer({ track, props }) {
       audioRef.current.addEventListener("ended", handleTrackEnd);
     }
 
-    updateCurrentTime(); // Вызов функции
+    updateCurrentTime();
 
     // Удаление слушателя при размонтировании компонента
     return () => {
@@ -176,6 +172,7 @@ function AudioPlayer({ track, props }) {
     audioRef.current.loop = true;
     setIsLooped(true);
   };
+
   //выключение
   const handleUnloop = () => {
     audioRef.current.loop = false;
@@ -268,18 +265,11 @@ function AudioPlayer({ track, props }) {
                   <S.TrackPlayLike>
                     <S.TrackPlayLikeSvg
                       alt="like"
-                      onClick={handleToggleLike(track)}
-                      {...props}
-                      isFavorite={isFavorite}
+                      onClick={() => handleToggleLike(track.id, track)}
+                      className={isFavorite ? "liked" : ""}
                     >
                       <use xlinkHref="/icon/sprite.svg#icon-like"></use>
                     </S.TrackPlayLikeSvg>
-                    {/* <S.TrackPlayLikeSvg alt="like">
-                      <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                    </S.TrackPlayLikeSvg>
-                    <S.TrackPlayDislikeSvg alt="dislike">
-                      <use xlinkHref="/icon/sprite.svg#icon-dislike"></use>
-                    </S.TrackPlayDislikeSvg> */}
                   </S.TrackPlayLike>
                 </S.TrackPlayLikeDis>
               </S.PlayerTrackPlay>
@@ -316,8 +306,8 @@ AudioPlayer.propTypes = {
     name: PropTypes.string,
     author: PropTypes.string,
     track_file: PropTypes.string,
+    isFavorite: PropTypes.bool,
   }).isRequired,
-  props: PropTypes.bool.isRequired,
 };
 
 export default AudioPlayer;

@@ -1,9 +1,9 @@
 import * as Style from "./Tracklist.styles.js";
-import { convertSecToMinAndSec } from "../../helpers.js";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCurrentTrack,
+  clearFilters,
   mixTracks,
   setCurrentTrack,
   toggleLike,
@@ -14,45 +14,20 @@ import {
 } from "../../services/Services.js";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Track } from "../Track/Track.jsx";
 
 function Tracklist({ tracks, getTracksError }) {
-  console.log("Rendering Tracklist component");
   const dispatch = useDispatch();
-  const { currentTrack, isPlaying, isMix } = useSelector(
-    (store) => store.player
-  );
   const navigate = useNavigate();
+
+  const { FilterCriteria } = useSelector((store) => store.player);
+  const { isMix } = useSelector((store) => store.player);
+
   const token = JSON.parse(localStorage.access);
 
   const [addToFavorites, { error: errorAdd }] = useAddToFavoritesMutation();
   const [deleteFromFavorites, { error: errorDelete }] =
     useDeleteFromFavoritesMutation();
-  const { isFavorite } = useSelector((store) => store.player);
-
-  const handleToggleLike = (track) => {
-    return () => {
-      if (isFavorite) {
-        deleteFromFavorites({ id: track.id })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error deleting from favorites:", error);
-          });
-      } else {
-        addToFavorites({ id: track.id, token })
-          .then(() => {
-            console.log("Toggling like for track:", track);
-          })
-          .catch((error) => {
-            console.error("Error adding to favorites:", error);
-          });
-      }
-
-      // Обернуть трек в объект с именем "track"
-      dispatch(toggleLike({ track }));
-    };
-  };
 
   useEffect(() => {
     if (
@@ -62,16 +37,71 @@ function Tracklist({ tracks, getTracksError }) {
       localStorage.removeItem("user");
       dispatch(clearCurrentTrack());
       navigate("/login");
+      dispatch(clearFilters());
     }
   }, [errorAdd, errorDelete]);
 
+  const handleToggleLike = (trackId, track) => {
+    if (track.isFavorite) {
+      deleteFromFavorites({ id: trackId })
+        .then(() => {
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error deleting from favorites:", error);
+        });
+    } else {
+      addToFavorites({ id: trackId, token })
+        .then(() => {
+          dispatch(toggleLike(trackId));
+        })
+        .catch((error) => {
+          console.error("Error adding to favorites:", error);
+        });
+    }
+  };
+
   const handleCurrentTrackId = (track) => {
-    console.log("Handling current track ID:", track.id);
     dispatch(setCurrentTrack({ playlist: tracks, track: track }));
     if (isMix) {
       dispatch(mixTracks(true));
     }
   };
+
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
+
+  const filterTracks = () => {
+    let tracks = [...filteredPlaylist];
+
+    if (FilterCriteria.author.length) {
+      tracks = tracks.filter((el) => FilterCriteria.author.includes(el.author));
+    }
+
+    if (FilterCriteria.genre.length) {
+      tracks = tracks.filter((el) => FilterCriteria.genre.includes(el.genre));
+    }
+
+    switch (FilterCriteria.sortButtonText) {
+      case "Сначала старые":
+        tracks.sort(
+          (a, b) => new Date(a.release_date) - new Date(b.release_date)
+        );
+        break;
+      case "Сначала новые":
+        tracks.sort(
+          (a, b) => new Date(b.release_date) - new Date(a.release_date)
+        );
+        break;
+      default:
+        break;
+    }
+
+    return tracks;
+  };
+
+  const filteredTracks = filterTracks();
 
   return (
     <Style.CenterblockContent>
@@ -89,62 +119,19 @@ function Tracklist({ tracks, getTracksError }) {
       <p>{getTracksError}</p>
 
       <Style.ContentPlaylist>
-        {tracks.map((track) => (
-          <Style.PlaylistItem key={track.id}>
-            <Style.PlaylistTrack>
-              <Style.TrackTitle>
-                <Style.TrackTitleImage>
-                  {currentTrack && currentTrack.id === track.id ? (
-                    <Style.BlinkingDot
-                      $isPlaying={isPlaying}
-                    ></Style.BlinkingDot>
-                  ) : (
-                    <Style.TrackTitleSvg alt="music">
-                      <use xlinkHref="/icon/sprite.svg#icon-note"></use>
-                      {track.logo}
-                    </Style.TrackTitleSvg>
-                  )}
-                </Style.TrackTitleImage>
-                <div>
-                  <Style.TrackTitleLink
-                    onClick={() => {
-                      handleCurrentTrackId(track);
-                    }}
-                  >
-                    {track.name} <Style.TrackTitleSpan></Style.TrackTitleSpan>
-                  </Style.TrackTitleLink>
-                </div>
-              </Style.TrackTitle>
-              <Style.TrackAuthor>
-                <Style.TrackAuthorLink
-                  onClick={() => handleCurrentTrackId(track)}
-                >
-                  {track.author}
-                </Style.TrackAuthorLink>
-              </Style.TrackAuthor>
-              <Style.TrackAlbum>
-                <Style.TrackAlbumLink
-                  onClick={() => handleCurrentTrackId(track)}
-                >
-                  {track.album}
-                </Style.TrackAlbumLink>
-              </Style.TrackAlbum>
-              <Style.TrackLikeTime>
-                <Style.TrackLikeSvg
-                  alt="like"
-                  onClick={handleToggleLike(track)}
-                  isFavorite={isFavorite}
-                >
-                  <use xlinkHref="/icon/sprite.svg#icon-like"></use>
-                </Style.TrackLikeSvg>
-
-                <Style.TrackTimeText>
-                  {convertSecToMinAndSec(track.duration_in_seconds)}
-                </Style.TrackTimeText>
-              </Style.TrackLikeTime>
-            </Style.PlaylistTrack>
-          </Style.PlaylistItem>
-        ))}
+        {!filteredTracks.length ? (
+          <>Ничего не найдено *_*</>
+        ) : (
+          filteredTracks.map((track) => (
+            <Style.PlaylistItem key={track.id}>
+              <Track
+                track={track}
+                handleCurrentTrackId={handleCurrentTrackId}
+                handleToggleLike={() => handleToggleLike(track.id, track)}
+              />
+            </Style.PlaylistItem>
+          ))
+        )}
       </Style.ContentPlaylist>
     </Style.CenterblockContent>
   );
@@ -153,7 +140,6 @@ function Tracklist({ tracks, getTracksError }) {
 Tracklist.propTypes = {
   tracks: PropTypes.array.isRequired,
   getTracksError: PropTypes.any,
-  refetch: PropTypes.func.isRequired,
 };
 
 export default Tracklist;

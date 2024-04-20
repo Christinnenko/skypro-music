@@ -6,34 +6,34 @@ import {
   MIX_TRACK,
   PLAY,
   PAUSE,
-  SET_SEARCH_QUERY,
-  CLEAR_SEARCH_QUERY,
+  SET_PAGE_PLAYLIST,
   TOGGLE_LIKE,
+  SET_INITIAL_TRACKS,
+  SET_FILTER,
+  SET_SEARCH,
+  CLEAR_FILTERS,
 } from "../actions/types/types";
 
-// 1.
 const initialState = {
   currentTrack: null,
-  allIds: [],
   isPlaying: null,
   tracks: [],
+  pagePlaylist: [],
   isMix: false,
-  likedTracks: [],
-  isFavorite: false,
   playlist: [],
-  searchQuery: "",
+  filteredPlaylist: [],
+  FilterCriteria: {
+    author: [],
+    genre: [],
+  },
+  initialTracksForFilter: [],
 };
 
-// 2.
 export default function playerReducer(state = initialState, action) {
   switch (action.type) {
-    // 3.
     case SET_CURRENT_TRACK: {
-      // 4.
-
       const { track, playlist } = action.payload;
 
-      // 5.
       return {
         ...state,
         currentTrack: track,
@@ -105,7 +105,6 @@ export default function playerReducer(state = initialState, action) {
 
     case MIX_TRACK: {
       const isMixValue = action.payload.isMix;
-      console.log(isMixValue);
       return {
         ...state,
 
@@ -114,32 +113,112 @@ export default function playerReducer(state = initialState, action) {
       };
     }
 
-    case SET_SEARCH_QUERY: {
-      const query = action.payload;
-      return {
-        ...state,
-        searchQuery: query,
-      };
-    }
+    case SET_PAGE_PLAYLIST: {
+      const { fetchedTracks } = action.payload;
+      const currentUser = JSON.parse(localStorage.getItem("user"));
 
-    case CLEAR_SEARCH_QUERY: {
+      const playlistWithLikes = fetchedTracks.map((el) => {
+        let isFavorite = false;
+        if (el.stared_user) {
+          isFavorite = el.stared_user.some(
+            (user) => user.id === currentUser.id
+          );
+        }
+
+        return { ...el, isFavorite };
+      });
       return {
         ...state,
-        searchQuery: "",
+        pagePlaylist: playlistWithLikes,
       };
     }
 
     case TOGGLE_LIKE: {
-      const { track } = action.payload;
+      const { trackId } = action.payload;
+
+      const updatedPagePlaylist = state.pagePlaylist.map((track) =>
+        track.id === trackId
+          ? { ...track, isFavorite: !track.isFavorite }
+          : track
+      );
+
+      const updatedFilteredPlaylist = state.filteredPlaylist.map((track) =>
+        track.id === trackId
+          ? { ...track, isFavorite: !track.isFavorite }
+          : track
+      );
 
       return {
         ...state,
-        likedTracks: state.likedTracks.includes(track)
-          ? state.likedTracks.filter((likedTrack) => likedTrack !== track)
-          : [...state.likedTracks, track],
-        isFavorite: !state.isFavorite,
+        pagePlaylist: updatedPagePlaylist,
+        filteredPlaylist: updatedFilteredPlaylist,
       };
     }
+
+    case SET_INITIAL_TRACKS: {
+      return {
+        ...state,
+        initialTracksForFilter: action.payload.data,
+      };
+    }
+
+    case SET_FILTER: {
+      let genres = [...state.FilterCriteria.genre];
+      let authors = [...state.FilterCriteria.author];
+      let sortButtonText = action.payload.item;
+
+      // Если фильтр по жанру
+      if (action.payload.name === "author") {
+        if (state.FilterCriteria.author.includes(action.payload.item)) {
+          authors = authors.filter((elem) => elem !== action.payload.item);
+        } else {
+          authors.push(action.payload.item);
+        }
+      }
+      if (action.payload.name === "genre") {
+        if (state.FilterCriteria.genre.includes(action.payload.item)) {
+          genres = genres.filter((elem) => elem !== action.payload.item);
+        } else {
+          genres.push(action.payload.item);
+        }
+      }
+
+      return {
+        ...state,
+        FilterCriteria: {
+          ...state.FilterCriteria,
+          author: authors,
+          genre: genres,
+          sortButtonText,
+        },
+      };
+    }
+
+    case SET_SEARCH: {
+      const searchValue = action.payload.value.trim().toLowerCase();
+      let searchedPlaylist;
+
+      const copyFilteredPlaylist = state.initialTracksForFilter;
+      searchedPlaylist = copyFilteredPlaylist.filter((track) =>
+        track.name.toLowerCase().includes(searchValue)
+      );
+
+      return {
+        ...state,
+        filteredPlaylist: searchedPlaylist,
+      };
+    }
+
+    case CLEAR_FILTERS:
+      return {
+        ...state,
+        FilterCriteria: {
+          genre: [],
+          author: [],
+          sortButtonText: "По умолчанию",
+        },
+        filteredPlaylist: [],
+      };
 
     default:
       return state;

@@ -10,21 +10,20 @@ import { getAllTracks } from "../../api.js";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSearchQuery } from "../../store/actions/creators/creators.js";
+import { setPagePlaylist } from "../../store/actions/creators/creators.js";
 
 export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [tracks, setTracks] = useState([]);
   const [tracksError, setTracksError] = useState([]);
-  const [filteredTracks, setFilteredTracks] = useState([]);
 
-  const searchQuery = useSelector((state) => state.player.searchQuery);
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
 
   const getTracks = async () => {
     try {
       const fetchedTracks = await getAllTracks();
-      setTracks(fetchedTracks);
+      dispatch(setPagePlaylist({ fetchedTracks }));
+
       setLoading(false);
     } catch (error) {
       setTracksError([
@@ -35,44 +34,58 @@ export const Main = ({ handleLogout }) => {
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(clearSearchQuery());
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
     getTracks();
   }, []);
 
-  useEffect(() => {
-    const updatedFilteredTracks = tracks.filter(
-      (track) =>
-        track.name &&
-        track.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  const isActiveAuthor = useSelector(
+    (state) => state.player.FilterCriteria.isActiveAuthor
+  );
+  const isActiveGenre = useSelector(
+    (state) => state.player.FilterCriteria.isActiveGenre
+  );
 
-    console.log("Search Query:", searchQuery);
-    console.log("Filtered Tracks:", updatedFilteredTracks);
-    setFilteredTracks(updatedFilteredTracks);
-  }, [searchQuery, tracks]);
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
+
+  const isFilter = isActiveAuthor || isActiveGenre;
+  const isSearch = useSelector((state) => state.player.isSearch);
+  const isSort = useSelector((state) => state.player.isSort);
+
+  const copySearchedPlaylist = useSelector(
+    (state) => state.player.copySearchedPlaylist
+  );
 
   return loading ? (
-    <EmulationApp handleLogout={handleLogout} tracks={tracks} />
+    <EmulationApp handleLogout={handleLogout} tracks={pagePlaylist} />
   ) : (
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div>
-          <Search />
+          <Search tracks={pagePlaylist} />
           <S.CenterblockH2>Треки</S.CenterblockH2>
-          <Filters tracks={tracks} />
+          <Filters tracks={pagePlaylist} />
 
           <Tracklist
-            tracks={filteredTracks}
+            tracks={
+              isSearch
+                ? isFilter
+                  ? filteredPlaylist
+                  : isSort
+                  ? filteredPlaylist
+                  : copySearchedPlaylist
+                : isFilter
+                ? filteredPlaylist
+                : isSort
+                ? filteredPlaylist
+                : pagePlaylist
+            }
             tracksError={tracksError}
             refetch={getTracks}
           />
         </div>
+
         <St.ContainerSidebar>
           <LoginSidebar handleLogout={handleLogout} />
           <Sidebar handleLogout={handleLogout} />

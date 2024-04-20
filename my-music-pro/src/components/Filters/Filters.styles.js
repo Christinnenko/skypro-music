@@ -41,8 +41,8 @@ export const FilterButton = styled.div`
   text-align: center;
   position: relative;
 
-  border-color: ${(props) => (props.$isOpen ? "#ad61ff" : "")};
-  color: ${(props) => (props.$isOpen ? "#ad61ff" : "")};
+  border-color: ${(props) => (props.$isActive ? "#ad61ff" : "")};
+  color: ${(props) => (props.$isActive ? "#ad61ff" : "")};
 
   &:hover {
     border-color: #d9b6ff;
@@ -58,45 +58,24 @@ export const FilterButton = styled.div`
 `;
 
 export const FilterPopup = styled.div`
-  margin-top: 10px;
-  border-radius: 12px;
   background: #313131;
-  display: flex;
-  flex-direction: column;
-  padding: 34px;
-  font-size: 20px;
-  line-height: 24px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  left: 0;
+  min-width: 269px;
+  /* min-height: 305px; */
+  padding: 32px;
   position: absolute;
-  max-height: 237px;
-  max-width: 242px;
-  overflow-y: auto;
+  top: 50px;
 `;
 
-export const FilterPopupScrollable = styled.div`
+export const FilterPopupScrollable = styled.ul`
+  max-height: 236px;
+  max-width: 242px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 28px;
-  list-style: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 19px;
-  line-height: 24px;
-  width: 100%;
-
-  div:hover {
-    color: #b672ff;
-    text-decoration-line: underline;
-  }
-
-  div:active {
-    color: #b672ff;
-    font-weight: bold;
-  }
-
-  div.selected {
-    color: #b672ff;
-    font-weight: bold;
-  }
 
   scrollbar-color: #ffffff #4b4949; /* Для Firefox */
   scrollbar-width: 4px; /* Для Firefox */
@@ -117,13 +96,42 @@ export const FilterPopupScrollable = styled.div`
   }
 `;
 
+export const FilterPopupItem = styled.li`
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    color: #b672ff;
+    text-decoration-line: underline;
+  }
+
+  &:active {
+    color: #b672ff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  &.selected {
+    color: #b672ff;
+    font-weight: bold;
+  }
+`;
+
 export const SelectedCount = styled.span`
   width: 26px;
   height: 25.5px;
   background-color: #ad61ff;
   color: white;
   border-radius: 50%;
-  padding: 6px 9px 6px 9px;
+  padding: ${({ count }) =>
+    count > 9 ? "6px 12px 6px 6px" : "6px 9px 6px 9px"};
+
   font-size: 13px;
   line-height: 13px;
   position: absolute;

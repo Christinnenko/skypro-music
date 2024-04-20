@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Categories } from "../../constants.js";
 import { useParams } from "react-router-dom";
 import * as Style from "../Pages.styles.js";
@@ -10,10 +11,15 @@ import * as St from "../Pages.styles.js";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { useViewSelectionsByIdQuery } from "../../services/Services.js";
 import { EmulationTracklist } from "../../components/EmulationApp/EmulationLoading.jsx";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setInitialTracksForFilter,
+  setPagePlaylist,
+  setSearch,
+} from "../../store/actions/creators/creators.js";
 
 export const Category = ({ handleLogout }) => {
+  const dispatch = useDispatch();
   const params = useParams();
   const category = Categories.find(
     (category) => category.id === Number(params.id)
@@ -23,32 +29,40 @@ export const Category = ({ handleLogout }) => {
   const { data, isLoading, error, refetch } = useViewSelectionsByIdQuery({
     id: categoryId,
   });
-
-  const searchQuery = useSelector((state) => state.player.searchQuery);
-  const [filteredTracks, setFilteredTracks] = useState([]);
+  const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
+  const filteredPlaylist = useSelector(
+    (state) => state.player.filteredPlaylist
+  );
+  const [updatedFilterTracks, setUpdatedFilterTracks] = useState([]);
 
   useEffect(() => {
     if (data) {
-      const updatedFilteredTracks = data.filter(
-        (track) =>
-          track.name &&
-          track.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      console.log("Search Query:", searchQuery);
-      console.log("Filtered Tracks:", updatedFilteredTracks);
-      setFilteredTracks(updatedFilteredTracks);
+      const updatedFilterTracks = data.map((track) => ({
+        ...track,
+        isFavorite: pagePlaylist.some(
+          (pTrack) => pTrack.id === track.id && pTrack.isFavorite
+        ), // Проверяем наличие лайка для каждого трека
+      }));
+      setUpdatedFilterTracks(updatedFilterTracks);
     }
-  }, [searchQuery, data]);
+  }, [data, pagePlaylist]);
 
   const isEmptyList = !isLoading && !data?.length;
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setPagePlaylist({ fetchedTracks: data }));
+      dispatch(setInitialTracksForFilter({ tracks: data }));
+      dispatch(setSearch({ value: "" }));
+    }
+  }, [data]);
 
   return (
     <>
       <S.Main>
         <NavMenu handleLogout={handleLogout} />
         <div style={{ minWidth: "1070px", justifyContent: "space-between" }}>
-          <Search />
+          <Search tracks={updatedFilterTracks} />
           <Style.Text>{`${title}`}</Style.Text>
           {error ? (
             <p>Не удалось загрузить плейлист, попробуйте позже</p>
@@ -57,7 +71,14 @@ export const Category = ({ handleLogout }) => {
           ) : isEmptyList ? (
             `Треки в разделе отсутствуют`
           ) : (
-            <Tracklist tracks={filteredTracks} refetch={refetch} />
+            <Tracklist
+              tracks={
+                filteredPlaylist.length > 0
+                  ? filteredPlaylist
+                  : updatedFilterTracks
+              }
+              refetch={refetch}
+            />
           )}
         </div>
 

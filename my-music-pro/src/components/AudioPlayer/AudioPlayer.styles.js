@@ -307,7 +307,7 @@ export const TrackPlayLikeDis = styled.div`
 `;
 
 export const TrackPlayLike = styled.div`
-  padding: 5px;
+  padding: 18px;
   cursor: pointer;
 `;
 
@@ -315,15 +315,23 @@ export const TrackPlayLikeSvg = styled.svg`
   width: 14px;
   height: 12px;
   margin-right: 17px;
-  fill: ${(props) => (props.isFavorite ? "#B672FF" : "transparent")};
-  stroke: ${(props) => (props.isFavorite ? "#B672FF" : "#696969")};
   cursor: pointer;
 
-  &:hover {
+  use {
+    fill: transparent;
+    stroke: #696969;
+  }
+
+  &.liked use {
+    fill: #b672ff;
+    stroke: #b672ff;
+  }
+
+  &:hover use {
     stroke: #acacac;
   }
 
-  &:active {
+  &:active use {
     fill: #696969;
     stroke: #fff;
   }
@@ -377,12 +385,77 @@ export const VolumeSvg = styled.svg`
 
 export const VolumeProgress = styled.div`
   width: 109px;
+  height: 30px;
   cursor: pointer;
 `;
 
 export const VolumeProgressLine = styled.input`
-  width: 109px;
-  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  position: relative;
+
+  &::-moz-range-track {
+    height: 2px;
+    border: 1px solid #1c1c1c;
+    background-color: #fff;
+    transform: translateY(7px);
+  }
+
+  &::-moz-range-thumb {
+    background-color: #1c1c1c;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    cursor: pointer;
+    transform: translateY(7px);
+  }
+
+  &::-webkit-slider-runnable-track {
+    height: 2px;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+
+  &::-webkit-slider-thumb {
+    background-color: #1c1c1c;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 12px;
+    height: 12px;
+    -webkit-appearance: none;
+    margin-top: -5px;
+    position: relative;
+    z-index: 2;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background-color: #fff;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 50%;
+    height: 2px;
+    background-color: transparent;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
 `;
 
 export const StandartAudioPlayer = styled.audio`

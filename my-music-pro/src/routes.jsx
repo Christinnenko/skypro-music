@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Main } from "./pages/main(tracks)/Main.jsx";
 import { NotFound } from "./pages/not-found/NotFound.jsx";
 import { Category } from "./pages/category/Category.jsx";
@@ -8,6 +8,9 @@ import PropTypes from "prop-types";
 import Register from "./pages/register/Register.jsx";
 import Login from "./pages/login/Login.jsx";
 import { PageLayout } from "./pages/Layout/Layout.jsx";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { clearFilters } from "./store/actions/creators/creators.js";
 
 export const AppRoutes = ({
   user,
@@ -16,6 +19,17 @@ export const AppRoutes = ({
   loading,
   setLoading,
 }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cleanup = () => {
+      dispatch(clearFilters());
+    };
+
+    return cleanup;
+  }, [navigate, dispatch]);
+
   return (
     <Routes>
       <Route path="/" element={<PageLayout handleLogout={handleLogout} />}>

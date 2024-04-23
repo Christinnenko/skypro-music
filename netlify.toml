@@ -1,0 +1,3 @@
+[build]
+  publish = "my-music-pro/build"
+  command = "npm run build"

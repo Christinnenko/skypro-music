@@ -1,3 +1,0 @@
-[build]
-  command = "cd my-music-pro && npm run build"
-  publish = "my-music-pro/build"

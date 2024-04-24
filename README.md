@@ -2,7 +2,7 @@
 
 ## Деплой проекта: https://main--listen-music-sp.netlify.app/
 
-![image](https://github.com/Christinnenko/skypro-music/assets/135636897/7397a55e-efdf-47d3-ac7c-ec7ade2a6054)
+![image](https://github.com/Christinnenko/skypro-music/assets/135636897/ef8f34c9-c670-498c-8fad-7a7598c110cf)
 
 ## Проект Skypro.Music - это музыкальный сервис, который предоставляет пользователям возможность прослушивания музыкальных треков, создания персонального плейлиста и фильтрации треков по жанрам/исполнителям.
 

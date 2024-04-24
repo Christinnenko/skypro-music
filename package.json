@@ -1,7 +1,6 @@
 {
   "name": "my-music-pro",
   "version": "0.1.0",
-  "homepage": "https://christinnenko.github.io/skypro-music/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
@@ -21,7 +20,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -51,6 +50,7 @@
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",
+    "gh-pages": "^6.1.1",
     "prettier": "3.0.3"
   }
 }

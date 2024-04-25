@@ -59,7 +59,7 @@ export const MenuItem = styled.li`
   margin-bottom: 16px;
 `;
 
-export const NavLink = styled(Link)`
+export const NavLink = styled.a`
   color: #fff;
   font-weight: 400;
   font-size: 16px;

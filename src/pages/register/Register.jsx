@@ -86,7 +86,10 @@ export default function Register() {
       <S.ModalForm>
         <Link to="/">
           <S.ModalLogo>
-            <S.ModalLogoImage src="/img/logo_modal.png" alt="logo" />
+            <S.ModalLogoImage
+              src={`${process.env.PUBLIC_URL}/img/logo_modal.png`}
+              alt="logo"
+            />
           </S.ModalLogo>
         </Link>
         <>

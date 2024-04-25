@@ -12,9 +12,9 @@ const NavMenu = ({ handleLogout }) => {
 
   return (
     <S.MainNav>
-      <Link to="/">
+      <a href="/">
         <S.LogoImage src="/img/logo.png" alt="logo" />
-      </Link>
+      </a>
       <S.NavBurger onClick={toggleVisibility}>
         <S.BurgerLine></S.BurgerLine>
         <S.BurgerLine></S.BurgerLine>

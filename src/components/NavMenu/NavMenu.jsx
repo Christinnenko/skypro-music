@@ -2,7 +2,6 @@ import * as S from "./NavMenu.styles.js";
 import cn from "classnames";
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 const NavMenu = ({ handleLogout }) => {
   const [visible, setVisible] = useState(false);

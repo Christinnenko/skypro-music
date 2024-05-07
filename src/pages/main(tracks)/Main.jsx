@@ -3,7 +3,6 @@ import * as S from "../../App.styles.js";
 import Filters from "../../components/Filters/Filters.jsx";
 import NavMenu from "../../components/NavMenu/NavMenu.jsx";
 import Search from "../../components/Search/Search.jsx";
-import { LoginSidebar, Sidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Tracklist from "../../components/Tracklist/Tracklist.jsx";
 import { EmulationApp } from "../../components/EmulationApp/EmulationApp.jsx";
 import { getAllTracks } from "../../api.js";
@@ -11,6 +10,7 @@ import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setPagePlaylist } from "../../store/actions/creators/creators.js";
+import { LoginSidebar, Sidebar } from "../../components/Sidebar/Sidebar.jsx";
 
 export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();

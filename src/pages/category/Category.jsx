@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import * as Style from "../Pages.styles.js";
 import * as S from "../../App.styles.js";
 import NavMenu from "../../components/NavMenu/NavMenu.jsx";
-import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 import Search from "../../components/Search/Search.jsx";
 import PropTypes from "prop-types";
 import * as St from "../Pages.styles.js";
@@ -17,6 +16,7 @@ import {
   setPagePlaylist,
   setSearch,
 } from "../../store/actions/creators/creators.js";
+import { LoginSidebar } from "../../components/Sidebar/Sidebar.jsx";
 
 export const Category = ({ handleLogout }) => {
   const dispatch = useDispatch();

@@ -16,6 +16,7 @@ export const Main = ({ handleLogout }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [tracksError, setTracksError] = useState([]);
+  const [forceUpdate, setForceUpdate] = useState(false);
 
   const pagePlaylist = useSelector((state) => state.player.pagePlaylist);
 
@@ -23,8 +24,8 @@ export const Main = ({ handleLogout }) => {
     try {
       const fetchedTracks = await getAllTracks();
       dispatch(setPagePlaylist({ fetchedTracks }));
-
       setLoading(false);
+      setForceUpdate((prevState) => !prevState);
     } catch (error) {
       setTracksError([
         `Не удалось загрузить плейлист, попробуйте позже: ${error.message}`,
@@ -83,6 +84,7 @@ export const Main = ({ handleLogout }) => {
             }
             tracksError={tracksError}
             refetch={getTracks}
+            forceUpdate={forceUpdate}
           />
         </div>
 
